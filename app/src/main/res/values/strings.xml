@@ -1,0 +1,15 @@
+<resources>
+  <string name="app_name">TextThrough</string>
+
+  <string name="action_ok">OK</string>
+  <string name="action_submit">Submit</string>
+
+  <string name="number">Number</string>
+  <string name="enterNumberToPassThrough">Enter the number to Pass Through</string>
+
+  <string name="read_sms_request_title">Read SMS Permission</string>
+  <string name="read_sms_request_message">This app will now request \'Read SMS\' permission on your device.\n\nThis is required in order to process new incoming SMS and will at no point leave this device.</string>
+  <string name="receive_sms_request_title">Receive SMS Permission</string>
+  <string name="receive_sms_request_message">This app will now request \'Receive SMS\' permission on your device.\n\nThis allows the app to intercept new emails so that they can trigger actions.</string>
+
+</resources>
