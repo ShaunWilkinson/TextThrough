@@ -20,7 +20,7 @@ public class SharedPrefFunctions {
     public void saveStringList(String uniqueName, List<String> values, Context context) {
         Set<String> convertedValues = new HashSet<>(values);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = context.getSharedPreferences(constants.SHAREDPREFKEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         editor.putStringSet(uniqueName, convertedValues);
@@ -34,7 +34,7 @@ public class SharedPrefFunctions {
      * @return Returns a List of Strings or null if nothing found
      */
     public List<String> loadStringList(String uniqueName, Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = context.getSharedPreferences(constants.SHAREDPREFKEY, Context.MODE_PRIVATE);
         Set<String> retrievedValues = prefs.getStringSet(uniqueName, null);
 
         if(retrievedValues != null) {

@@ -39,9 +39,18 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:onClick="submitDetails"
+      android:onClick="submitNumber"
       android:text="@string/action_submit"
       />
+
+  <Button
+      android:id="@+id/button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:onClick="startService"
+      android:text="@string/startService" />
+
   <Button
       android:id="@+id/stopRingtoneBtn"
       android:layout_width="wrap_content"

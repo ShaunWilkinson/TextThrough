@@ -9,7 +9,11 @@ import android.provider.Telephony;
 import android.util.Log;
 
 import com.seikoshadow.apps.textthrough.BroadcastReceivers.SmsBroadcastReceiver;
+import com.seikoshadow.apps.textthrough.SharedPrefFunctions;
+import com.seikoshadow.apps.textthrough.constants;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,12 +32,21 @@ public class SMSWatchService extends Service {
         // TODO do something useful
         super.onStartCommand(intent, flags, startId);
 
+        // Create the Text Message Broadcast Receiver and register it to listen to text messages arriving
         smsBroadcastReceiver = new SmsBroadcastReceiver();
         registerReceiver(smsBroadcastReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
-        smsBroadcastReceiver.setSenderLimitation("6505551212");
+
+        SharedPrefFunctions sharedPrefFunctions = new SharedPrefFunctions();
+
+        List<String> numbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
+        if(!numbers.isEmpty()) {
+            smsBroadcastReceiver.setSenderLimitation(numbers);
+        } else {
+            Log.e(TAG, "Failed to find numbers");
+        }
+
         Log.d(TAG, "Started SMSBroadcastListener");
 
-        // TODO handle a proper text being received
         // What to do when a text is received
         smsBroadcastReceiver.setListener(new SmsBroadcastReceiver.Listener() {
             @Override public void onTextReceived(String smsSender, String smsBody) {

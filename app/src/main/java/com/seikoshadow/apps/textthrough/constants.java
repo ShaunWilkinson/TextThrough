@@ -11,4 +11,5 @@ public class constants {
   public static final String NOTIFICATION_CHANNEL_ID = "com.seikoshadow.apps.textthrough.alerts";
   public static final String NOTIFICATION_CHANNEL_NAME = "TextThrough Notification Channel";
   public static final String PHONENUMBERKEY = "PhoneNumbers";
+  public static final String SHAREDPREFKEY = "com.seikoshadow.apps.textthrough";
 }

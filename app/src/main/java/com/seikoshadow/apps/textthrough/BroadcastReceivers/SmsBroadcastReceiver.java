@@ -11,13 +11,16 @@ import android.util.Log;
 
 import com.seikoshadow.apps.textthrough.constants;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by Shaun on 22/05/2018.
  */
 
 public class SmsBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "SMSBroadcastReceiver";
-    private String senderLimitation; // TODO change to List<String>
+    private List<String> senderLimitation; // TODO change to List<String>
 
     private Listener listener;
 
@@ -26,7 +29,11 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
     }
 
     public void setSenderLimitation(String senderLimitation) {
-        this.senderLimitation = senderLimitation;
+        this.senderLimitation = Arrays.asList(senderLimitation);
+    }
+
+    public void setSenderLimitation(List<String> senderLimitations) { //TODO make use of this
+        this.senderLimitation = senderLimitations;
     }
 
     public interface Listener {
@@ -66,10 +73,9 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                 }
             }
 
-            Log.i(TAG, senderLimitation);
+            Log.i(TAG, senderLimitation.toString());
 
-            // TODO check against passed list of senders
-            if (smsSender.equalsIgnoreCase(senderLimitation)) {
+            if (senderLimitation.contains(smsSender)) {
                 if (listener != null) {
                     listener.onTextReceived(smsSender, smsBody);
                 } else {

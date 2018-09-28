@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.seikoshadow.apps.textthrough.Services.SMSWatchService;
 import com.seikoshadow.apps.textthrough.constants;
@@ -28,9 +29,7 @@ public class MainActivity extends Activity {
     private Ringtone ringtone;
     SMSWatchService smsWatchService;
     Intent mServiceIntent;
-
-    //TODO make sms watcher service run in background
-    //TODO make a way to save a list of numbers to take action on
+    SharedPrefFunctions sharedPrefFunctions;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +38,7 @@ public class MainActivity extends Activity {
         // Setup the ringtone sound
         notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
+        sharedPrefFunctions = new SharedPrefFunctions();
 
         // Request READ SMS permission if not already granted
         if (!SmsFunctions.isReadSmsPermissionGranted(this)) {
@@ -50,11 +50,27 @@ public class MainActivity extends Activity {
             showRequestReceiveSmsPermissionDialog(this);
         }
 
-        // Create an SMSWatchService then if not already started then start it
-        smsWatchService = new SMSWatchService();
-        mServiceIntent = new Intent(MainActivity.this, smsWatchService.getClass());
-        if(!isMyServiceRunning(smsWatchService.getClass())) {
-            startService(mServiceIntent);
+        startSmsService();
+    }
+
+    // Called by Start Service Button
+    public void startService(View view) {
+        startSmsService();
+    }
+
+    //TODO make it started and stopped via button
+    protected void startSmsService() {
+        // Load the numbers saved in SharedPrefs
+        List<String> savedNumbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
+
+        // Make sure there is some saved numbers before starting the service
+        if(savedNumbers != null) {
+            // Create an SMSWatchService then if not already started then start it
+            smsWatchService = new SMSWatchService();
+            mServiceIntent = new Intent(MainActivity.this, smsWatchService.getClass());
+            if(!isMyServiceRunning(smsWatchService.getClass())) {
+                startService(mServiceIntent);
+            }
         }
     }
 
@@ -80,7 +96,7 @@ public class MainActivity extends Activity {
     /**
      * Submits the details entered on the homepage
      */
-    public void submitDetails(View view) { //TODO make a way to submit numbers
+    public void submitNumber(View view) {
         TextView enteredNumberTxt = findViewById(R.id.enteredNumber);
         String enteredNumberVal = enteredNumberTxt.getText().toString();
 
@@ -97,6 +113,8 @@ public class MainActivity extends Activity {
 
         phoneNumbers.add(enteredNumberVal);
         sharedPrefFunctions.saveStringList(constants.PHONENUMBERKEY, phoneNumbers, this);
+
+        Toast.makeText(this, "Added " + enteredNumberVal + " to list of numbers", Toast.LENGTH_LONG).show();
     }
 
     // TODO easy way to remove phone numbers
