@@ -1,4 +1,4 @@
-package com.seikoshadow.apps.textthrough;
+package com.seikoshadow.apps.textthrough.Services;
 
 import android.app.Service;
 import android.content.Context;
@@ -21,19 +21,12 @@ public class SMSWatchService extends Service {
     public SmsBroadcastReceiver smsBroadcastReceiver;
     private final static String TAG = "SMSWatchService";
 
-    public SMSWatchService(Context applicationContext) {
-        super();
-        Log.i(TAG, "Service Called");
-    }
-
     public SMSWatchService() {}
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO do something useful
         super.onStartCommand(intent, flags, startId);
-
-        //startTimer();
 
         smsBroadcastReceiver = new SmsBroadcastReceiver();
         registerReceiver(smsBroadcastReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
@@ -48,7 +41,6 @@ public class SMSWatchService extends Service {
         });
 
         return START_STICKY;
-        //return Service.START_REDELIVER_INTENT; // Restart if service is killed and pass original intent
     }
 
     // When service is destroyed create a the broadcast receiver
@@ -58,7 +50,6 @@ public class SMSWatchService extends Service {
         Log.i(TAG, "onDestroy");
         Intent broadcastIntent = new Intent("com.seikoshadow.apps.textthrough.restartBroadcastReceiver");
         sendBroadcast(broadcastIntent);
-        stoptimertask();
     }
 
     @Override
@@ -76,44 +67,4 @@ public class SMSWatchService extends Service {
         Log.d(TAG, "Processing text from " + smsSender);
 
     }
-
-
-    public int counter=0;
-    private Timer timer;
-    private TimerTask timerTask;
-    long oldTime=0;
-    public void startTimer() {
-        //set a new Timer
-        timer = new Timer();
-
-        //initialize the TimerTask's job
-        initializeTimerTask();
-
-        //schedule the timer, to wake up every 1 second
-        timer.schedule(timerTask, 1000, 1000); //
-    }
-
-    /**
-     * it sets the timer to print the counter every x seconds
-     */
-    public void initializeTimerTask() {
-        timerTask = new TimerTask() {
-            public void run() {
-                Log.i("in timer", "in timer ++++  "+ (counter++));
-
-            }
-        };
-    }
-
-    /**
-     * not needed
-     */
-    public void stoptimertask() {
-        //stop the timer, if it's not already null
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-    }
-
 }

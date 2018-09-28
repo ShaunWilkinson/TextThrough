@@ -1,11 +1,9 @@
-package com.seikoshadow.apps.textthrough.BroadcastReceivers;
+package com.seikoshadow.apps.textthrough.Services;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
-import com.seikoshadow.apps.textthrough.SMSWatchService;
 
 public class RestartService extends BroadcastReceiver {
     private static final String TAG = "RestartService";

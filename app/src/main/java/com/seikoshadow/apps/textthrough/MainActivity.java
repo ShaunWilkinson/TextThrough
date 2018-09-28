@@ -1,41 +1,29 @@
 package com.seikoshadow.apps.textthrough;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.provider.Telephony;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.seikoshadow.apps.textthrough.Services.SMSWatchService;
+import com.seikoshadow.apps.textthrough.constants;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import static com.seikoshadow.apps.textthrough.constants.SMS_PERMISSION_CODE;
 
 public class MainActivity extends Activity {
     //private SmsBroadcastReceiver smsBroadcastReceiver;
     private static final String TAG = "MainActivity";
-    private NotificationUtils notificationUtils;
     private Uri notification;
     private Ringtone ringtone;
     SMSWatchService smsWatchService;
@@ -68,34 +56,6 @@ public class MainActivity extends Activity {
         if(!isMyServiceRunning(smsWatchService.getClass())) {
             startService(mServiceIntent);
         }
-
-        /*
-        // Create the receiver then register it
-        final SmsBroadcastReceiver smsBroadcastReceiver = new SmsBroadcastReceiver("6505551212"); //TODO replace with way to manage list of senders
-
-        smsBroadcastReceiver.setListener(new SmsBroadcastReceiver.Listener() {
-            @Override public void onTextReceived(String smsSender, String smsBody) {
-                Log.d(TAG, "Received text - " + smsSender + ", " + smsBody);
-                Toast.makeText(MainActivity.this, "Received Text!", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        registerReceiver(smsBroadcastReceiver,
-            new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
-*/
-
-        /*
-        if(isMyServiceRunning(SMSWatchService.class)) {
-            Log.d(TAG, "SMSWatchService is already running");
-        }
-
-        // Triggers the SMSWatchService Service
-        Intent intent = new Intent(this, SMSWatchService.class);
-        // Example of adding data to intent
-        //i.putExtra("KEY1", "Value to be used by service");
-        this.startService(intent);
-        */
-
     }
 
     // when the app is properly closed stop the service so that it calls its own create
@@ -121,30 +81,25 @@ public class MainActivity extends Activity {
      * Submits the details entered on the homepage
      */
     public void submitDetails(View view) { //TODO make a way to submit numbers
-
         TextView enteredNumberTxt = findViewById(R.id.enteredNumber);
         String enteredNumberVal = enteredNumberTxt.getText().toString();
 
-        /*
-        // Save the entered number into SharedPreferences
         SharedPrefFunctions sharedPrefFunctions = new SharedPrefFunctions();
 
-        // Create a list, assign any saved numbers to it
-        List<String> phoneNumbers = new ArrayList<>();
-        try {
-            String[] numbers = sharedPrefFunctions.loadStringArray("phoneNumbers", this);
-            phoneNumbers = new ArrayList<>(Arrays.asList(numbers));
-        } catch (Exception e) {
-            Log.e(TAG, "Error accessing numbers");
-            Log.e(TAG, e.getMessage());
+         // If the SharedPrefs contains the saved data already then update, otherwise create
+        List<String> phoneNumbers;
+
+        if(sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this) != null) {
+            phoneNumbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
+        } else {
+            phoneNumbers = new ArrayList<>();
         }
 
-        // Add the inserted number to the existing list after converting
         phoneNumbers.add(enteredNumberVal);
-*/
-
-        //sharedPrefFunctions.saveStringArray(numbers, "phoneNumbers", this);
+        sharedPrefFunctions.saveStringList(constants.PHONENUMBERKEY, phoneNumbers, this);
     }
+
+    // TODO easy way to remove phone numbers
 
     /**
      * Displays a dialog describing why the read permission is required

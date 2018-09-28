@@ -30,7 +30,7 @@
       </intent-filter>
     </receiver>
 
-      <receiver android:name=".BroadcastReceivers.RestartService"
+      <receiver android:name=".Services.RestartService"
           android:enabled="true"
           android:exported="true"
           android:label="RestartServiceWhenStopped">
@@ -40,7 +40,7 @@
       </receiver>
 
     <service
-      android:name=".SMSWatchService"
+      android:name=".Services.SMSWatchService"
       android:label="@string/smswatchservice_name"
       />
   </application>
