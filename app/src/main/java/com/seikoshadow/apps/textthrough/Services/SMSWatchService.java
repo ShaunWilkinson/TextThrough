@@ -33,6 +33,8 @@ public class SMSWatchService extends Service {
         smsBroadcastReceiver.setSenderLimitation("6505551212");
         Log.d(TAG, "Started SMSBroadcastListener");
 
+        // TODO handle a proper text being received
+        // What to do when a text is received
         smsBroadcastReceiver.setListener(new SmsBroadcastReceiver.Listener() {
             @Override public void onTextReceived(String smsSender, String smsBody) {
                 Log.d(TAG, "Received text - " + smsSender + ", " + smsBody);

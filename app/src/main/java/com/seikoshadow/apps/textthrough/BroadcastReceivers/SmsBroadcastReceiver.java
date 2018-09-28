@@ -17,7 +17,7 @@ import com.seikoshadow.apps.textthrough.constants;
 
 public class SmsBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "SMSBroadcastReceiver";
-    private String senderLimitation;
+    private String senderLimitation; // TODO change to List<String>
 
     private Listener listener;
 
@@ -67,6 +67,8 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
             }
 
             Log.i(TAG, senderLimitation);
+
+            // TODO check against passed list of senders
             if (smsSender.equalsIgnoreCase(senderLimitation)) {
                 if (listener != null) {
                     listener.onTextReceived(smsSender, smsBody);
@@ -74,8 +76,13 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                     Log.e(TAG, "Failed to find a Listener");
                 }
             } else {
+                senderIgnoredAction(smsSender, smsBody);
                 Log.d(TAG, "Ignored sms from " + smsSender);
             }
         }
+    }
+
+    private void senderIgnoredAction(String smsSender, String smsBody) {
+        // TODO how should ignored actions be handled
     }
 }
