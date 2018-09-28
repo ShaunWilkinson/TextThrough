@@ -1,4 +1,4 @@
-package com.seikoshadow.apps.textthrough;
+package com.seikoshadow.apps.textthrough.BroadcastReceivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.seikoshadow.apps.textthrough.SMSWatchService;
+
 /**
  * Created by Shaun on 22/05/2018.
  */
@@ -25,28 +27,36 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
     private Listener listener;
 
+    /*
     public SmsBroadcastReceiver() {
         this.senderLimitation = null;
     }
+    */
 
-    public SmsBroadcastReceiver(String senderLimitation) {
-        this.senderLimitation = senderLimitation;
+    /*
+    public SmsBroadcastReceiver(String number) {
+        this.senderLimitation = number;
     }
+    */
 
-    void setListener(Listener listener) {
+    public void setListener(Listener listener) {
         this.listener = listener;
     }
 
-    void setSenderLimitation(String senderLimitation) {
+    public void setSenderLimitation(String senderLimitation) {
         this.senderLimitation = senderLimitation;
     }
 
-    interface Listener {
+    public interface Listener {
         void onTextReceived(String smsSender, String smsBody);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d(TAG, "OnReceive called");
+
+        //context.startService(new Intent(context, SMSWatchService.class));
+
         // If the received intent is a 'SMS_RECEIVED'
         if (intent.getAction().equals(SMS_RECEIVED)) {
             String smsSender = "";
@@ -76,13 +86,21 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                 }
             }
 
-            if(smsSender.equalsIgnoreCase(senderLimitation)) {
+            Log.i(TAG, senderLimitation);
+            if (smsSender.equalsIgnoreCase(senderLimitation)) {
                 if (listener != null) {
                     listener.onTextReceived(smsSender, smsBody);
                 } else {
                     Log.e(TAG, "Failed to find a Listener");
                 }
+            } else {
+                Log.d(TAG, "Ignored sms from " + smsSender);
             }
         }
+    }
+
+    public void processTextAction(String smsSender, String smsBody) {
+        Log.d(TAG, "Processing text from " + smsSender);
+
     }
 }

@@ -21,11 +21,27 @@
       </intent-filter>
     </activity>
 
-    <receiver android:name=".SmsBroadcastReceiver">
+    <receiver android:name=".BroadcastReceivers.SmsBroadcastReceiver"
+        android:enabled="true"
+        android:exported="true"
+        android:label="SMSBroadcastReceiver">
       <intent-filter android:priority="500">
-        <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+        <action android:name="com.seikoshadow.apps.textthrough.SmsBroadcastReceiver" />
       </intent-filter>
     </receiver>
 
+      <receiver android:name=".BroadcastReceivers.RestartService"
+          android:enabled="true"
+          android:exported="true"
+          android:label="RestartServiceWhenStopped">
+          <intent-filter android:priority="500">
+              <action android:name="com.seikoshadow.apps.textthrough.restartBroadcastReceiver" />
+          </intent-filter>
+      </receiver>
+
+    <service
+      android:name=".SMSWatchService"
+      android:label="@string/smswatchservice_name"
+      />
   </application>
 </manifest>
