@@ -50,7 +50,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
             String smsBody = "";
 
             // Loop through the received sms (loops due to char limit of sms leading to multi-part sms)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= 19) {
                 for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
                     smsSender = smsMessage.getDisplayOriginatingAddress();
                     smsBody += smsMessage.getMessageBody();
@@ -64,6 +64,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                         Log.e(TAG, "SmsBundle had no pdus key");
                         return;
                     }
+
                     SmsMessage[] messages = new SmsMessage[pdus.length];
                     for (int i = 0; i < messages.length; i++) {
                         messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
@@ -75,15 +76,10 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
             Log.i(TAG, senderLimitation.toString());
 
-            if (senderLimitation.contains(smsSender)) {
-                if (listener != null) {
-                    listener.onTextReceived(smsSender, smsBody);
-                } else {
-                    Log.e(TAG, "Failed to find a Listener");
-                }
+            if(senderLimitation.contains(smsSender) && listener != null) {
+                listener.onTextReceived(smsSender, smsBody);
             } else {
                 senderIgnoredAction(smsSender, smsBody);
-                Log.d(TAG, "Ignored sms from " + smsSender);
             }
         }
     }

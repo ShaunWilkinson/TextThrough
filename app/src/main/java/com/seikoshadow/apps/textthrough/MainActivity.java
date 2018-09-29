@@ -3,12 +3,15 @@ package com.seikoshadow.apps.textthrough;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -41,16 +44,14 @@ public class MainActivity extends Activity {
         sharedPrefFunctions = new SharedPrefFunctions();
 
         // Request READ SMS permission if not already granted
-        if (!SmsFunctions.isReadSmsPermissionGranted(this)) {
+        if (!SmsFunctions.isReadSmsPermissionGranted(this))
             showRequestReadSmsPermissionDialog(this);
-        }
 
         // Request RECEIVE SMS permission if not already granted
-        if (!SmsFunctions.isReceiveSmsPermissionGranted(this)) {
+        if (!SmsFunctions.isReceiveSmsPermissionGranted(this))
             showRequestReceiveSmsPermissionDialog(this);
-        }
 
-        startSmsService();
+        createNotificationChannel();
     }
 
     // Called by Start Service Button
@@ -59,6 +60,10 @@ public class MainActivity extends Activity {
     }
 
     //TODO make it started and stopped via button
+
+    /**
+     * Starts the SMS Service so long as there is saved numbers to compare
+     */
     protected void startSmsService() {
         // Load the numbers saved in SharedPrefs
         List<String> savedNumbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
@@ -71,10 +76,14 @@ public class MainActivity extends Activity {
             if(!isMyServiceRunning(smsWatchService.getClass())) {
                 startService(mServiceIntent);
             }
+        } else {
+            Toast.makeText(this, "No numbers have been saved", Toast.LENGTH_LONG).show();
         }
     }
 
-    // when the app is properly closed stop the service so that it calls its own create
+    /**
+     * When the app is properly closed stop the service so that it calls its own create
+     */
     @Override
     protected void onDestroy() {
         stopService(mServiceIntent);
@@ -100,21 +109,22 @@ public class MainActivity extends Activity {
         TextView enteredNumberTxt = findViewById(R.id.enteredNumber);
         String enteredNumberVal = enteredNumberTxt.getText().toString();
 
-        SharedPrefFunctions sharedPrefFunctions = new SharedPrefFunctions();
+        if(!enteredNumberVal.equals("")) {
+            // If the SharedPrefs contains the saved data already then update, otherwise create
+            List<String> phoneNumbers;
+            if (sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this) != null) {
+                phoneNumbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
+            } else {
+                phoneNumbers = new ArrayList<>();
+            }
 
-         // If the SharedPrefs contains the saved data already then update, otherwise create
-        List<String> phoneNumbers;
+            phoneNumbers.add(enteredNumberVal);
+            sharedPrefFunctions.saveStringList(constants.PHONENUMBERKEY, phoneNumbers, this);
 
-        if(sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this) != null) {
-            phoneNumbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
+            Toast.makeText(this, "Added " + enteredNumberVal + " to list of numbers", Toast.LENGTH_LONG).show();
         } else {
-            phoneNumbers = new ArrayList<>();
+            Toast.makeText(this, "No number input", Toast.LENGTH_LONG).show();
         }
-
-        phoneNumbers.add(enteredNumberVal);
-        sharedPrefFunctions.saveStringList(constants.PHONENUMBERKEY, phoneNumbers, this);
-
-        Toast.makeText(this, "Added " + enteredNumberVal + " to list of numbers", Toast.LENGTH_LONG).show();
     }
 
     // TODO easy way to remove phone numbers
@@ -176,5 +186,21 @@ public class MainActivity extends Activity {
         }
         Log.i (TAG, "is service running: "+false+"");
         return false;
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = constants.NOTIFICATION_CHANNEL_NAME;
+            String description = getString(R.string.serviceRunningDesc);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(constants.NOTIFICATION_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }

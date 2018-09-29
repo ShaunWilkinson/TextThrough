@@ -1,21 +1,20 @@
 package com.seikoshadow.apps.textthrough.Services;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.provider.Telephony;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.seikoshadow.apps.textthrough.BroadcastReceivers.SmsBroadcastReceiver;
+import com.seikoshadow.apps.textthrough.R;
 import com.seikoshadow.apps.textthrough.SharedPrefFunctions;
 import com.seikoshadow.apps.textthrough.constants;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Shaun on 24/05/2018.
@@ -36,16 +35,14 @@ public class SMSWatchService extends Service {
         smsBroadcastReceiver = new SmsBroadcastReceiver();
         registerReceiver(smsBroadcastReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
 
+        // Load the list of saved numbers then set the sender limitation
         SharedPrefFunctions sharedPrefFunctions = new SharedPrefFunctions();
-
         List<String> numbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
         if(!numbers.isEmpty()) {
             smsBroadcastReceiver.setSenderLimitation(numbers);
         } else {
             Log.e(TAG, "Failed to find numbers");
         }
-
-        Log.d(TAG, "Started SMSBroadcastListener");
 
         // What to do when a text is received
         smsBroadcastReceiver.setListener(new SmsBroadcastReceiver.Listener() {
@@ -54,6 +51,18 @@ public class SMSWatchService extends Service {
                 processTextAction(smsSender, smsBody);
             }
         });
+
+        // Start the notification
+        //TODO create notification tap action - https://developer.android.com/training/notify-user/build-notification#java
+
+        NotificationCompat.Builder serviceNotificationBuilder = new NotificationCompat.Builder(this, constants.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle(getString(R.string.serviceRunningTitle))
+                //.setContentText(getString(R.string.serviceRunningDesc))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(constants.SMSServiceRunningID, serviceNotificationBuilder.build());
 
         return START_STICKY;
     }

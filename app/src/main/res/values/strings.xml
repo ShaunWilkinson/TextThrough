@@ -19,5 +19,8 @@
   <string name="receive_sms_request_message">&appname; will now request \'Receive SMS\' permission on your device.\n\nThis allows the app to intercept new emails so that they can trigger actions.</string>
 
   <string name="smswatchservice_name">&appname; Service</string>
+  <string name="serviceRunningTitle">&appname; Service Running</string>
+  <string name="serviceRunningDesc">forcing alert if sms received from entered numbers</string>
+
   <string name="startService">Start Service</string>
 </resources>
