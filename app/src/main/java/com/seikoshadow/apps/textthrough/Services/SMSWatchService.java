@@ -22,6 +22,8 @@ import java.util.List;
 
 public class SMSWatchService extends Service {
     public SmsBroadcastReceiver smsBroadcastReceiver;
+    private NotificationManagerCompat notificationManager;
+
     private final static String TAG = "SMSWatchService";
 
     public SMSWatchService() {}
@@ -59,9 +61,10 @@ public class SMSWatchService extends Service {
                 .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(getString(R.string.serviceRunningTitle))
                 //.setContentText(getString(R.string.serviceRunningDesc))
+                .setOngoing(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(constants.SMSServiceRunningID, serviceNotificationBuilder.build());
 
         return START_STICKY;
@@ -71,9 +74,11 @@ public class SMSWatchService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy");
         Intent broadcastIntent = new Intent("com.seikoshadow.apps.textthrough.restartBroadcastReceiver");
+        notificationManager.cancel(constants.SMSServiceRunningID);
         sendBroadcast(broadcastIntent);
+
+        unregisterReceiver(smsBroadcastReceiver); // Stops the receiver leaking on destruction (not entirely sure this is as intended)
     }
 
     @Override

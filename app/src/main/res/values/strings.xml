@@ -23,4 +23,5 @@
   <string name="serviceRunningDesc">forcing alert if sms received from entered numbers</string>
 
   <string name="startService">Start Service</string>
+  <string name="stopService">Stop Service</string>
 </resources>

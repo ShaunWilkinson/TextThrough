@@ -59,6 +59,12 @@ public class MainActivity extends Activity {
         startSmsService();
     }
 
+    // Called by Start Service Button
+    public void stopService(View view) {
+        stopSmsService();
+    }
+
+
     //TODO make it started and stopped via button
 
     /**
@@ -81,25 +87,20 @@ public class MainActivity extends Activity {
         }
     }
 
+    protected void stopSmsService() {
+        // TODO finish ability to stop service
+        if(isMyServiceRunning(smsWatchService.getClass())) {
+            stopService(mServiceIntent);
+        }
+    }
+
     /**
      * When the app is properly closed stop the service so that it calls its own create
      */
     @Override
     protected void onDestroy() {
         stopService(mServiceIntent);
-        Log.i(TAG, "Destroyed Service");
         super.onDestroy();
-    }
-
-    /**
-     * Run when the stop tone button is clicked, stops the playing tone
-     * @param view the calling view
-     */
-    public void stopTone(View view) {
-        ringtone.stop();
-
-        Button stopToneBtn = findViewById(R.id.stopRingtoneBtn);
-        stopToneBtn.setVisibility(View.GONE);
     }
 
     /**
