@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -15,11 +17,90 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="wrap_content">
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/nameLabel"
+            style="@style/FullScreenDialogLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/alert_name" />
+
+        <EditText
+            android:id="@+id/nameEditText"
+            style="@style/FullScreenDialogEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/alert_name"
+            android:inputType="textPersonName"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/colorPrimaryLight" />
+
+        <TextView
+            android:id="@+id/phoneNumberLabel"
+            style="@style/FullScreenDialogLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/phoneNumber" />
+
+        <EditText
+            android:id="@+id/NumberEditText"
+            style="@style/FullScreenDialogEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@android:string/emptyPhoneNumber"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/ringtoneLabel"
+            style="@style/FullScreenDialogLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ringtone" />
+
+        <Spinner
+            android:id="@+id/ringtoneSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/numOfRingsLabel"
+            style="@style/FullScreenDialogLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/numberOfRings" />
+
+        <EditText
+            android:id="@+id/numOfRingsEditText"
+            style="@style/FullScreenDialogEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="1"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/vibrateLabel"
+            style="@style/FullScreenDialogLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/vibrate" />
+
+        <Switch
+            android:id="@+id/vibrateSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchPadding="50dp"
+            android:text="Switch" />
+    </LinearLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>

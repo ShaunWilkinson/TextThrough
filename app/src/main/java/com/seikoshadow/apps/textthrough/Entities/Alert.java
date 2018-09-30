@@ -13,6 +13,8 @@ public class Alert {
     private String name;
     @ColumnInfo(name="phone_number")
     private String phoneNumber;
+    @ColumnInfo(name="ringtone_uri")
+    private int ringtoneUri;
     @ColumnInfo(name="number_of_rings")
     private int numberOfRings;
     @ColumnInfo(name="alert_active")
@@ -39,6 +41,10 @@ public class Alert {
         return this.phoneNumber;
     }
 
+    public int getRingtoneUri() {
+        return this.ringtoneUri;
+    }
+
     public int getNumberOfRings() {
         return this.numberOfRings;
     }
@@ -61,6 +67,10 @@ public class Alert {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setRingtoneUri(int ringtoneUri) {
+        this.ringtoneUri = ringtoneUri;
     }
 
     public void setNumberOfRings(int numberOfRings) {

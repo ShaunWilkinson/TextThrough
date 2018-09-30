@@ -19,12 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
-import com.seikoshadow.apps.textthrough.Dialogs.FullScreenDialog;
+import com.seikoshadow.apps.textthrough.Dialogs.CreateAlertDialogFragment;
 import com.seikoshadow.apps.textthrough.Entities.Alert;
 import com.seikoshadow.apps.textthrough.Services.SMSWatchService;
 
-import java.util.ArrayList;
 import java.util.List;
+
+//TODO finish layout_create_layout
+//TODO create ringtone selector
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -229,8 +231,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void createAlert(View view) {
         //TODO create an alert
-        FullScreenDialog dialog = new FullScreenDialog();
+        CreateAlertDialogFragment dialog = new CreateAlertDialogFragment();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        dialog.show(fragmentTransaction, FullScreenDialog.TAG);
+        dialog.show(fragmentTransaction, CreateAlertDialogFragment.TAG);
     }
 }

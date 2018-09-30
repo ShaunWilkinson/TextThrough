@@ -26,4 +26,10 @@
   <string name="stopService">Stop Service</string>
 
   <string name="createAlertTitle">Create an Alert</string>
+  <string name="alert_name">Alert Name</string>
+  <string name="phoneNumber">Phone Number</string>
+  <string name="ringtone">Ringtone</string>
+  <string name="numberOfRings">Times to Ring</string>
+  <string name="vibrate">Vibrate</string>
+  <string name="save">Save</string>
 </resources>
