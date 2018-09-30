@@ -13,6 +13,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +26,7 @@ import com.seikoshadow.apps.textthrough.constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     //private SmsBroadcastReceiver smsBroadcastReceiver;
     private static final String TAG = "MainActivity";
     private Uri notification;
@@ -129,6 +130,10 @@ public class MainActivity extends Activity {
     }
 
     // TODO easy way to remove phone numbers
+
+    public void createAlert(View view) {
+        //TODO create an alert
+    }
 
     /**
      * Displays a dialog describing why the read permission is required
