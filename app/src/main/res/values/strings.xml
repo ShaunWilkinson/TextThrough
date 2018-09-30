@@ -24,4 +24,6 @@
 
   <string name="startService">Start Service</string>
   <string name="stopService">Stop Service</string>
+
+  <string name="createAlertTitle">Create an Alert</string>
 </resources>

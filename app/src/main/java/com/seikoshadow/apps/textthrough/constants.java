@@ -13,4 +13,6 @@ public class constants {
   public static final int SMSServiceRunningID = 1;
   public static final String PHONENUMBERKEY = "PhoneNumbers";
   public static final String SHAREDPREFKEY = "com.seikoshadow.apps.textthrough";
+
+  public static final String APPDATABASENAME = "TextThrough_DB";
 }

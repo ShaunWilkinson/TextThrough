@@ -3,45 +3,40 @@ package com.seikoshadow.apps.textthrough;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.seikoshadow.apps.textthrough.Database.AppDatabase;
+import com.seikoshadow.apps.textthrough.Dialogs.FullScreenDialog;
+import com.seikoshadow.apps.textthrough.Entities.Alert;
 import com.seikoshadow.apps.textthrough.Services.SMSWatchService;
-import com.seikoshadow.apps.textthrough.constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    //private SmsBroadcastReceiver smsBroadcastReceiver;
     private static final String TAG = "MainActivity";
-    private Uri notification;
-    private Ringtone ringtone;
     SMSWatchService smsWatchService;
     Intent mServiceIntent;
     SharedPrefFunctions sharedPrefFunctions;
+    AppDatabase db;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Setup the ringtone sound
-        notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        ringtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
         sharedPrefFunctions = new SharedPrefFunctions();
 
         // Request READ SMS permission if not already granted
@@ -52,7 +47,13 @@ public class MainActivity extends AppCompatActivity {
         if (!SmsFunctions.isReceiveSmsPermissionGranted(this))
             showRequestReceiveSmsPermissionDialog(this);
 
+        // Notifies the system to expect notifications
         createNotificationChannel();
+
+        //TODO properly implement database creation
+        db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, constants.APPDATABASENAME).build();
+
     }
 
     // Called by Start Service Button
@@ -72,10 +73,24 @@ public class MainActivity extends AppCompatActivity {
      * Starts the SMS Service so long as there is saved numbers to compare
      */
     protected void startSmsService() {
+        /* Shared Prefs based
         // Load the numbers saved in SharedPrefs
         List<String> savedNumbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
 
         // Make sure there is some saved numbers before starting the service
+        if(savedNumbers != null) {
+            // Create an SMSWatchService then if not already started then start it
+            smsWatchService = new SMSWatchService();
+            mServiceIntent = new Intent(MainActivity.this, smsWatchService.getClass());
+            if(!isMyServiceRunning(smsWatchService.getClass())) {
+                startService(mServiceIntent);
+            }
+        } else {
+            Toast.makeText(this, "No numbers have been saved", Toast.LENGTH_LONG).show();
+        }
+        */
+
+        List<Alert> savedNumbers = db.alertDao().getAll();
         if(savedNumbers != null) {
             // Create an SMSWatchService then if not already started then start it
             smsWatchService = new SMSWatchService();
@@ -111,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         TextView enteredNumberTxt = findViewById(R.id.enteredNumber);
         String enteredNumberVal = enteredNumberTxt.getText().toString();
 
+        /* Shared Prefs based
         if(!enteredNumberVal.equals("")) {
             // If the SharedPrefs contains the saved data already then update, otherwise create
             List<String> phoneNumbers;
@@ -127,12 +143,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No number input", Toast.LENGTH_LONG).show();
         }
-    }
-
-    // TODO easy way to remove phone numbers
-
-    public void createAlert(View view) {
-        //TODO create an alert
+        */
     }
 
     /**
@@ -208,5 +219,18 @@ public class MainActivity extends AppCompatActivity {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    /**
+     * ================= NEW ALERT CODE ===================
+     */
+
+    // TODO easy way to remove phone numbers
+
+    public void createAlert(View view) {
+        //TODO create an alert
+        FullScreenDialog dialog = new FullScreenDialog();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        dialog.show(fragmentTransaction, FullScreenDialog.TAG);
     }
 }
