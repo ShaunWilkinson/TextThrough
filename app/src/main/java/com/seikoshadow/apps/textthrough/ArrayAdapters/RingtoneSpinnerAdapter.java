@@ -30,8 +30,8 @@ public class RingtoneSpinnerAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public Ringtone getItem(int i) {
+        return ringtones.get(i);
     }
 
     @Override

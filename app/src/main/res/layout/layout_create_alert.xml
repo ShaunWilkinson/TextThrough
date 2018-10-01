@@ -51,7 +51,7 @@
             android:text="@string/phoneNumber" />
 
         <EditText
-            android:id="@+id/NumberEditText"
+            android:id="@+id/numberEditText"
             style="@style/FullScreenDialogEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -85,7 +85,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="1"
-            android:inputType="number" />
+            android:inputType="number"
+            android:text="1" />
 
         <TextView
             android:id="@+id/vibrateLabel"

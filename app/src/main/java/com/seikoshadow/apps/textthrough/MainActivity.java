@@ -25,15 +25,15 @@ import com.seikoshadow.apps.textthrough.Services.SMSWatchService;
 
 import java.util.List;
 
-//TODO finish layout_create_layout
+//TODO finish layout_create_alert
 //TODO create ringtone selector
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    SMSWatchService smsWatchService;
-    Intent mServiceIntent;
-    SharedPrefFunctions sharedPrefFunctions;
-    AppDatabase db;
+    private SMSWatchService smsWatchService;
+    private Intent mServiceIntent;
+    private SharedPrefFunctions sharedPrefFunctions;
+    private AppDatabase db;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,22 +75,6 @@ public class MainActivity extends AppCompatActivity {
      * Starts the SMS Service so long as there is saved numbers to compare
      */
     protected void startSmsService() {
-        /* Shared Prefs based
-        // Load the numbers saved in SharedPrefs
-        List<String> savedNumbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
-
-        // Make sure there is some saved numbers before starting the service
-        if(savedNumbers != null) {
-            // Create an SMSWatchService then if not already started then start it
-            smsWatchService = new SMSWatchService();
-            mServiceIntent = new Intent(MainActivity.this, smsWatchService.getClass());
-            if(!isMyServiceRunning(smsWatchService.getClass())) {
-                startService(mServiceIntent);
-            }
-        } else {
-            Toast.makeText(this, "No numbers have been saved", Toast.LENGTH_LONG).show();
-        }
-        */
 
         List<Alert> savedNumbers = db.alertDao().getAll();
         if(savedNumbers != null) {
@@ -234,5 +218,6 @@ public class MainActivity extends AppCompatActivity {
         CreateAlertDialogFragment dialog = new CreateAlertDialogFragment();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         dialog.show(fragmentTransaction, CreateAlertDialogFragment.TAG);
+        // PAss DB to fragment
     }
 }

@@ -2,7 +2,7 @@ package com.seikoshadow.apps.textthrough.Dialogs;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
+import android.arch.persistence.room.Room;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -12,12 +12,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
-import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import com.seikoshadow.apps.textthrough.ArrayAdapters.RingtoneSpinnerAdapter;
+import com.seikoshadow.apps.textthrough.Database.AlertDao;
+import com.seikoshadow.apps.textthrough.Database.AppDatabase;
+import com.seikoshadow.apps.textthrough.Entities.Alert;
 import com.seikoshadow.apps.textthrough.Entities.Ringtone;
 import com.seikoshadow.apps.textthrough.R;
+import com.seikoshadow.apps.textthrough.constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,18 +30,23 @@ import java.util.List;
 
 public class CreateAlertDialogFragment extends DialogFragment {
     public static String TAG = "CreateAlertDialogFragment";
+    private View view;
+    private AppDatabase db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+
+        db = Room.databaseBuilder(getContext(),
+                AppDatabase.class, constants.APPDATABASENAME).build();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.layout_create_layout, container, false);
+        view = inflater.inflate(R.layout.layout_create_alert, container, false);
 
         // Setup the toolbar
         Toolbar toolbar = view.findViewById(R.id.toolbar);
@@ -56,7 +66,12 @@ public class CreateAlertDialogFragment extends DialogFragment {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                return false;
+                if(validateFields()) {
+                    saveAlert();
+                    return true;
+                } else {
+                    return false;
+                }
             }
         });
 
@@ -110,5 +125,31 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
         alarmsCursor.close();
         return ringtones;
+    }
+
+    private boolean validateFields() {
+        //TODO validation of fields
+        return true;
+    }
+
+    private void saveAlert() {
+        //TODO save note
+        EditText alertNameEditText = view.findViewById(R.id.nameEditText);
+        EditText phoneNumberEditText = view.findViewById(R.id.numberEditText);
+        Spinner ringtoneSelector = view.findViewById(R.id.ringtoneSpinner);
+        EditText numberOfRingsEditText = view.findViewById(R.id.numOfRingsEditText);
+        Switch vibrateSwitch = view.findViewById(R.id.vibrateSwitch);
+
+        Ringtone selectedRingtone = (Ringtone)ringtoneSelector.getSelectedItem();
+
+        Alert newAlert = new Alert(
+                alertNameEditText.getText().toString(),
+                phoneNumberEditText.getText().toString(),
+                selectedRingtone.getRingtoneUri(),
+                Integer.parseInt(numberOfRingsEditText.getText().toString()),
+                vibrateSwitch.isChecked());
+//TODO don't think I'm retrieving ringtone correctly
+        db.alertDao().insertAll(newAlert);
+        this.dismiss();
     }
 }

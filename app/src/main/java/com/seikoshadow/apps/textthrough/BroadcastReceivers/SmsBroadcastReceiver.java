@@ -20,7 +20,7 @@ import java.util.List;
 
 public class SmsBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "SMSBroadcastReceiver";
-    private List<String> senderLimitation; // TODO change to List<String>
+    private List<String> senderLimitation;
 
     private Listener listener;
 

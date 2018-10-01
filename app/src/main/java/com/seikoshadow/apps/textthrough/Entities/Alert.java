@@ -3,6 +3,7 @@ package com.seikoshadow.apps.textthrough.Entities;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 @Entity
@@ -14,7 +15,7 @@ public class Alert {
     @ColumnInfo(name="phone_number")
     private String phoneNumber;
     @ColumnInfo(name="ringtone_uri")
-    private int ringtoneUri;
+    private String ringtoneUri;
     @ColumnInfo(name="number_of_rings")
     private int numberOfRings;
     @ColumnInfo(name="alert_active")
@@ -22,11 +23,22 @@ public class Alert {
     @ColumnInfo(name="alert_vibrate")
     private boolean alertVibrate;
 
-    public Alert(String name, String phoneNumber) {
-        this.id = 0; //TODO make this dynamic
+    public Alert(String name, String phoneNumber, String ringtoneUri, int numberOfRings, boolean alertVibrate) {
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.numberOfRings = 1;
+        this.ringtoneUri = ringtoneUri;
+        this.alertActive = true;
+        this.numberOfRings = numberOfRings;
+        this.alertVibrate = alertVibrate;
+    }
+
+    public Alert(String name, String phoneNumber, Uri ringtoneUri, int numberOfRings, boolean alertVibrate) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.ringtoneUri = String.valueOf(ringtoneUri);
+        this.alertActive = true;
+        this.numberOfRings = numberOfRings;
+        this.alertVibrate = alertVibrate;
     }
 
     public int getId() {
@@ -41,7 +53,11 @@ public class Alert {
         return this.phoneNumber;
     }
 
-    public int getRingtoneUri() {
+    public Uri getRingtoneUriActual() {
+        return Uri.parse(this.ringtoneUri);
+    }
+
+    public String getRingtoneUri() {
         return this.ringtoneUri;
     }
 
@@ -69,7 +85,11 @@ public class Alert {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setRingtoneUri(int ringtoneUri) {
+    public void setRingtoneUri(Uri ringtoneUri) {
+        this.ringtoneUri = String.valueOf(ringtoneUri);
+    }
+
+    public void setRingtoneUri(String ringtoneUri) {
         this.ringtoneUri = ringtoneUri;
     }
 
