@@ -1,5 +1,6 @@
 package com.seikoshadow.apps.textthrough.Database;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -12,16 +13,20 @@ import java.util.List;
 @Dao
 public interface AlertDao {
     @Query("SELECT * FROM alert")
-    List<Alert> getAll();
+    LiveData<List<Alert>> getAll();
 
     @Query("SELECT * FROM alert WHERE id IN (:alertIds)")
-    List<Alert> loadAllByIds(int[] alertIds);
+    LiveData<List<Alert>> loadAllByIds(int[] alertIds);
 
     @Query("SELECT * FROM alert WHERE alert_name LIKE :name LIMIT 1")
-    Alert findByName(String name);
+    LiveData<Alert> findByName(String name);
 
     @Query("SELECT phone_number FROM alert")
-    List<String> getAllPhoneNumbers();
+    LiveData<List<String>> getAllPhoneNumbers();
+
+    @Query("SELECT phone_number FROM alert LIMIT 1")
+    String isTherePhoneNumber();
+
 
     @Insert
     void insertAll(Alert... alerts);

@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.seikoshadow.apps.textthrough.BroadcastReceivers.SmsBroadcastReceiver;
+import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.R;
 import com.seikoshadow.apps.textthrough.SharedPrefFunctions;
 import com.seikoshadow.apps.textthrough.constants;
@@ -38,8 +39,14 @@ public class SMSWatchService extends Service {
         registerReceiver(smsBroadcastReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
 
         // Load the list of saved numbers then set the sender limitation
-        SharedPrefFunctions sharedPrefFunctions = new SharedPrefFunctions();
-        List<String> numbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
+        //SharedPrefFunctions sharedPrefFunctions = new SharedPrefFunctions();
+        //List<String> numbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
+
+        // TODO load saved numbers
+        AppDatabase db = AppDatabase.getInstance(this);
+        List<String> numbers = db.alertDao().getAllPhoneNumbers().getValue();
+
+
         if(!numbers.isEmpty()) {
             smsBroadcastReceiver.setSenderLimitation(numbers);
         } else {

@@ -6,6 +6,7 @@ import android.arch.persistence.room.Room;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,20 +27,22 @@ import com.seikoshadow.apps.textthrough.constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 
 public class CreateAlertDialogFragment extends DialogFragment {
     public static String TAG = "CreateAlertDialogFragment";
     private View view;
     private AppDatabase db;
+    private Alert newAlert;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
 
-        db = Room.databaseBuilder(getContext(),
-                AppDatabase.class, constants.APPDATABASENAME).build();
+        db = AppDatabase.getInstance(getContext());
     }
 
     @Override
@@ -142,14 +145,23 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
         Ringtone selectedRingtone = (Ringtone)ringtoneSelector.getSelectedItem();
 
-        Alert newAlert = new Alert(
+        newAlert = new Alert(
                 alertNameEditText.getText().toString(),
                 phoneNumberEditText.getText().toString(),
                 selectedRingtone.getRingtoneUri(),
                 Integer.parseInt(numberOfRingsEditText.getText().toString()),
                 vibrateSwitch.isChecked());
 //TODO don't think I'm retrieving ringtone correctly
-        db.alertDao().insertAll(newAlert);
+
+        // Run the insert on a separate thread
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                db.alertDao().insertAll(newAlert);
+            }
+        });
+
         this.dismiss();
     }
 }
