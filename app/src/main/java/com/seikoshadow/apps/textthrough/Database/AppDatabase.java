@@ -11,7 +11,6 @@ import com.seikoshadow.apps.textthrough.constants;
 @Database(entities = {Alert.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase appDatabase;
-    private Context context;
     public abstract AlertDao alertDao();
 
     // If there's no app database already then create otherwise return the current database

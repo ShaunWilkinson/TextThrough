@@ -25,6 +25,7 @@ import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.Dialogs.CreateAlertDialogFragment;
 import com.seikoshadow.apps.textthrough.Entities.Alert;
 import com.seikoshadow.apps.textthrough.Services.SMSWatchService;
+import com.seikoshadow.apps.textthrough.Services.SmsFunctionsServiceManager;
 
 import java.util.List;
 
@@ -76,13 +77,13 @@ public class MainActivity extends AppCompatActivity {
      * Starts the SMS Service so long as there is saved numbers to compare
      */
     protected void startSmsService() {
-        if(db.alertDao().isTherePhoneNumber() != null) {
+        if(db.alertDao().isTherePhoneNumber() != null && SmsFunctionsServiceManager.isMyServiceRunning) {
+
             // Create an SMSWatchService then if not already started then start it
             smsWatchService = new SMSWatchService();
             mServiceIntent = new Intent(MainActivity.this, smsWatchService.getClass());
-            if(!isMyServiceRunning(smsWatchService.getClass())) {
-                startService(mServiceIntent);
-            }
+            startService(mServiceIntent);
+
         } else {
             Toast.makeText(this, getString(R.string.noNumbersFound), Toast.LENGTH_LONG).show();
         }
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void stopSmsService() {
         // TODO finish ability to stop service
-        if(isMyServiceRunning(smsWatchService.getClass())) {
+        if(SmsFunctionsServiceManager.isMyServiceRunning) {
             stopService(mServiceIntent);
         }
     }
@@ -149,18 +150,6 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setCancelable(false);
         builder.show();
-    }
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i (TAG, "is service running: "+true+"");
-                return true;
-            }
-        }
-        Log.i (TAG, "is service running: "+false+"");
-        return false;
     }
 
     private void createNotificationChannel() {

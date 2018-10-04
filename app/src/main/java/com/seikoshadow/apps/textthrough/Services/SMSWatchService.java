@@ -12,7 +12,6 @@ import android.util.Log;
 import com.seikoshadow.apps.textthrough.BroadcastReceivers.SmsBroadcastReceiver;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.R;
-import com.seikoshadow.apps.textthrough.SharedPrefFunctions;
 import com.seikoshadow.apps.textthrough.constants;
 
 import java.util.List;
@@ -37,6 +36,9 @@ public class SMSWatchService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO do something useful
         super.onStartCommand(intent, flags, startId);
+
+        // Change the flag so service running can be checked
+        SmsFunctionsServiceManager.isMyServiceRunning = true;
 
         // Create the Text Message Broadcast Receiver and register it to listen to text messages arriving
         smsBroadcastReceiver = new SmsBroadcastReceiver();
@@ -63,7 +65,7 @@ public class SMSWatchService extends Service {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(constants.SMSServiceRunningID, serviceNotificationBuilder.build());
+        notificationManager.notify(constants.SMS_SERVICE_RUNNING_ID, serviceNotificationBuilder.build());
 
         return START_STICKY;
     }
@@ -97,8 +99,11 @@ public class SMSWatchService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Intent broadcastIntent = new Intent("com.seikoshadow.apps.textthrough.restartBroadcastReceiver");
-        notificationManager.cancel(constants.SMSServiceRunningID);
+        notificationManager.cancel(constants.SMS_SERVICE_RUNNING_ID);
         sendBroadcast(broadcastIntent);
+
+        // Change the flag so service running can be checked
+        SmsFunctionsServiceManager.isMyServiceRunning = true;
 
         unregisterReceiver(smsBroadcastReceiver); // Stops the receiver leaking on destruction (not entirely sure this is as intended)
     }
