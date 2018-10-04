@@ -24,9 +24,11 @@ public interface AlertDao {
     @Query("SELECT phone_number FROM alert")
     LiveData<List<String>> getAllPhoneNumbers();
 
+    @Query("SELECt phone_number FROM alert")
+    List<String> getAllPhoneNumbersList();
+
     @Query("SELECT phone_number FROM alert LIMIT 1")
     String isTherePhoneNumber();
-
 
     @Insert
     void insertAll(Alert... alerts);

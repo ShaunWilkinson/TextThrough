@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 startService(mServiceIntent);
             }
         } else {
-            Toast.makeText(this, "No numbers have been saved", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.noNumbersFound), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -102,33 +102,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         stopService(mServiceIntent);
         super.onDestroy();
-    }
-
-    /**
-     * Submits the details entered on the homepage
-     */
-    public void submitNumber(View view) {
-        TextView enteredNumberTxt = findViewById(R.id.enteredNumber);
-        String enteredNumberVal = enteredNumberTxt.getText().toString();
-
-        /* Shared Prefs based
-        if(!enteredNumberVal.equals("")) {
-            // If the SharedPrefs contains the saved data already then update, otherwise create
-            List<String> phoneNumbers;
-            if (sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this) != null) {
-                phoneNumbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
-            } else {
-                phoneNumbers = new ArrayList<>();
-            }
-
-            phoneNumbers.add(enteredNumberVal);
-            sharedPrefFunctions.saveStringList(constants.PHONENUMBERKEY, phoneNumbers, this);
-
-            Toast.makeText(this, "Added " + enteredNumberVal + " to list of numbers", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "No number input", Toast.LENGTH_LONG).show();
-        }
-        */
     }
 
     /**

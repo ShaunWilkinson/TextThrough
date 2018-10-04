@@ -30,13 +30,19 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-
+/**
+ * Handles the fullscreen dialog for creating new alerts
+ */
 public class CreateAlertDialogFragment extends DialogFragment {
     public static String TAG = "CreateAlertDialogFragment";
     private View view;
     private AppDatabase db;
     private Alert newAlert;
 
+    /**
+     * Called first, on creation set the style to fullscreen and initiate a reference to the database
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +51,10 @@ public class CreateAlertDialogFragment extends DialogFragment {
         db = AppDatabase.getInstance(getContext());
     }
 
+    /**
+     * inflates the view, sets up the toolbar and sets up the ringtone spinner
+     * @return the inflated view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -78,14 +88,17 @@ public class CreateAlertDialogFragment extends DialogFragment {
             }
         });
 
+        // Setup the ringtone Spinner selector
         Spinner ringtoneSpinner = view.findViewById(R.id.ringtoneSpinner);
-        List<Ringtone> ringtones = getRingtones();
-        RingtoneSpinnerAdapter adapter = new RingtoneSpinnerAdapter(getContext(), ringtones);
+        RingtoneSpinnerAdapter adapter = new RingtoneSpinnerAdapter(getContext(), getRingtones());
         ringtoneSpinner.setAdapter(adapter);
 
         return view;
     }
 
+    /**
+     * Ensure the dialog is full screen
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -105,7 +118,6 @@ public class CreateAlertDialogFragment extends DialogFragment {
         // Instantiate a Ringtone Manager and set the filter to alarm tones
         RingtoneManager ringtoneManager = new RingtoneManager(getContext());
         ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
-
 
         // Create a cursor for accessing the ringtones db
         Cursor alarmsCursor = ringtoneManager.getCursor();
@@ -151,7 +163,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
                 selectedRingtone.getRingtoneUri(),
                 Integer.parseInt(numberOfRingsEditText.getText().toString()),
                 vibrateSwitch.isChecked());
-//TODO don't think I'm retrieving ringtone correctly
+        //TODO don't think I'm retrieving ringtone correctly
 
         // Run the insert on a separate thread
         Executor executor = Executors.newSingleThreadExecutor();

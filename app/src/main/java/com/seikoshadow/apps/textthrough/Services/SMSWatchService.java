@@ -16,15 +16,19 @@ import com.seikoshadow.apps.textthrough.SharedPrefFunctions;
 import com.seikoshadow.apps.textthrough.constants;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Shaun on 24/05/2018.
  */
 
+/**
+ * Background service responsible for keeping the SMS Broadcast Receiver alive and passing any required data to BroadCast Receiver
+ */
 public class SMSWatchService extends Service {
     public SmsBroadcastReceiver smsBroadcastReceiver;
     private NotificationManagerCompat notificationManager;
-
     private final static String TAG = "SMSWatchService";
 
     public SMSWatchService() {}
@@ -38,21 +42,6 @@ public class SMSWatchService extends Service {
         smsBroadcastReceiver = new SmsBroadcastReceiver();
         registerReceiver(smsBroadcastReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
 
-        // Load the list of saved numbers then set the sender limitation
-        //SharedPrefFunctions sharedPrefFunctions = new SharedPrefFunctions();
-        //List<String> numbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
-
-        // TODO load saved numbers
-        AppDatabase db = AppDatabase.getInstance(this);
-        List<String> numbers = db.alertDao().getAllPhoneNumbers().getValue();
-
-
-        if(!numbers.isEmpty()) {
-            smsBroadcastReceiver.setSenderLimitation(numbers);
-        } else {
-            Log.e(TAG, "Failed to find numbers");
-        }
-
         // What to do when a text is received
         smsBroadcastReceiver.setListener(new SmsBroadcastReceiver.Listener() {
             @Override public void onTextReceived(String smsSender, String smsBody) {
@@ -61,13 +50,15 @@ public class SMSWatchService extends Service {
             }
         });
 
+        // Sets the sender limitation in the background
+        setSMSNumberLimitation();
+
         // Start the notification
         //TODO create notification tap action - https://developer.android.com/training/notify-user/build-notification#java
 
         NotificationCompat.Builder serviceNotificationBuilder = new NotificationCompat.Builder(this, constants.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(getString(R.string.serviceRunningTitle))
-                //.setContentText(getString(R.string.serviceRunningDesc))
                 .setOngoing(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
@@ -77,7 +68,31 @@ public class SMSWatchService extends Service {
         return START_STICKY;
     }
 
-    // When service is destroyed create a the broadcast receiver
+    /**
+     * Sets the sender limitation for the Broadcast Receiver on a background thread
+     */
+    public void setSMSNumberLimitation() {
+
+        // Run a query on the database in the background then set the sender limitation
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+                List<String> numbers = db.alertDao().getAllPhoneNumbersList();
+
+                if(!numbers.isEmpty()) {
+                    smsBroadcastReceiver.setSenderLimitation(numbers);
+                } else {
+                    Log.e(TAG, "Failed to find numbers");
+                }
+            }
+        });
+    }
+
+    /**
+     * onDestroy of the service it creates a new broadcast receiver, cancels the notification if active
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
