@@ -3,6 +3,9 @@ package com.seikoshadow.apps.textthrough.Services;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.provider.Telephony;
 import android.support.v4.app.NotificationCompat;
@@ -11,16 +14,15 @@ import android.util.Log;
 
 import com.seikoshadow.apps.textthrough.BroadcastReceivers.SmsBroadcastReceiver;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
+import com.seikoshadow.apps.textthrough.Entities.Alert;
+import com.seikoshadow.apps.textthrough.Entities.Ringtone;
 import com.seikoshadow.apps.textthrough.R;
 import com.seikoshadow.apps.textthrough.constants;
 
 import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
-/**
- * Created by Shaun on 24/05/2018.
- */
 
 /**
  * Background service responsible for keeping the SMS Broadcast Receiver alive and passing any required data to BroadCast Receiver
@@ -29,6 +31,7 @@ public class SMSWatchService extends Service {
     public SmsBroadcastReceiver smsBroadcastReceiver;
     private NotificationManagerCompat notificationManager;
     private final static String TAG = "SMSWatchService";
+    private AppDatabase db;
 
     public SMSWatchService() {}
 
@@ -47,7 +50,8 @@ public class SMSWatchService extends Service {
         // What to do when a text is received
         smsBroadcastReceiver.setListener(new SmsBroadcastReceiver.Listener() {
             @Override public void onTextReceived(String smsSender, String smsBody) {
-                Log.d(TAG, "Received text - " + smsSender + ", " + smsBody);
+                // Called when the origin matches one of the defined senders
+                Log.d(TAG, "got here");
                 processTextAction(smsSender, smsBody);
             }
         });
@@ -74,14 +78,13 @@ public class SMSWatchService extends Service {
      * Sets the sender limitation for the Broadcast Receiver on a background thread
      */
     public void setSMSNumberLimitation() {
-
         // Run a query on the database in the background then set the sender limitation
         Executor executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                AppDatabase db = AppDatabase.getInstance(getApplicationContext());
-                List<String> numbers = db.alertDao().getAllPhoneNumbersList();
+                db = AppDatabase.getInstance(getApplicationContext());
+                List<String> numbers = db.alertDao().getAllPhoneNumbers();
 
                 if(!numbers.isEmpty()) {
                     smsBroadcastReceiver.setSenderLimitation(numbers);
@@ -99,7 +102,10 @@ public class SMSWatchService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Intent broadcastIntent = new Intent("com.seikoshadow.apps.textthrough.restartBroadcastReceiver");
-        notificationManager.cancel(constants.SMS_SERVICE_RUNNING_ID);
+
+        if(notificationManager != null)
+            notificationManager.cancel(constants.SMS_SERVICE_RUNNING_ID);
+
         sendBroadcast(broadcastIntent);
 
         // Change the flag so service running can be checked
@@ -122,5 +128,13 @@ public class SMSWatchService extends Service {
     public void processTextAction(String smsSender, String smsBody) {
         Log.d(TAG, "Processing text from " + smsSender);
 
+        // Retrieve the alert related to the smsSender
+        Alert relatedAlert = db.alertDao().findByPhoneNumber(smsSender);
+        String ringtoneLocation = relatedAlert.getRingtoneUri();
+        Uri ringtoneUri = Uri.parse(ringtoneLocation); //TODO fix this
+
+        MediaPlayer mp = MediaPlayer.create(this, ringtoneUri);
+        mp.start();
+        // TODO test this and test way to stop it via notification
     }
 }

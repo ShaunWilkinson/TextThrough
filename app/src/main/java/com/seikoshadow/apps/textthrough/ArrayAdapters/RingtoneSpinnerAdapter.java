@@ -13,14 +13,12 @@ import com.seikoshadow.apps.textthrough.R;
 import java.util.List;
 
 public class RingtoneSpinnerAdapter extends BaseAdapter {
-    private Context context;
     private List<Ringtone> ringtones;
     private LayoutInflater inflater;
 
-    public RingtoneSpinnerAdapter(Context context, List<Ringtone> ringtones) {
-        this.context = context;
+    public RingtoneSpinnerAdapter(Context currentContext, List<Ringtone> ringtones) {
         this.ringtones = ringtones;
-        inflater = (LayoutInflater.from(context));
+        inflater = (LayoutInflater.from(currentContext));
     }
 
     @Override
@@ -39,10 +37,29 @@ public class RingtoneSpinnerAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        view = inflater.inflate(R.layout.layout_spinner_ringtone, null); //TODO fix this
-        TextView title = view.findViewById(R.id.title);
-        title.setText(ringtones.get(position).getName());
+    public View getView(int position, View view, ViewGroup parent) {
+        ViewHolder viewHolder;
+
+        // For the first item 'view' will be null, populate the ViewHolder. For every other view get references
+        // from the ViewHolder
+        if(view == null) {
+            view = inflater.inflate(R.layout.layout_spinner_ringtone, null); //TODO fix this
+
+            viewHolder = new ViewHolder();
+            viewHolder.title = view.findViewById(R.id.title);
+
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
+        }
+
+        viewHolder.title.setText(ringtones.get(position).getName());
+
         return view;
+    }
+
+
+    static class ViewHolder {
+        TextView title;
     }
 }

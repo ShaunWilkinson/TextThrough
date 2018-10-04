@@ -1,40 +1,27 @@
 package com.seikoshadow.apps.textthrough;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.arch.lifecycle.Observer;
-import android.arch.persistence.room.Room;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.seikoshadow.apps.textthrough.Database.AlertDao;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.Dialogs.CreateAlertDialogFragment;
-import com.seikoshadow.apps.textthrough.Entities.Alert;
 import com.seikoshadow.apps.textthrough.Services.SMSWatchService;
 import com.seikoshadow.apps.textthrough.Services.SmsFunctionsServiceManager;
 
-import java.util.List;
-
 //TODO finish layout_create_alert
-//TODO create ringtone selector
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private SMSWatchService smsWatchService;
     private Intent mServiceIntent;
     private AppDatabase db;
 
@@ -55,9 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO properly implement database creation
         db = AppDatabase.getInstance(getApplicationContext());
-               /* Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, constants.APPDATABASENAME).build();*/
-
     }
 
     // Called by Start Service Button
@@ -77,10 +61,11 @@ public class MainActivity extends AppCompatActivity {
      * Starts the SMS Service so long as there is saved numbers to compare
      */
     protected void startSmsService() {
-        if(db.alertDao().isTherePhoneNumber() != null && SmsFunctionsServiceManager.isMyServiceRunning) {
+        boolean serviceIsRunning = SmsFunctionsServiceManager.isMyServiceRunning;
 
+        if(db.alertDao().isTherePhoneNumber() != null && !serviceIsRunning) {
             // Create an SMSWatchService then if not already started then start it
-            smsWatchService = new SMSWatchService();
+            SMSWatchService smsWatchService = new SMSWatchService();
             mServiceIntent = new Intent(MainActivity.this, smsWatchService.getClass());
             startService(mServiceIntent);
 
@@ -160,9 +145,8 @@ public class MainActivity extends AppCompatActivity {
             String description = getString(R.string.serviceRunningDesc);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(constants.NOTIFICATION_CHANNEL_ID, name, importance);
+
             channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }

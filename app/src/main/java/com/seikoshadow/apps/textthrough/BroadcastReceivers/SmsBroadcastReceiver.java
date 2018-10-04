@@ -45,7 +45,8 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
         Log.d(TAG, "OnReceive called");
 
         // If the received intent is a 'SMS_RECEIVED'
-        if (intent.getAction().equals(constants.SMS_RECEIVED)) {
+        String action = intent.getAction();
+        if (action != null && action.equals(constants.SMS_RECEIVED)) {
             String smsSender = "";
             String smsBody = "";
 
@@ -74,9 +75,10 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                 }
             }
 
-            Log.i(TAG, senderLimitation.toString());
+            Log.d(TAG, "Limitation: " + senderLimitation.toString() + ", Sender: " + smsSender);
 
-            if(senderLimitation.contains(smsSender) && listener != null) {
+            // compare the received texts origin to the defined list
+            if(senderLimitation.contains(smsSender.toLowerCase()) && listener != null) {
                 listener.onTextReceived(smsSender, smsBody);
             } else {
                 senderIgnoredAction(smsSender, smsBody);

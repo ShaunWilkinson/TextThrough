@@ -8,7 +8,7 @@ import android.content.Context;
 import com.seikoshadow.apps.textthrough.Entities.Alert;
 import com.seikoshadow.apps.textthrough.constants;
 
-@Database(entities = {Alert.class}, version = 1)
+@Database(entities = {Alert.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase appDatabase;
     public abstract AlertDao alertDao();
@@ -18,6 +18,7 @@ public abstract class AppDatabase extends RoomDatabase {
         if(appDatabase == null) {
             appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, constants.APPDATABASENAME)
             .allowMainThreadQueries() //TODO may want to stop allowing mainthreadqueries
+            .fallbackToDestructiveMigration() // Definitely remove this
             .build();
         }
         return appDatabase;

@@ -2,11 +2,9 @@ package com.seikoshadow.apps.textthrough.Dialogs;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.arch.persistence.room.Room;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,7 +21,6 @@ import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.Entities.Alert;
 import com.seikoshadow.apps.textthrough.Entities.Ringtone;
 import com.seikoshadow.apps.textthrough.R;
-import com.seikoshadow.apps.textthrough.constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +38,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
     /**
      * Called first, on creation set the style to fullscreen and initiate a reference to the database
-     * @param savedInstanceState
+     * @param savedInstanceState the savedInstanceState bundle
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,7 +100,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         Dialog dialog = getDialog();
-        if (dialog != null) {
+        if (dialog.getWindow() != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             dialog.getWindow().setLayout(width, height);
@@ -144,11 +141,11 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
     private boolean validateFields() {
         //TODO validation of fields
+        //TODO ensure that the phone number is unique
         return true;
     }
 
     private void saveAlert() {
-        //TODO save note
         EditText alertNameEditText = view.findViewById(R.id.nameEditText);
         EditText phoneNumberEditText = view.findViewById(R.id.numberEditText);
         Spinner ringtoneSelector = view.findViewById(R.id.ringtoneSpinner);
@@ -170,7 +167,10 @@ public class CreateAlertDialogFragment extends DialogFragment {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                db.alertDao().insertAll(newAlert);
+                // Make sure theres not an existing record with the same phone number
+                AlertDao alertDao = db.alertDao();
+                if(alertDao.findByPhoneNumber(newAlert.getPhoneNumber()) == null)
+                    db.alertDao().insertAll(newAlert);
             }
         });
 

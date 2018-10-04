@@ -21,11 +21,11 @@ public interface AlertDao {
     @Query("SELECT * FROM alert WHERE alert_name LIKE :name LIMIT 1")
     LiveData<Alert> findByName(String name);
 
-    @Query("SELECT phone_number FROM alert")
-    LiveData<List<String>> getAllPhoneNumbers();
+    @Query("SELECT * FROM alert WHERE phone_number LIKE :phoneNumber")
+    Alert findByPhoneNumber(String phoneNumber);
 
-    @Query("SELECt phone_number FROM alert")
-    List<String> getAllPhoneNumbersList();
+    @Query("SELECT phone_number FROM alert")
+    List<String> getAllPhoneNumbers();
 
     @Query("SELECT phone_number FROM alert LIMIT 1")
     String isTherePhoneNumber();

@@ -2,11 +2,12 @@ package com.seikoshadow.apps.textthrough.Entities;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-@Entity
+@Entity (indices = {@Index(value = "phone_number", unique = true)})
 public class Alert {
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -25,7 +26,7 @@ public class Alert {
 
     public Alert(String name, String phoneNumber, String ringtoneUri, int numberOfRings, boolean alertVibrate) {
         this.name = name;
-        this.phoneNumber = phoneNumber;
+        this.phoneNumber = phoneNumber.toLowerCase();
         this.ringtoneUri = ringtoneUri;
         this.alertActive = true;
         this.numberOfRings = numberOfRings;
@@ -34,7 +35,7 @@ public class Alert {
 
     public Alert(String name, String phoneNumber, Uri ringtoneUri, int numberOfRings, boolean alertVibrate) {
         this.name = name;
-        this.phoneNumber = phoneNumber;
+        this.phoneNumber = phoneNumber.toLowerCase();
         this.ringtoneUri = String.valueOf(ringtoneUri);
         this.alertActive = true;
         this.numberOfRings = numberOfRings;
@@ -51,10 +52,6 @@ public class Alert {
 
     public String getPhoneNumber() {
         return this.phoneNumber;
-    }
-
-    public Uri getRingtoneUriActual() {
-        return Uri.parse(this.ringtoneUri);
     }
 
     public String getRingtoneUri() {
@@ -82,7 +79,7 @@ public class Alert {
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.phoneNumber = phoneNumber.toLowerCase();
     }
 
     public void setRingtoneUri(Uri ringtoneUri) {
