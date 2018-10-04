@@ -6,6 +6,7 @@ import android.arch.persistence.room.Room;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,22 +27,34 @@ import com.seikoshadow.apps.textthrough.constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-
+/**
+ * Handles the fullscreen dialog for creating new alerts
+ */
 public class CreateAlertDialogFragment extends DialogFragment {
     public static String TAG = "CreateAlertDialogFragment";
     private View view;
     private AppDatabase db;
+    private Alert newAlert;
 
+    /**
+     * Called first, on creation set the style to fullscreen and initiate a reference to the database
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
 
-        db = Room.databaseBuilder(getContext(),
-                AppDatabase.class, constants.APPDATABASENAME).build();
+        db = AppDatabase.getInstance(getContext());
     }
 
+    /**
+     * inflates the view, sets up the toolbar and sets up the ringtone spinner
+     * @return the inflated view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -75,14 +88,17 @@ public class CreateAlertDialogFragment extends DialogFragment {
             }
         });
 
+        // Setup the ringtone Spinner selector
         Spinner ringtoneSpinner = view.findViewById(R.id.ringtoneSpinner);
-        List<Ringtone> ringtones = getRingtones();
-        RingtoneSpinnerAdapter adapter = new RingtoneSpinnerAdapter(getContext(), ringtones);
+        RingtoneSpinnerAdapter adapter = new RingtoneSpinnerAdapter(getContext(), getRingtones());
         ringtoneSpinner.setAdapter(adapter);
 
         return view;
     }
 
+    /**
+     * Ensure the dialog is full screen
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -102,7 +118,6 @@ public class CreateAlertDialogFragment extends DialogFragment {
         // Instantiate a Ringtone Manager and set the filter to alarm tones
         RingtoneManager ringtoneManager = new RingtoneManager(getContext());
         ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
-
 
         // Create a cursor for accessing the ringtones db
         Cursor alarmsCursor = ringtoneManager.getCursor();
@@ -142,14 +157,23 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
         Ringtone selectedRingtone = (Ringtone)ringtoneSelector.getSelectedItem();
 
-        Alert newAlert = new Alert(
+        newAlert = new Alert(
                 alertNameEditText.getText().toString(),
                 phoneNumberEditText.getText().toString(),
                 selectedRingtone.getRingtoneUri(),
                 Integer.parseInt(numberOfRingsEditText.getText().toString()),
                 vibrateSwitch.isChecked());
-//TODO don't think I'm retrieving ringtone correctly
-        db.alertDao().insertAll(newAlert);
+        //TODO don't think I'm retrieving ringtone correctly
+
+        // Run the insert on a separate thread
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                db.alertDao().insertAll(newAlert);
+            }
+        });
+
         this.dismiss();
     }
 }

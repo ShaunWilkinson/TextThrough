@@ -6,18 +6,21 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.arch.lifecycle.Observer;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.seikoshadow.apps.textthrough.Database.AlertDao;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.Dialogs.CreateAlertDialogFragment;
 import com.seikoshadow.apps.textthrough.Entities.Alert;
@@ -32,14 +35,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private SMSWatchService smsWatchService;
     private Intent mServiceIntent;
-    private SharedPrefFunctions sharedPrefFunctions;
     private AppDatabase db;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        sharedPrefFunctions = new SharedPrefFunctions();
 
         // Request READ SMS permission if not already granted
         if (!SmsFunctions.isReadSmsPermissionGranted(this))
@@ -53,8 +53,9 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
 
         //TODO properly implement database creation
-        db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, constants.APPDATABASENAME).build();
+        db = AppDatabase.getInstance(getApplicationContext());
+               /* Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, constants.APPDATABASENAME).build();*/
 
     }
 
@@ -75,9 +76,7 @@ public class MainActivity extends AppCompatActivity {
      * Starts the SMS Service so long as there is saved numbers to compare
      */
     protected void startSmsService() {
-
-        List<Alert> savedNumbers = db.alertDao().getAll();
-        if(savedNumbers != null) {
+        if(db.alertDao().isTherePhoneNumber() != null) {
             // Create an SMSWatchService then if not already started then start it
             smsWatchService = new SMSWatchService();
             mServiceIntent = new Intent(MainActivity.this, smsWatchService.getClass());
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 startService(mServiceIntent);
             }
         } else {
-            Toast.makeText(this, "No numbers have been saved", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.noNumbersFound), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -103,33 +102,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         stopService(mServiceIntent);
         super.onDestroy();
-    }
-
-    /**
-     * Submits the details entered on the homepage
-     */
-    public void submitNumber(View view) {
-        TextView enteredNumberTxt = findViewById(R.id.enteredNumber);
-        String enteredNumberVal = enteredNumberTxt.getText().toString();
-
-        /* Shared Prefs based
-        if(!enteredNumberVal.equals("")) {
-            // If the SharedPrefs contains the saved data already then update, otherwise create
-            List<String> phoneNumbers;
-            if (sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this) != null) {
-                phoneNumbers = sharedPrefFunctions.loadStringList(constants.PHONENUMBERKEY, this);
-            } else {
-                phoneNumbers = new ArrayList<>();
-            }
-
-            phoneNumbers.add(enteredNumberVal);
-            sharedPrefFunctions.saveStringList(constants.PHONENUMBERKEY, phoneNumbers, this);
-
-            Toast.makeText(this, "Added " + enteredNumberVal + " to list of numbers", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "No number input", Toast.LENGTH_LONG).show();
-        }
-        */
     }
 
     /**

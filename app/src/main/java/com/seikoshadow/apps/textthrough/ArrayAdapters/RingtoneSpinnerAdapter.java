@@ -14,9 +14,9 @@ import com.seikoshadow.apps.textthrough.R;
 import java.util.List;
 
 public class RingtoneSpinnerAdapter extends BaseAdapter {
-    Context context;
-    List<Ringtone> ringtones;
-    LayoutInflater inflater;
+    private Context context;
+    private List<Ringtone> ringtones;
+    private LayoutInflater inflater;
 
     public RingtoneSpinnerAdapter(Context context, List<Ringtone> ringtones) {
         this.context = context;

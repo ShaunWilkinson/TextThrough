@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 
 @Entity
 public class Alert {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
     @ColumnInfo(name="alert_name")
     private String name;
