@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
 import android.provider.Telephony;
@@ -15,12 +14,10 @@ import android.util.Log;
 import com.seikoshadow.apps.textthrough.BroadcastReceivers.SmsBroadcastReceiver;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.Entities.Alert;
-import com.seikoshadow.apps.textthrough.Entities.Ringtone;
 import com.seikoshadow.apps.textthrough.R;
 import com.seikoshadow.apps.textthrough.constants;
 
 import java.util.List;
-import java.util.ListIterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 

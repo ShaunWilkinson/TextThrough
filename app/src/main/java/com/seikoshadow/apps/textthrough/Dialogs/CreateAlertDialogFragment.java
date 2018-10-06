@@ -2,7 +2,7 @@ package com.seikoshadow.apps.textthrough.Dialogs;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.database.Cursor;
+import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,20 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Switch;
 
-import com.seikoshadow.apps.textthrough.ArrayAdapters.RingtoneSpinnerAdapter;
 import com.seikoshadow.apps.textthrough.Database.AlertDao;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.Entities.Alert;
-import com.seikoshadow.apps.textthrough.Entities.Ringtone;
 import com.seikoshadow.apps.textthrough.R;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Handles the fullscreen dialog for creating new alerts
@@ -77,18 +74,13 @@ public class CreateAlertDialogFragment extends DialogFragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if(validateFields()) {
-                    saveAlert();
+                    selectRingtone();
                     return true;
                 } else {
                     return false;
                 }
             }
         });
-
-        // Setup the ringtone Spinner selector
-        Spinner ringtoneSpinner = view.findViewById(R.id.ringtoneSpinner);
-        RingtoneSpinnerAdapter adapter = new RingtoneSpinnerAdapter(getContext(), getRingtones());
-        ringtoneSpinner.setAdapter(adapter);
 
         return view;
     }
@@ -107,60 +99,49 @@ public class CreateAlertDialogFragment extends DialogFragment {
         }
     }
 
-    /**
-     * Retrieves system ringtones
-     * @return an array of ringtones
-     */
-    public List<Ringtone> getRingtones() {
-        // Instantiate a Ringtone Manager and set the filter to alarm tones
-        RingtoneManager ringtoneManager = new RingtoneManager(getContext());
-        ringtoneManager.setType(RingtoneManager.TYPE_ALARM);
-
-        // Create a cursor for accessing the ringtones db
-        Cursor alarmsCursor = ringtoneManager.getCursor();
-
-        // Get the count of alarms and providing it's not 0 then continue
-        int alarmsCount = alarmsCursor.getCount();
-        if(alarmsCount == 0 && !alarmsCursor.moveToNext()) {
-            return null;
-        }
-
-        // Create a list to hold the alarms Uris and go through all alarms retrieving the uri
-        List<Ringtone> ringtones = new ArrayList<>();
-        while(alarmsCursor.moveToNext()) {
-            String ringtoneName = alarmsCursor.getString(RingtoneManager.TITLE_COLUMN_INDEX);
-            String ringtoneUri = alarmsCursor.getString(RingtoneManager.URI_COLUMN_INDEX);
-
-            Ringtone retrievedRingtone = new Ringtone(ringtoneName, Uri.parse(ringtoneUri));
-            ringtones.add(retrievedRingtone);
-        }
-
-        alarmsCursor.close();
-        return ringtones;
-    }
-
     private boolean validateFields() {
         //TODO validation of fields
         //TODO ensure that the phone number is unique
         return true;
     }
 
-    private void saveAlert() {
+    private void selectRingtone() {
+        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtonePickerTitle));
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_NOTIFICATION);
+            this.startActivityForResult(intent,999);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // If the result comes from the ringtone picker
+        if(requestCode == 999) {
+            if(resultCode == RESULT_OK) {
+                // Get the selected ringtone and pass to saveAlert
+                Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                if(uri != null) {
+                    saveAlert(uri);
+                }
+            } else {
+                //TODO handle cancelling ringtone selector
+            }
+        }
+    }
+
+    public void saveAlert(Uri selectedRingtone) {
         EditText alertNameEditText = view.findViewById(R.id.nameEditText);
         EditText phoneNumberEditText = view.findViewById(R.id.numberEditText);
-        Spinner ringtoneSelector = view.findViewById(R.id.ringtoneSpinner);
         EditText numberOfRingsEditText = view.findViewById(R.id.numOfRingsEditText);
         Switch vibrateSwitch = view.findViewById(R.id.vibrateSwitch);
-
-        Ringtone selectedRingtone = (Ringtone)ringtoneSelector.getSelectedItem();
 
         newAlert = new Alert(
                 alertNameEditText.getText().toString(),
                 phoneNumberEditText.getText().toString(),
-                selectedRingtone.getRingtoneUri(),
+                selectedRingtone.toString(),
                 Integer.parseInt(numberOfRingsEditText.getText().toString()),
                 vibrateSwitch.isChecked());
-        //TODO don't think I'm retrieving ringtone correctly
 
         // Run the insert on a separate thread
         Executor executor = Executors.newSingleThreadExecutor();
