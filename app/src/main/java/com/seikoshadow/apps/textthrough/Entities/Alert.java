@@ -1,11 +1,12 @@
 package com.seikoshadow.apps.textthrough.Entities;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
 import android.net.Uri;
-import android.support.annotation.NonNull;
 
 @Entity (indices = {@Index(value = "phone_number", unique = true)})
 public class Alert {

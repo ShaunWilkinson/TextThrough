@@ -9,7 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,10 +21,11 @@ import com.seikoshadow.apps.textthrough.Services.SmsFunctionsServiceManager;
 
 //TODO finish layout_create_alert
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
     private Intent mServiceIntent;
     private AppDatabase db;
+    private RecyclerView alertsList;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +42,10 @@ public class MainActivity extends AppCompatActivity {
         // Notifies the system to expect notifications
         createNotificationChannel();
 
-        //TODO properly implement database creation
         db = AppDatabase.getInstance(getApplicationContext());
+
+        // TODO update the listview on change
+        alertsList = findViewById(R.id.alertsList);
     }
 
     // Called by Start Service Button
@@ -74,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * If it's running this stops the SMS Service watcher
+     */
     protected void stopSmsService() {
         // TODO finish ability to stop service
         if(SmsFunctionsServiceManager.isMyServiceRunning) {
@@ -137,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * Sets up the notification channel so that the app can display notifications
+     */
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -152,10 +162,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * ================= NEW ALERT CODE ===================
-     */
-
     // TODO easy way to remove phone numbers
 
     public void createAlert(View view) {
@@ -163,6 +169,5 @@ public class MainActivity extends AppCompatActivity {
         CreateAlertDialogFragment dialog = new CreateAlertDialogFragment();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         dialog.show(fragmentTransaction, CreateAlertDialogFragment.TAG);
-        // PAss DB to fragment
     }
 }
