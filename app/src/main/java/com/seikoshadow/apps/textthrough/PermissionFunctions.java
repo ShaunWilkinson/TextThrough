@@ -17,7 +17,7 @@ import static com.seikoshadow.apps.textthrough.constants.SMS_PERMISSION_CODE;
  * Created by Shaun on 22/05/2018.
  */
 
-public class SmsFunctions {
+public class PermissionFunctions {
 
     /**
      * Checks whether the READ SMS permission has been granted
@@ -70,4 +70,5 @@ public class SmsFunctions {
         ActivityCompat.requestPermissions(activity,
             new String[] { Manifest.permission.RECEIVE_SMS }, SMS_PERMISSION_CODE);
     }
+
 }

@@ -81,7 +81,7 @@ public class SMSWatchService extends Service {
             @Override
             public void run() {
                 db = AppDatabase.getInstance(getApplicationContext());
-                List<String> numbers = db.alertDao().getAllPhoneNumbers();
+                List<String> numbers = db.alertModel().getAllPhoneNumbers();
 
                 if(!numbers.isEmpty()) {
                     smsBroadcastReceiver.setSenderLimitation(numbers);
@@ -126,7 +126,7 @@ public class SMSWatchService extends Service {
         Log.d(TAG, "Processing text from " + smsSender);
 
         // Retrieve the alert related to the smsSender
-        Alert relatedAlert = db.alertDao().findByPhoneNumber(smsSender);
+        Alert relatedAlert = db.alertModel().findByPhoneNumber(smsSender);
         String ringtoneLocation = relatedAlert.getRingtoneUri();
         Uri ringtoneUri = Uri.parse(ringtoneLocation); //TODO fix this
 

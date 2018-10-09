@@ -10,33 +10,41 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
+import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import com.seikoshadow.apps.textthrough.Adapters.AlertsExpandableListAdapter;
+import com.seikoshadow.apps.textthrough.Database.AlertViewModel;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.Dialogs.CreateAlertDialogFragment;
 import com.seikoshadow.apps.textthrough.Services.SMSWatchService;
 import com.seikoshadow.apps.textthrough.Services.SmsFunctionsServiceManager;
 
-//TODO finish layout_create_alert
+import java.util.ArrayList;
 
-public class MainActivity extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+
+//TODO finish layout_create_alert
+//TODO alerts listview not showing first column
+
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private Intent mServiceIntent;
     private AppDatabase db;
-    private RecyclerView alertsList;
+    private ExpandableListView alertsList;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Request READ SMS permission if not already granted
-        if (!SmsFunctions.isReadSmsPermissionGranted(this))
+        if (!PermissionFunctions.isReadSmsPermissionGranted(this))
             showRequestReadSmsPermissionDialog(this);
 
         // Request RECEIVE SMS permission if not already granted
-        if (!SmsFunctions.isReceiveSmsPermissionGranted(this))
+        if (!PermissionFunctions.isReceiveSmsPermissionGranted(this))
             showRequestReceiveSmsPermissionDialog(this);
 
         // Notifies the system to expect notifications
@@ -46,6 +54,12 @@ public class MainActivity extends Activity {
 
         // TODO update the listview on change
         alertsList = findViewById(R.id.alertsList);
+        AlertsExpandableListAdapter listAdapter = new AlertsExpandableListAdapter(this, new ArrayList<>());
+        alertsList.setAdapter(listAdapter);
+
+        // Create a viewmodel and then observe and wait for changes before applying to list
+        AlertViewModel viewModel = ViewModelProviders.of(this).get(AlertViewModel.class);
+        viewModel.getAlertsList().observe(this, listAdapter::addItems);
     }
 
     // Called by Start Service Button
@@ -67,7 +81,7 @@ public class MainActivity extends Activity {
     protected void startSmsService() {
         boolean serviceIsRunning = SmsFunctionsServiceManager.isMyServiceRunning;
 
-        if(db.alertDao().isTherePhoneNumber() != null && !serviceIsRunning) {
+        if(db.alertModel().isTherePhoneNumber() != null && !serviceIsRunning) {
             // Create an SMSWatchService then if not already started then start it
             SMSWatchService smsWatchService = new SMSWatchService();
             mServiceIntent = new Intent(MainActivity.this, smsWatchService.getClass());
@@ -112,7 +126,7 @@ public class MainActivity extends Activity {
                 dialog.dismiss();
 
                 // Display permission request
-                SmsFunctions.requestReadSmsPermission(activity);
+                PermissionFunctions.requestReadSmsPermission(activity);
             }
         });
 
@@ -136,7 +150,7 @@ public class MainActivity extends Activity {
                 dialog.dismiss();
 
                 // Display permission request
-                SmsFunctions.requestReceiveSmsPermission(activity);
+                PermissionFunctions.requestReceiveSmsPermission(activity);
             }
         });
 

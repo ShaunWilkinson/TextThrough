@@ -3,6 +3,7 @@ package com.seikoshadow.apps.textthrough.Dialogs;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.widget.EditText;
 import android.widget.Switch;
 
-import com.seikoshadow.apps.textthrough.Database.AlertDao;
+import com.seikoshadow.apps.textthrough.Database.AlertModel;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.Entities.Alert;
 import com.seikoshadow.apps.textthrough.R;
@@ -120,9 +121,11 @@ public class CreateAlertDialogFragment extends DialogFragment {
         if(requestCode == 999) {
             if(resultCode == RESULT_OK) {
                 // Get the selected ringtone and pass to saveAlert
+                Ringtone selectedRingtone = RingtoneManager.getRingtone(getActivity(), Uri.parse(RingtoneManager.EXTRA_RINGTONE_PICKED_URI));
+                String name = selectedRingtone.getTitle(getActivity()); //TODO not getting name properly
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 if(uri != null) {
-                    saveAlert(uri);
+                    saveAlert(name, uri);
                 }
             } else {
                 //TODO handle cancelling ringtone selector
@@ -130,7 +133,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
         }
     }
 
-    public void saveAlert(Uri selectedRingtone) {
+    public void saveAlert(String ringtoneName, Uri selectedRingtone) {
         EditText alertNameEditText = view.findViewById(R.id.nameEditText);
         EditText phoneNumberEditText = view.findViewById(R.id.numberEditText);
         EditText numberOfRingsEditText = view.findViewById(R.id.numOfRingsEditText);
@@ -139,6 +142,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
         newAlert = new Alert(
                 alertNameEditText.getText().toString(),
                 phoneNumberEditText.getText().toString(),
+                ringtoneName,
                 selectedRingtone.toString(),
                 Integer.parseInt(numberOfRingsEditText.getText().toString()),
                 vibrateSwitch.isChecked());
@@ -149,9 +153,9 @@ public class CreateAlertDialogFragment extends DialogFragment {
             @Override
             public void run() {
                 // Make sure theres not an existing record with the same phone number
-                AlertDao alertDao = db.alertDao();
-                if(alertDao.findByPhoneNumber(newAlert.getPhoneNumber()) == null)
-                    db.alertDao().insertAll(newAlert);
+                AlertModel alertModel = db.alertModel();
+                if(alertModel.findByPhoneNumber(newAlert.getPhoneNumber()) == null)
+                    db.alertModel().insertAll(newAlert);
             }
         });
 

@@ -11,7 +11,7 @@ import com.seikoshadow.apps.textthrough.Entities.Alert;
 import java.util.List;
 
 @Dao
-public interface AlertDao {
+public interface AlertModel {
     @Query("SELECT * FROM alert")
     LiveData<List<Alert>> getAll();
 

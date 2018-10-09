@@ -8,10 +8,10 @@ import android.content.Context;
 import com.seikoshadow.apps.textthrough.Entities.Alert;
 import com.seikoshadow.apps.textthrough.constants;
 
-@Database(entities = {Alert.class}, version = 2)
+@Database(entities = {Alert.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase appDatabase;
-    public abstract AlertDao alertDao();
+    public abstract AlertModel alertModel();
 
     // If there's no app database already then create otherwise return the current database
     public static AppDatabase getInstance(Context context) {

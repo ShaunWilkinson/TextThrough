@@ -18,6 +18,8 @@ public class Alert {
     private String phoneNumber;
     @ColumnInfo(name="ringtone_uri")
     private String ringtoneUri;
+    @ColumnInfo(name="ringtone_name")
+    private String ringtoneName;
     @ColumnInfo(name="number_of_rings")
     private int numberOfRings;
     @ColumnInfo(name="alert_active")
@@ -25,18 +27,20 @@ public class Alert {
     @ColumnInfo(name="alert_vibrate")
     private boolean alertVibrate;
 
-    public Alert(String name, String phoneNumber, String ringtoneUri, int numberOfRings, boolean alertVibrate) {
+    public Alert(String name, String phoneNumber, String ringtoneName, String ringtoneUri, int numberOfRings, boolean alertVibrate) {
         this.name = name;
         this.phoneNumber = phoneNumber.toLowerCase();
+        this.ringtoneName = ringtoneName;
         this.ringtoneUri = ringtoneUri;
         this.alertActive = true;
         this.numberOfRings = numberOfRings;
         this.alertVibrate = alertVibrate;
     }
 
-    public Alert(String name, String phoneNumber, Uri ringtoneUri, int numberOfRings, boolean alertVibrate) {
+    public Alert(String name, String phoneNumber, String ringtoneName, Uri ringtoneUri, int numberOfRings, boolean alertVibrate) {
         this.name = name;
         this.phoneNumber = phoneNumber.toLowerCase();
+        this.ringtoneName = ringtoneName;
         this.ringtoneUri = String.valueOf(ringtoneUri);
         this.alertActive = true;
         this.numberOfRings = numberOfRings;
@@ -57,6 +61,10 @@ public class Alert {
 
     public String getRingtoneUri() {
         return this.ringtoneUri;
+    }
+
+    public String getRingtoneName() {
+        return this.ringtoneName;
     }
 
     public int getNumberOfRings() {
@@ -85,6 +93,10 @@ public class Alert {
 
     public void setRingtoneUri(Uri ringtoneUri) {
         this.ringtoneUri = String.valueOf(ringtoneUri);
+    }
+
+    public void setRingtoneName(String ringtoneName) {
+        this.ringtoneName = ringtoneName;
     }
 
     public void setRingtoneUri(String ringtoneUri) {
