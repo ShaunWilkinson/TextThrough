@@ -10,7 +10,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -27,7 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 //TODO finish layout_create_alert
-//TODO alerts listview not showing first column
+//TODO support editing and deleting alerts
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -52,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
         db = AppDatabase.getInstance(getApplicationContext());
 
+        handleListView();
+    }
+
+    public void handleListView() {
         // TODO update the listview on change
         alertsList = findViewById(R.id.alertsList);
         AlertsExpandableListAdapter listAdapter = new AlertsExpandableListAdapter(this, new ArrayList<>());

@@ -102,10 +102,12 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
     private boolean validateFields() {
         //TODO validation of fields
-        //TODO ensure that the phone number is unique
         return true;
     }
 
+    /**
+     * Generates a Ringtone Picker
+     */
     private void selectRingtone() {
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtonePickerTitle));
@@ -115,24 +117,34 @@ public class CreateAlertDialogFragment extends DialogFragment {
             this.startActivityForResult(intent,999);
     }
 
+    /**
+     * When a ringtone has been selected or otherwise check for the result then get URI and name then save
+     * @param requestCode The requestCode specified when the ringtone selector is instantiated
+     * @param resultCode The result of the dialog, ie was a ringtone picked or cancelled
+     * @param data The data passed from the dialog
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // If the result comes from the ringtone picker
         if(requestCode == 999) {
             if(resultCode == RESULT_OK) {
                 // Get the selected ringtone and pass to saveAlert
-                Ringtone selectedRingtone = RingtoneManager.getRingtone(getActivity(), Uri.parse(RingtoneManager.EXTRA_RINGTONE_PICKED_URI));
-                String name = selectedRingtone.getTitle(getActivity()); //TODO not getting name properly
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                Ringtone selectedRingtone = RingtoneManager.getRingtone(getContext(), uri);
+                String name = selectedRingtone.getTitle(getContext());
+                selectedRingtone.stop();
                 if(uri != null) {
                     saveAlert(name, uri);
                 }
-            } else {
-                //TODO handle cancelling ringtone selector
             }
         }
     }
 
+    /**
+     * Gets the values from the input fields and then saves the result
+     * @param ringtoneName The name of the ringtone selected
+     * @param selectedRingtone The Uri of the ringtone that was selected
+     */
     public void saveAlert(String ringtoneName, Uri selectedRingtone) {
         EditText alertNameEditText = view.findViewById(R.id.nameEditText);
         EditText phoneNumberEditText = view.findViewById(R.id.numberEditText);
@@ -149,14 +161,11 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
         // Run the insert on a separate thread
         Executor executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                // Make sure theres not an existing record with the same phone number
-                AlertModel alertModel = db.alertModel();
-                if(alertModel.findByPhoneNumber(newAlert.getPhoneNumber()) == null)
-                    db.alertModel().insertAll(newAlert);
-            }
+        executor.execute(() -> {
+            // Make sure theres not an existing record with the same phone number
+            AlertModel alertModel = db.alertModel();
+            if(alertModel.findByPhoneNumber(newAlert.getPhoneNumber()) == null)
+                db.alertModel().insertAll(newAlert);
         });
 
         this.dismiss();
