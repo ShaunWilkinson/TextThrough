@@ -12,7 +12,7 @@
   <string name="action_submit">Submit</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
-    <string name="active">Active</string>
+  <string name="active">Active</string>
 
   <string name="number">Number</string>
   <string name="enterNumberToPassThrough">Enter the number to Pass Through</string>

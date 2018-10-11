@@ -2,8 +2,6 @@ package com.seikoshadow.apps.textthrough.Database;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import com.seikoshadow.apps.textthrough.Entities.Alert;
-
 import java.util.List;
 
 import androidx.lifecycle.AndroidViewModel;

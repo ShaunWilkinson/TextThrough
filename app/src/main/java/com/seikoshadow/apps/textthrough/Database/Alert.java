@@ -1,4 +1,4 @@
-package com.seikoshadow.apps.textthrough.Entities;
+package com.seikoshadow.apps.textthrough.Database;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

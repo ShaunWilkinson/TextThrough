@@ -3,12 +3,12 @@ package com.seikoshadow.apps.textthrough.Dialogs;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.widget.Toolbar;
@@ -17,7 +17,7 @@ import android.widget.Switch;
 
 import com.seikoshadow.apps.textthrough.Database.AlertModel;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
-import com.seikoshadow.apps.textthrough.Entities.Alert;
+import com.seikoshadow.apps.textthrough.Database.Alert;
 import com.seikoshadow.apps.textthrough.R;
 
 import java.util.concurrent.Executor;
@@ -56,34 +56,30 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
         view = inflater.inflate(R.layout.layout_create_alert, container, false);
 
+        setupToolbar();
+
+        return view;
+    }
+
+    private void setupToolbar() {
         // Setup the toolbar
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.createAlertTitle));
 
         // Add an exit button
         toolbar.setNavigationIcon(R.drawable.ic_close_white);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getDialog().dismiss();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> getDialog().dismiss());
 
         // Inflate the menu for save
         toolbar.inflateMenu(R.menu.menu_create_alert);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if(validateFields()) {
-                    selectRingtone();
-                    return true;
-                } else {
-                    return false;
-                }
+        toolbar.setOnMenuItemClickListener(item -> {
+            if(validateFields()) {
+                selectRingtone();
+                return true;
+            } else {
+                return false;
             }
         });
-
-        return view;
     }
 
     /**

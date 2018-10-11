@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.seikoshadow.apps.textthrough.BroadcastReceivers.SmsBroadcastReceiver;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
-import com.seikoshadow.apps.textthrough.Entities.Alert;
+import com.seikoshadow.apps.textthrough.Database.Alert;
 import com.seikoshadow.apps.textthrough.R;
 import com.seikoshadow.apps.textthrough.constants;
 

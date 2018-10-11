@@ -3,8 +3,26 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="coordinatorLayoutStyle">@style/Widget.Support.CoordinatorLayout</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MainActivityConstraintLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="alertsItemHeading">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginStart">20dp</item>
+    </style>
+
+    <!-- Create and Edit Dialogs -->
     <style name="FullScreenDialogStyle" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -16,17 +34,47 @@
         <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
     </style>
 
-    <style name="FullScreenDialogLabel" parent="@style/Base.TextAppearance.AppCompat.Subhead">
-        <item name="android:textColor">@color/colorPrimaryLight</item>
-        <item name="android:layout_marginStart">5dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:textSize">15sp</item>
+    <style name="createOrEditLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_margin">10dp</item>
     </style>
 
-    <style name="FullScreenDialogEditText" parent="@style/Base.Widget.AppCompat.EditText">
-        <item name="android:textColor">@android:color/black</item>
+    <style name="createOrEditLabel">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:drawableBottom">@drawable/section_header_line</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
+    <style name="createOrEditField">
+        <item name="android:textColor">@color/colorGrey</item>
         <item name="android:textColorHint">@color/colorPrimaryLight</item>
-        <item name="android:backgroundTint">@color/colorGrey</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">@color/colorPrimaryLight</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
+    <style name="createOrEditSwitch">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="android:colorControlNormal">@color/colorAccent</item>
     </style>
 
     <!-- Alert ListView -->

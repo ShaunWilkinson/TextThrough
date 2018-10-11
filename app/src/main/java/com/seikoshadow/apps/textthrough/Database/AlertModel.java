@@ -6,8 +6,6 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.seikoshadow.apps.textthrough.Entities.Alert;
-
 import java.util.List;
 
 @Dao

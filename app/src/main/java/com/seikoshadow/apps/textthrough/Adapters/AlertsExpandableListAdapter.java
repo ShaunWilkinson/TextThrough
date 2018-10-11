@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.seikoshadow.apps.textthrough.Entities.Alert;
+import com.seikoshadow.apps.textthrough.Database.Alert;
 import com.seikoshadow.apps.textthrough.R;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         TextView itemTitleText = v.findViewById(R.id.alertsItemHeading);
+
         itemTitleText.setText(headerTitle);
 
         return v;

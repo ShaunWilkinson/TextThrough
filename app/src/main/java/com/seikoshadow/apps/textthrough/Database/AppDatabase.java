@@ -5,7 +5,6 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import android.content.Context;
 
-import com.seikoshadow.apps.textthrough.Entities.Alert;
 import com.seikoshadow.apps.textthrough.constants;
 
 @Database(entities = {Alert.class}, version = 3)
