@@ -20,6 +20,7 @@ import com.seikoshadow.apps.textthrough.Adapters.AlertsExpandableListAdapter;
 import com.seikoshadow.apps.textthrough.Database.AlertViewModel;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.Dialogs.CreateAlertDialogFragment;
+import com.seikoshadow.apps.textthrough.Dialogs.EditAlertDialogFragment;
 import com.seikoshadow.apps.textthrough.Services.SMSWatchService;
 import com.seikoshadow.apps.textthrough.Services.SmsFunctionsServiceManager;
 
@@ -66,6 +67,16 @@ public class MainActivity extends AppCompatActivity {
         // Create a viewmodel and then observe and wait for changes before applying to list
         AlertViewModel viewModel = ViewModelProviders.of(this).get(AlertViewModel.class);
         viewModel.getAlertsList().observe(this, listAdapter::addItems);
+
+        alertsList.setOnItemLongClickListener((adapterView, view, i, id) -> {
+            int groupPosition = ExpandableListView.getPackedPositionGroup(id);
+            int childPosition = ExpandableListView.getPackedPositionChild(id);
+
+            Toast.makeText(getApplicationContext(), "Group: " + groupPosition + ", Child: " + childPosition, Toast.LENGTH_LONG).show();
+            editAlert(view, listAdapter.getGroupId(groupPosition));
+
+            return true;
+        });
     }
 
     // Called by Start Service Button
@@ -185,9 +196,20 @@ public class MainActivity extends AppCompatActivity {
     // TODO easy way to remove phone numbers
 
     public void createAlert(View view) {
-        //TODO create an alert
         CreateAlertDialogFragment dialog = new CreateAlertDialogFragment();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         dialog.show(fragmentTransaction, CreateAlertDialogFragment.TAG);
+    }
+
+    public void editAlert(View view, int alertId) {
+        //TODO create an alert
+        Bundle bundle = new Bundle();
+        bundle.putLong("Alert Id", alertId);
+
+        EditAlertDialogFragment dialog = new EditAlertDialogFragment();
+        dialog.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        dialog.show(fragmentTransaction, EditAlertDialogFragment.TAG);
     }
 }

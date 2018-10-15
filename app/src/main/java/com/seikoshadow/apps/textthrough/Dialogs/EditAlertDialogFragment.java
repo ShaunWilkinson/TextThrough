@@ -1,7 +1,6 @@
 package com.seikoshadow.apps.textthrough.Dialogs;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -10,28 +9,30 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.appcompat.widget.Toolbar;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 
-import com.seikoshadow.apps.textthrough.Database.AlertModel;
-import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.Database.Alert;
+import com.seikoshadow.apps.textthrough.Database.AlertModel;
+import com.seikoshadow.apps.textthrough.Database.AlertViewModel;
+import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.R;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+
 import static android.app.Activity.RESULT_OK;
 
-/**
- * Handles the fullscreen dialog for creating new alerts
- */
-public class CreateAlertDialogFragment extends DialogFragment {
-    public static String TAG = "CreateAlertDialogFragment";
+public class EditAlertDialogFragment extends DialogFragment {
+    public static String TAG = "EditAlertDialogFragment";
     private View view;
     private AppDatabase db;
     private Alert alert;
+    private Uri ringtoneUri;
 
     /**
      * Called first, on creation set the style to fullscreen and initiate a reference to the database
@@ -40,9 +41,14 @@ public class CreateAlertDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+        setStyle(android.app.DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+
+        //TODO finish edit alerts
 
         db = AppDatabase.getInstance(getContext());
+
+        Bundle bundle = getArguments();
+        alert = db.alertModel().findById((int)bundle.getLong("Alert Id"));
     }
 
     /**
@@ -57,13 +63,17 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
         setupToolbar();
 
+        TextView ringtoneSelector = view.findViewById(R.id.ringtoneEditText);
+        ringtoneSelector.setText(alert.getRingtoneName());
+
         return view;
     }
+
 
     private void setupToolbar() {
         // Setup the toolbar
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.createAlertTitle));
+        toolbar.setTitle(getString(R.string.editAlertTitle));
 
         // Add an exit button
         toolbar.setNavigationIcon(R.drawable.ic_close_white);
@@ -105,11 +115,11 @@ public class CreateAlertDialogFragment extends DialogFragment {
      */
     private void selectRingtone() {
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtonePickerTitle));
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_NOTIFICATION);
-            this.startActivityForResult(intent,999);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtonePickerTitle));
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_NOTIFICATION);
+        this.startActivityForResult(intent,999);
     }
 
     /**
@@ -137,15 +147,14 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
     /**
      * Gets the values from the input fields and then saves the result
-     * @param ringtoneName The name of the ringtone selected
-     * @param selectedRingtone The Uri of the ringtone that was selected
      */
-    public void saveAlert(String ringtoneName, Uri selectedRingtone) {
+    public void saveAlert() {
         EditText alertNameEditText = view.findViewById(R.id.nameEditText);
         EditText phoneNumberEditText = view.findViewById(R.id.numberEditText);
         EditText numberOfRingsEditText = view.findViewById(R.id.numOfRingsEditText);
         Switch vibrateSwitch = view.findViewById(R.id.vibrateSwitch);
 
+        /*
         alert = new Alert(
                 alertNameEditText.getText().toString(),
                 phoneNumberEditText.getText().toString(),
@@ -163,6 +172,8 @@ public class CreateAlertDialogFragment extends DialogFragment {
                 db.alertModel().insertAll(alert);
         });
 
+*/
         this.dismiss();
     }
+
 }

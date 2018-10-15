@@ -16,6 +16,9 @@ public interface AlertModel {
     @Query("SELECT * FROM alert WHERE id IN (:alertIds)")
     LiveData<List<Alert>> loadAllByIds(int[] alertIds);
 
+    @Query("SELECT * FROM alert WHERE id LIKE :id LIMIT 1")
+    Alert findById(int id);
+
     @Query("SELECT * FROM alert WHERE alert_name LIKE :name LIMIT 1")
     LiveData<Alert> findByName(String name);
 
