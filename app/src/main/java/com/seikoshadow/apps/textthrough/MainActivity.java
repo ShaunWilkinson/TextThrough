@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
             int groupPosition = ExpandableListView.getPackedPositionGroup(id);
             int childPosition = ExpandableListView.getPackedPositionChild(id);
 
-            Toast.makeText(getApplicationContext(), "Group: " + groupPosition + ", Child: " + childPosition, Toast.LENGTH_LONG).show();
-            editAlert(view, listAdapter.getGroupId(groupPosition));
+            Toast.makeText(getApplicationContext(), "Group: " + (groupPosition-1) + ", Child: " + childPosition, Toast.LENGTH_LONG).show();
+            editAlert(listAdapter.getGroupId(groupPosition-1));
 
             return true;
         });
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show(fragmentTransaction, CreateAlertDialogFragment.TAG);
     }
 
-    public void editAlert(View view, int alertId) {
+    public void editAlert(long alertId) {
         //TODO create an alert
         Bundle bundle = new Bundle();
         bundle.putLong("Alert Id", alertId);
