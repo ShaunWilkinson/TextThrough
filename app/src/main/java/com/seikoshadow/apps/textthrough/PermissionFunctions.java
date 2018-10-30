@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.widget.Toast;
 
+import static com.seikoshadow.apps.textthrough.constants.KILL_BACKGROUND_PERMISSION_CODE;
 import static com.seikoshadow.apps.textthrough.constants.SMS_PERMISSION_CODE;
 
 /**
@@ -71,4 +72,29 @@ public class PermissionFunctions {
             new String[] { Manifest.permission.RECEIVE_SMS }, SMS_PERMISSION_CODE);
     }
 
+    /**
+     * Checks whether the Receive SMS permission has been granted
+     *
+     * @return True if permission given, false otherwise
+     */
+    public static boolean isKillProcessesPermissionGranted(Context context) {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.KILL_BACKGROUND_PROCESSES)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     * Handles requesting READ SMS permissions for the app
+     */
+    public static void requestKillProcessesPermission(Activity activity) {
+        // If the user has previously denied Read_SMS permission
+        if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                Manifest.permission.KILL_BACKGROUND_PROCESSES)) {
+            // You may display a non-blocking explanation here, read more in the documentation:
+            // https://developer.android.com/training/permissions/requesting.html
+        }
+
+        // Request the permissions
+        ActivityCompat.requestPermissions(activity,
+                new String[] { Manifest.permission.KILL_BACKGROUND_PROCESSES }, KILL_BACKGROUND_PERMISSION_CODE);
+    }
 }

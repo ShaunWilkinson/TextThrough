@@ -12,4 +12,5 @@ public class constants {
   public static final String NOTIFICATION_CHANNEL_NAME = "TextThrough Notification Channel";
   public static final int SMS_SERVICE_RUNNING_ID = 1;
   public static final String APPDATABASENAME = "TextThrough_DB";
+  public static final int KILL_BACKGROUND_PERMISSION_CODE = 999;
 }

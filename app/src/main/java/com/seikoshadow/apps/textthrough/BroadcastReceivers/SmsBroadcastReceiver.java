@@ -77,6 +77,8 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
             Log.d(TAG, "Limitation: " + senderLimitation.toString() + ", Sender: " + smsSender);
 
+
+
             // compare the received texts origin to the defined list
             if(senderLimitation.contains(smsSender.toLowerCase()) && listener != null) {
                 listener.onTextReceived(smsSender, smsBody);

@@ -1,10 +1,12 @@
 package com.seikoshadow.apps.textthrough;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -49,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
         if (!PermissionFunctions.isReceiveSmsPermissionGranted(this))
             showRequestReceiveSmsPermissionDialog(this);
 
+        if(!PermissionFunctions.isKillProcessesPermissionGranted(this))
+            showRequestKillProcessesPermissionDialog(this);
+
         // Notifies the system to expect notifications
         createNotificationChannel();
 
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Called by Start Service Button
     public void stopService(View view) {
-        stopSmsService();
+        forceKillService();
     }
 
 
@@ -97,12 +102,15 @@ public class MainActivity extends AppCompatActivity {
     protected void startSmsService() {
         boolean serviceIsRunning = SmsFunctionsServiceManager.isMyServiceRunning;
 
-        if(db.alertModel().isTherePhoneNumber() != null && !serviceIsRunning) {
-            // Create an SMSWatchService then if not already started then start it
-            SMSWatchService smsWatchService = new SMSWatchService();
-            mServiceIntent = new Intent(MainActivity.this, smsWatchService.getClass());
-            startService(mServiceIntent);
-
+        if(db.alertModel().isTherePhoneNumber() != null) {
+            if(!serviceIsRunning) {
+                // Create an SMSWatchService then if not already started then start it
+                SMSWatchService smsWatchService = new SMSWatchService();
+                mServiceIntent = new Intent(MainActivity.this, smsWatchService.getClass());
+                startService(mServiceIntent);
+            } else {
+                Toast.makeText(this, "service is running", Toast.LENGTH_LONG).show();
+            }
         } else {
             Toast.makeText(this, getString(R.string.noNumbersFound), Toast.LENGTH_LONG).show();
         }
@@ -118,6 +126,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    protected void forceKillService() {
+        // Gets running services and kills the service associated with the app
+        ActivityManager am = (ActivityManager) getSystemService(Activity.ACTIVITY_SERVICE);
+        if(am != null) {
+            am.killBackgroundProcesses("com.seikoshadow.apps.textthrough");
+        }
+
+        // Close the notification
+        /*
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        if(notificationManager != null)
+            notificationManager.cancelAll();
+        */
+    }
+
     /**
      * When the app is properly closed stop the service so that it calls its own create
      */
@@ -126,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
         stopService(mServiceIntent);
         super.onDestroy();
     }
+
 
     /**
      * Displays a dialog describing why the read permission is required
@@ -164,6 +188,28 @@ public class MainActivity extends AppCompatActivity {
 
             // Display permission request
             PermissionFunctions.requestReceiveSmsPermission(activity);
+        });
+
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    /**
+     * Creates an AlertDialog explaining why the KILL_BACKGROUND_PROCESSES permission is required then asks for
+     * permission
+     */
+    public void showRequestKillProcessesPermissionDialog(final Activity activity) {
+        // Create the alert dialog and set values
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.kill_background_processes_title);
+        builder.setMessage(R.string.kill_background_processes_message);
+
+        // Handle button click
+        builder.setPositiveButton(R.string.action_ok, (dialog, which) -> {
+            dialog.dismiss();
+
+            // Display permission request
+            PermissionFunctions.requestKillProcessesPermission(activity);
         });
 
         builder.setCancelable(false);

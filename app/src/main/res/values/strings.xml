@@ -24,6 +24,8 @@
   <string name="read_sms_request_message">&appname; will now request \'Read SMS\' permission on your device.\n\nThis is required in order to process new incoming SMS and will at no point leave this device.</string>
   <string name="receive_sms_request_title">Receive SMS Permission</string>
   <string name="receive_sms_request_message">&appname; will now request \'Receive SMS\' permission on your device.\n\nThis allows the app to intercept new emails so that they can trigger actions.</string>
+  <string name="kill_background_processes_title">Kill Background Process Permission</string>
+  <string name="kill_background_processes_message">&appname; will now request \'Kill Background Processes\' permission.\n\nThis allows the app to close the background service which watches for texts to start the alert.</string>
 
   <!-- Service -->
   <string name="smswatchservice_name">&appname; Service</string>
