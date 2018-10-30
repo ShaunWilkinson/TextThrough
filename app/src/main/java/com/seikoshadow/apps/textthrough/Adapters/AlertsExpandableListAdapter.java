@@ -5,8 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.seikoshadow.apps.textthrough.Database.Alert;
@@ -54,7 +54,8 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
 
         if(v == null) {
             LayoutInflater layoutInflater = (LayoutInflater)this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = layoutInflater.inflate(R.layout.alerts_listview_child, parent, false);
+            if(layoutInflater != null)
+                v = layoutInflater.inflate(R.layout.alerts_listview_child, parent, false);
         }
 
         // initiate the fields

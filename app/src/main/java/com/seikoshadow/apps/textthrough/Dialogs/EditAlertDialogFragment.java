@@ -10,27 +10,26 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.appcompat.widget.Toolbar;
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 
+import com.seikoshadow.apps.textthrough.Database.Alert;
 import com.seikoshadow.apps.textthrough.Database.AlertModel;
 import com.seikoshadow.apps.textthrough.Database.AppDatabase;
-import com.seikoshadow.apps.textthrough.Database.Alert;
 import com.seikoshadow.apps.textthrough.R;
+
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import androidx.appcompat.widget.Toolbar;
+
 import static android.app.Activity.RESULT_OK;
 
-/**
- * Handles the fullscreen dialog for creating new alerts
- */
-public class CreateAlertDialogFragment extends DialogFragment {
-    public static String TAG = "CreateAlertDialogFragment";
+public class EditAlertDialogFragment extends DialogFragment {
+    public static String TAG = "EditAlertDialogFragment";
     private View view;
     private AppDatabase db;
     private Alert alert;
@@ -47,9 +46,14 @@ public class CreateAlertDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+        setStyle(android.app.DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+
+        //TODO finish edit alerts
 
         db = AppDatabase.getInstance(getContext());
+
+        Bundle bundle = getArguments();
+        alert = db.alertModel().findById((int)bundle.getLong("Alert Id"));
     }
 
     /**
@@ -63,12 +67,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
         view = inflater.inflate(R.layout.layout_create_alert, container, false);
 
         setupToolbar();
-
-        alertNameEditText = view.findViewById(R.id.nameEditText);
-        phoneNumberEditText = view.findViewById(R.id.numberEditText);
-        numberOfRingsEditText = view.findViewById(R.id.numOfRingsEditText);
-        vibrateSwitch = view.findViewById(R.id.vibrateSwitch);
-
+        populateFields();
         setupRingtonePickerButton(view);
 
         return view;
@@ -76,20 +75,29 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
     private void setupRingtonePickerButton(View view) {
         Button ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
-
-        Ringtone ringtone = RingtoneManager.getActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_ALARM );
-    //TODO ringtone title not right
-        ringtoneSelectButton.setText(ringtone.getTitle(getContext()));
+        ringtoneSelectButton.setText(alert.getRingtoneName());
 
         ringtoneSelectButton.setOnClickListener(view1 -> {
             selectRingtone(view);
         });
     }
 
+    private void populateFields() {
+        alertNameEditText = view.findViewById(R.id.nameEditText);
+        phoneNumberEditText = view.findViewById(R.id.numberEditText);
+        numberOfRingsEditText = view.findViewById(R.id.numOfRingsEditText);
+        vibrateSwitch = view.findViewById(R.id.vibrateSwitch);
+
+        alertNameEditText.setText(alert.getName());
+        phoneNumberEditText.setText(alert.getPhoneNumber());
+        numberOfRingsEditText.setText(String.valueOf(alert.getNumberOfRings()));
+        vibrateSwitch.setChecked(alert.isAlertVibrate());
+    }
+
     private void setupToolbar() {
         // Setup the toolbar
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.createAlertTitle));
+        toolbar.setTitle(getString(R.string.editAlertTitle));
 
         // Add an exit button
         toolbar.setNavigationIcon(R.drawable.ic_close_white);
@@ -127,15 +135,39 @@ public class CreateAlertDialogFragment extends DialogFragment {
     }
 
     /**
+     * Gets the values from the input fields and then saves the result
+     */
+    public void saveAlert() {
+        alert.setName(alertNameEditText.getText().toString());
+        alert.setPhoneNumber(phoneNumberEditText.getText().toString());
+        int numberOfRings = Integer.parseInt(numberOfRingsEditText.getText().toString());
+        alert.setNumberOfRings(numberOfRings);
+        alert.setAlertVibrate(vibrateSwitch.isChecked());
+
+        // Run the insert on a separate thread
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            // Make sure theres not an existing record with the same phone number
+            AlertModel alertModel = db.alertModel();
+            alertModel.insertAll(alert);
+        });
+
+        this.dismiss();
+    }
+
+    //TODO finish ringtone selector (only a button right now)
+
+    /**
      * Generates a Ringtone Picker
      */
     private void selectRingtone(View view) {
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtonePickerTitle));
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_NOTIFICATION);
-            this.startActivityForResult(intent,999);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtonePickerTitle));
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_NOTIFICATION);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Uri.parse(alert.getRingtoneUri())); // Sets the default ringtone
+        this.startActivityForResult(intent,999);
     }
 
     /**
@@ -164,33 +196,4 @@ public class CreateAlertDialogFragment extends DialogFragment {
         }
     }
 
-    /**
-     * Gets the values from the input fields and then saves the result
-     */
-    public void saveAlert() {
-        alert.setName(alertNameEditText.getText().toString());
-        alert.setPhoneNumber(phoneNumberEditText.getText().toString());
-        int numberOfRings = Integer.parseInt(numberOfRingsEditText.getText().toString());
-        alert.setNumberOfRings(numberOfRings);
-        alert.setAlertVibrate(vibrateSwitch.isChecked());
-
-        alert = new Alert(
-                alertNameEditText.getText().toString(),
-                phoneNumberEditText.getText().toString(),
-                alert.getRingtoneName(),
-                alert.getRingtoneUri(),
-                Integer.parseInt(numberOfRingsEditText.getText().toString()),
-                vibrateSwitch.isChecked());
-
-        // Run the insert on a separate thread
-        Executor executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            // Make sure theres not an existing record with the same phone number
-            AlertModel alertModel = db.alertModel();
-            if(alertModel.findByPhoneNumber(alert.getPhoneNumber()) == null)
-                db.alertModel().insertAll(alert);
-        });
-
-        this.dismiss();
-    }
 }

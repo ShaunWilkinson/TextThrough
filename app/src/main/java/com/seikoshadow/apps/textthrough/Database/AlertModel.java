@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import java.util.List;
@@ -15,6 +16,9 @@ public interface AlertModel {
 
     @Query("SELECT * FROM alert WHERE id IN (:alertIds)")
     LiveData<List<Alert>> loadAllByIds(int[] alertIds);
+
+    @Query("SELECT * FROM alert WHERE id LIKE :id LIMIT 1")
+    Alert findById(int id);
 
     @Query("SELECT * FROM alert WHERE alert_name LIKE :name LIMIT 1")
     LiveData<Alert> findByName(String name);
@@ -28,7 +32,7 @@ public interface AlertModel {
     @Query("SELECT phone_number FROM alert LIMIT 1")
     String isTherePhoneNumber();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Alert... alerts);
 
     @Delete

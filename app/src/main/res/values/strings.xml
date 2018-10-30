@@ -6,6 +6,7 @@
 
 <resources>
   <string name="app_name">&appname;</string>
+  <string name="placeholder">Placeholder</string>
 
   <!-- Generic -->
   <string name="action_ok">OK</string>
@@ -41,4 +42,7 @@
   <string name="vibrate">Vibrate</string>
   <string name="save">Save</string>
   <string name="ringtonePickerTitle">Select a ringtone for the alert</string>
+
+  <!-- Edit Alert -->
+  <string name="editAlertTitle">Edit Alert</string>
 </resources>
