@@ -33,7 +33,9 @@ public class CreateAlertDialogFragment extends DialogFragment {
     public static String TAG = "CreateAlertDialogFragment";
     private View view;
     private AppDatabase db;
-    private Alert alert;
+
+    private String ringtoneName;
+    private Uri ringtoneUri;
 
     private EditText alertNameEditText;
     private EditText phoneNumberEditText;
@@ -77,9 +79,14 @@ public class CreateAlertDialogFragment extends DialogFragment {
     private void setupRingtonePickerButton(View view) {
         Button ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
 
-        Ringtone ringtone = RingtoneManager.getActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_ALARM );
-    //TODO ringtone title not right
-        ringtoneSelectButton.setText(ringtone.getTitle(getContext()));
+        Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getActivity().getApplicationContext(), RingtoneManager.TYPE_ALARM);
+        Ringtone defaultRingtone = RingtoneManager.getRingtone(getActivity(), ringtoneUri);
+
+        this.ringtoneUri = ringtoneUri;
+        ringtoneName = defaultRingtone.getTitle(getContext());
+
+        //TODO ringtone title not right
+        ringtoneSelectButton.setText(defaultRingtone.getTitle(getContext()));
 
         ringtoneSelectButton.setOnClickListener(view1 -> {
             selectRingtone(view);
@@ -100,10 +107,9 @@ public class CreateAlertDialogFragment extends DialogFragment {
         toolbar.setOnMenuItemClickListener(item -> {
             if(validateFields()) {
                 saveAlert();
-                return true;
-            } else {
-                return false;
             }
+
+            return true;
         });
     }
 
@@ -134,7 +140,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtonePickerTitle));
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_NOTIFICATION);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_ALARM);
             this.startActivityForResult(intent,999);
     }
 
@@ -157,8 +163,8 @@ public class CreateAlertDialogFragment extends DialogFragment {
                 if(uri != null) {
                     Button ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
                     ringtoneSelectButton.setText(name);
-                    alert.setRingtoneName(name);
-                    alert.setRingtoneUri(uri);
+                    ringtoneName = name;
+                    ringtoneUri = uri;
                 }
             }
         }
@@ -168,17 +174,11 @@ public class CreateAlertDialogFragment extends DialogFragment {
      * Gets the values from the input fields and then saves the result
      */
     public void saveAlert() {
-        alert.setName(alertNameEditText.getText().toString());
-        alert.setPhoneNumber(phoneNumberEditText.getText().toString());
-        int numberOfRings = Integer.parseInt(numberOfRingsEditText.getText().toString());
-        alert.setNumberOfRings(numberOfRings);
-        alert.setAlertVibrate(vibrateSwitch.isChecked());
-
-        alert = new Alert(
+        Alert alert = new Alert(
                 alertNameEditText.getText().toString(),
                 phoneNumberEditText.getText().toString(),
-                alert.getRingtoneName(),
-                alert.getRingtoneUri(),
+                ringtoneName,
+                ringtoneUri,
                 Integer.parseInt(numberOfRingsEditText.getText().toString()),
                 vibrateSwitch.isChecked());
 

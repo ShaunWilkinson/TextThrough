@@ -11,6 +11,7 @@
   <!-- Generic -->
   <string name="action_ok">OK</string>
   <string name="action_submit">Submit</string>
+  <string name="action_delete">Delete</string>
   <string name="yes">Yes</string>
   <string name="no">No</string>
   <string name="active">Active</string>

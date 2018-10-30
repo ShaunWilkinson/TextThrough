@@ -1,10 +1,16 @@
 package com.seikoshadow.apps.textthrough.Services;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.provider.Telephony;
 import androidx.core.app.NotificationCompat;
@@ -34,7 +40,6 @@ public class SMSWatchService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // TODO do something useful
         super.onStartCommand(intent, flags, startId);
 
         // Change the flag so service running can be checked
@@ -45,12 +50,10 @@ public class SMSWatchService extends Service {
         registerReceiver(smsBroadcastReceiver, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
 
         // What to do when a text is received
-        smsBroadcastReceiver.setListener(new SmsBroadcastReceiver.Listener() {
-            @Override public void onTextReceived(String smsSender, String smsBody) {
-                // Called when the origin matches one of the defined senders
-                Log.d(TAG, "got here");
-                processTextAction(smsSender, smsBody);
-            }
+        smsBroadcastReceiver.setListener((smsSender, smsBody) -> {
+            // Called when the origin matches one of the defined senders
+            Log.d(TAG, "got here");
+            processTextAction(smsSender, smsBody);
         });
 
         // Sets the sender limitation in the background
@@ -77,17 +80,14 @@ public class SMSWatchService extends Service {
     public void setSMSNumberLimitation() {
         // Run a query on the database in the background then set the sender limitation
         Executor executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                db = AppDatabase.getInstance(getApplicationContext());
-                List<String> numbers = db.alertModel().getAllPhoneNumbers();
+        executor.execute(() -> {
+            db = AppDatabase.getInstance(getApplicationContext());
+            List<String> numbers = db.alertModel().getAllPhoneNumbers();
 
-                if(!numbers.isEmpty()) {
-                    smsBroadcastReceiver.setSenderLimitation(numbers);
-                } else {
-                    Log.e(TAG, "Failed to find numbers");
-                }
+            if(!numbers.isEmpty()) {
+                smsBroadcastReceiver.setSenderLimitation(numbers);
+            } else {
+                Log.e(TAG, "Failed to find numbers");
             }
         });
     }
@@ -128,10 +128,27 @@ public class SMSWatchService extends Service {
         // Retrieve the alert related to the smsSender
         Alert relatedAlert = db.alertModel().findByPhoneNumber(smsSender);
         String ringtoneLocation = relatedAlert.getRingtoneUri();
-        Uri ringtoneUri = Uri.parse(ringtoneLocation); //TODO fix this
 
-        MediaPlayer mp = MediaPlayer.create(this, ringtoneUri);
-        mp.start();
+        Uri ringtoneUri = Uri.parse(ringtoneLocation); //TODO fix this
+        if(ringtoneUri == null) {
+            // If alert is null then use the default as a backup
+            ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        }
+
+        Ringtone ringtone = RingtoneManager.getRingtone(this, ringtoneUri);
+
+        ringtone.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build());
+
+        // Setup an audio manager and get the current alarm volume level, if it's 0 then override
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int audioVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+        if(audioVolume == 0) {
+            audioVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+        }
+
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, audioVolume, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+
+         ringtone.play();
         // TODO test this and test way to stop it via notification
     }
 }

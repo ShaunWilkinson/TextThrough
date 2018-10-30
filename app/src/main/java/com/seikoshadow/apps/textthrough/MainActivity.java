@@ -12,7 +12,6 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -29,6 +28,7 @@ import java.util.ArrayList;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+
 //TODO finish layout_create_alert
 //TODO support editing and deleting alerts
 
@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private Intent mServiceIntent;
     private AppDatabase db;
-    private ExpandableListView alertsList;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void handleListView() {
         // TODO update the listview on change
-        alertsList = findViewById(R.id.alertsList);
+        ExpandableListView alertsList = findViewById(R.id.alertsList);
         AlertsExpandableListAdapter listAdapter = new AlertsExpandableListAdapter(this, new ArrayList<>());
         alertsList.setAdapter(listAdapter);
 
@@ -72,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
             int groupPosition = ExpandableListView.getPackedPositionGroup(id);
             int childPosition = ExpandableListView.getPackedPositionChild(id);
 
-            Toast.makeText(getApplicationContext(), "Group: " + (groupPosition-1) + ", Child: " + childPosition, Toast.LENGTH_LONG).show();
-            editAlert(listAdapter.getGroupId(groupPosition-1));
+           Log.d(TAG,"Group: " + (groupPosition) + ", Child: " + childPosition);
+            editAlert(groupPosition);
 
             return true;
         });
@@ -138,13 +137,11 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(R.string.read_sms_request_message);
 
         // Handle button click
-        builder.setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+        builder.setPositiveButton(R.string.action_ok, (dialog, which) -> {
+            dialog.dismiss();
 
-                // Display permission request
-                PermissionFunctions.requestReadSmsPermission(activity);
-            }
+            // Display permission request
+            PermissionFunctions.requestReadSmsPermission(activity);
         });
 
         builder.setCancelable(false);
@@ -162,13 +159,11 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(R.string.receive_sms_request_message);
 
         // Handle button click
-        builder.setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+        builder.setPositiveButton(R.string.action_ok, (dialog, which) -> {
+            dialog.dismiss();
 
-                // Display permission request
-                PermissionFunctions.requestReceiveSmsPermission(activity);
-            }
+            // Display permission request
+            PermissionFunctions.requestReceiveSmsPermission(activity);
         });
 
         builder.setCancelable(false);

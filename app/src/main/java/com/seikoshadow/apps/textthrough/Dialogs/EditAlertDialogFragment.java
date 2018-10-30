@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import com.seikoshadow.apps.textthrough.Database.Alert;
 import com.seikoshadow.apps.textthrough.Database.AlertModel;
@@ -24,6 +23,7 @@ import com.seikoshadow.apps.textthrough.R;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
 import static android.app.Activity.RESULT_OK;
@@ -104,15 +104,36 @@ public class EditAlertDialogFragment extends DialogFragment {
         toolbar.setNavigationOnClickListener(view -> getDialog().dismiss());
 
         // Inflate the menu for save
-        toolbar.inflateMenu(R.menu.menu_create_alert);
+        toolbar.inflateMenu(R.menu.menu_edit_alert);
         toolbar.setOnMenuItemClickListener(item -> {
-            if(validateFields()) {
-                saveAlert();
-                return true;
+            // Save Button Clicked
+            if(item.getItemId() == R.id.saveAlert) {
+                if (validateFields()) {
+                    saveAlert();
+                }
+            // Delete Button Clicked
             } else {
-                return false;
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Confirm")
+                        .setMessage("Are you sure you want to delete this alert?")
+                        .setPositiveButton(android.R.string.yes, (confirmDialog, which) -> {
+                            // Run the delete in the background
+                            Executor executor = Executors.newSingleThreadExecutor();
+                            executor.execute(() -> {
+                                // Make sure theres not an existing record with the same phone number
+                                AlertModel alertModel = db.alertModel();
+                                alertModel.delete(alert);
+                            });
+
+                            this.dismiss();
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
             }
+
+            return true;
         });
+
     }
 
     /**
@@ -165,7 +186,7 @@ public class EditAlertDialogFragment extends DialogFragment {
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtonePickerTitle));
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_NOTIFICATION);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_ALARM);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Uri.parse(alert.getRingtoneUri())); // Sets the default ringtone
         this.startActivityForResult(intent,999);
     }
