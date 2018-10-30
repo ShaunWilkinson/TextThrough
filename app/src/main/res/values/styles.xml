@@ -80,6 +80,11 @@
         <item name="android:colorControlNormal">@color/colorAccent</item>
     </style>
 
+    <style name="createOfEditButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorPrimaryLight</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
     <!-- Alert ListView -->
     <style name="ListViewGridLayout">
         <item name="android:layout_width">match_parent</item>

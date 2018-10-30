@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.widget.Toolbar;
+
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 
@@ -32,6 +34,11 @@ public class CreateAlertDialogFragment extends DialogFragment {
     private View view;
     private AppDatabase db;
     private Alert alert;
+
+    private EditText alertNameEditText;
+    private EditText phoneNumberEditText;
+    private EditText numberOfRingsEditText;
+    private Switch vibrateSwitch;
 
     /**
      * Called first, on creation set the style to fullscreen and initiate a reference to the database
@@ -57,7 +64,26 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
         setupToolbar();
 
+        alertNameEditText = view.findViewById(R.id.nameEditText);
+        phoneNumberEditText = view.findViewById(R.id.numberEditText);
+        numberOfRingsEditText = view.findViewById(R.id.numOfRingsEditText);
+        vibrateSwitch = view.findViewById(R.id.vibrateSwitch);
+
+        setupRingtonePickerButton(view);
+
         return view;
+    }
+
+    private void setupRingtonePickerButton(View view) {
+        Button ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
+
+        Ringtone ringtone = RingtoneManager.getActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_ALARM );
+    //TODO ringtone title not right
+        ringtoneSelectButton.setText(ringtone.getTitle(getContext()));
+
+        ringtoneSelectButton.setOnClickListener(view1 -> {
+            selectRingtone(view);
+        });
     }
 
     private void setupToolbar() {
@@ -73,7 +99,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
         toolbar.inflateMenu(R.menu.menu_create_alert);
         toolbar.setOnMenuItemClickListener(item -> {
             if(validateFields()) {
-                selectRingtone();
+                saveAlert();
                 return true;
             } else {
                 return false;
@@ -103,7 +129,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
     /**
      * Generates a Ringtone Picker
      */
-    private void selectRingtone() {
+    private void selectRingtone(View view) {
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtonePickerTitle));
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
@@ -129,7 +155,10 @@ public class CreateAlertDialogFragment extends DialogFragment {
                 String name = selectedRingtone.getTitle(getContext());
                 selectedRingtone.stop();
                 if(uri != null) {
-                    saveAlert(name, uri);
+                    Button ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
+                    ringtoneSelectButton.setText(name);
+                    alert.setRingtoneName(name);
+                    alert.setRingtoneUri(uri);
                 }
             }
         }
@@ -137,20 +166,19 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
     /**
      * Gets the values from the input fields and then saves the result
-     * @param ringtoneName The name of the ringtone selected
-     * @param selectedRingtone The Uri of the ringtone that was selected
      */
-    public void saveAlert(String ringtoneName, Uri selectedRingtone) {
-        EditText alertNameEditText = view.findViewById(R.id.nameEditText);
-        EditText phoneNumberEditText = view.findViewById(R.id.numberEditText);
-        EditText numberOfRingsEditText = view.findViewById(R.id.numOfRingsEditText);
-        Switch vibrateSwitch = view.findViewById(R.id.vibrateSwitch);
+    public void saveAlert() {
+        alert.setName(alertNameEditText.getText().toString());
+        alert.setPhoneNumber(phoneNumberEditText.getText().toString());
+        int numberOfRings = Integer.parseInt(numberOfRingsEditText.getText().toString());
+        alert.setNumberOfRings(numberOfRings);
+        alert.setAlertVibrate(vibrateSwitch.isChecked());
 
         alert = new Alert(
                 alertNameEditText.getText().toString(),
                 phoneNumberEditText.getText().toString(),
-                ringtoneName,
-                selectedRingtone.toString(),
+                alert.getRingtoneName(),
+                alert.getRingtoneUri(),
                 Integer.parseInt(numberOfRingsEditText.getText().toString()),
                 vibrateSwitch.isChecked());
 

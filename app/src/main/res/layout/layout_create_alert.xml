@@ -56,11 +56,6 @@
             android:hint="1"
             android:inputType="number" />
 
-        <Switch
-            android:id="@+id/vibrateSwitch"
-            style="@style/createOrEditSwitch"
-            android:text="@string/vibrate" />
-
         <TextView
             android:id="@+id/numOfRingsLabel2"
             style="@style/createOrEditLabel"
@@ -72,7 +67,14 @@
             android:id="@+id/ringtoneSelectBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="Button"
+            android:theme="@style/createOfEditButton" />
+
+        <Switch
+            android:id="@+id/vibrateSwitch"
+            style="@style/createOrEditSwitch"
+            android:text="@string/vibrate" />
+
 
     </LinearLayout>
 
