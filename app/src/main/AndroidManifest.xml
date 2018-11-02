@@ -23,8 +23,9 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+      <activity android:name=".Dialogs.AlarmRingingDialog" />
 
-    <receiver android:name=".BroadcastReceivers.SmsBroadcastReceiver"
+      <receiver android:name=".BroadcastReceivers.SmsBroadcastReceiver"
         android:enabled="true"
         android:exported="true"
         android:label="SMSBroadcastReceiver">
