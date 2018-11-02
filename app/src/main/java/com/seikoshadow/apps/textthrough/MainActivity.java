@@ -132,13 +132,6 @@ public class MainActivity extends AppCompatActivity {
         if(am != null) {
             am.killBackgroundProcesses("com.seikoshadow.apps.textthrough");
         }
-
-        // Close the notification
-        /*
-        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        if(notificationManager != null)
-            notificationManager.cancelAll();
-        */
     }
 
     /**

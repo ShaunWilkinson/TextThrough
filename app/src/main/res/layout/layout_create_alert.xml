@@ -48,7 +48,7 @@
         <TextView
             android:id="@+id/numOfRingsLabel"
             style="@style/createOrEditLabel"
-            android:text="@string/numberOfRings" />
+            android:text="@string/secondsToRingFor" />
 
         <EditText
             android:id="@+id/numOfRingsEditText"

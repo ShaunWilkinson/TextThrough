@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
@@ -39,7 +40,7 @@ public class SMSWatchService extends Service {
     private NotificationManagerCompat notificationManager;
     private final static String TAG = "SMSWatchService";
     private AppDatabase db;
-    int count = 0;
+    Alert relatedAlert;
 
     public SMSWatchService() {}
 
@@ -128,13 +129,13 @@ public class SMSWatchService extends Service {
      * @param smsBody The body of the received text
      */
     public void processTextAction(String smsSender, String smsBody) {
-        Log.d(TAG, "Processing text from " + smsSender);
+        // TODO dialog popup when alarm goes off
 
         // Retrieve the alert related to the smsSender
-        Alert relatedAlert = db.alertModel().findByPhoneNumber(smsSender);
+        relatedAlert = db.alertModel().findByPhoneNumber(smsSender);
         String ringtoneLocation = relatedAlert.getRingtoneUri();
 
-        Uri ringtoneUri = Uri.parse(ringtoneLocation); //TODO fix this
+        Uri ringtoneUri = Uri.parse(ringtoneLocation);
         if(ringtoneUri == null) {
             // If alert is null then use the default as a backup
             ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -143,24 +144,38 @@ public class SMSWatchService extends Service {
         // Setup an audio manager and get the current alarm volume level, if it's 0 then override
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int audioVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-        final int originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM, audioVolume, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
 
-        // Loop the ringtone based on the number set in the alert
-        MediaPlayer player = MediaPlayer.create(this, ringtoneUri);
+        // Set up the MediaPlayer to play the selected alarm
+        MediaPlayer player = new MediaPlayer();
         player.setVolume(100, 100);
+        player.setLooping(true);
 
-        player.setOnCompletionListener(mediaPlayer -> {
-            if(count < relatedAlert.getNumberOfRings()) {
-                player.start();
-                count++;
+        try {
+            player.setDataSource(this, ringtoneUri);
+            player.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        player.start();
+
+        Log.d(TAG, "Seconds to ring for" + relatedAlert.getSecondsToRingFor());
+        // In a separate thread wait the specified length of time then stop the ringtone
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                Thread.sleep(relatedAlert.getSecondsToRingFor() * 1000);
+                if(player.isPlaying()) {
+                    player.stop();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         });
-        player.start();
 
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0);
 
         // TODO test this and test way to stop it via notification
     }
-
 }

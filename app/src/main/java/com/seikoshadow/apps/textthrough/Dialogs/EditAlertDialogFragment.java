@@ -90,7 +90,7 @@ public class EditAlertDialogFragment extends DialogFragment {
 
         alertNameEditText.setText(alert.getName());
         phoneNumberEditText.setText(alert.getPhoneNumber());
-        numberOfRingsEditText.setText(String.valueOf(alert.getNumberOfRings()));
+        numberOfRingsEditText.setText(String.valueOf(alert.getSecondsToRingFor()));
         vibrateSwitch.setChecked(alert.isAlertVibrate());
     }
 
@@ -162,7 +162,7 @@ public class EditAlertDialogFragment extends DialogFragment {
         alert.setName(alertNameEditText.getText().toString());
         alert.setPhoneNumber(phoneNumberEditText.getText().toString());
         int numberOfRings = Integer.parseInt(numberOfRingsEditText.getText().toString());
-        alert.setNumberOfRings(numberOfRings);
+        alert.setSecondsToRingFor(numberOfRings);
         alert.setAlertVibrate(vibrateSwitch.isChecked());
 
         // Run the insert on a separate thread

@@ -41,7 +41,7 @@
   <string name="alert_name">Alert Name</string>
   <string name="phoneNumber">Phone Number</string>
   <string name="ringtone">Ringtone</string>
-  <string name="numberOfRings">Times to Ring</string>
+  <string name="secondsToRingFor">Seconds to Ring</string>
   <string name="vibrate">Vibrate</string>
   <string name="save">Save</string>
   <string name="ringtonePickerTitle">Select a ringtone for the alert</string>

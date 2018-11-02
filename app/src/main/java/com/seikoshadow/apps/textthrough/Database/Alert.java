@@ -1,6 +1,5 @@
 package com.seikoshadow.apps.textthrough.Database;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -21,29 +20,29 @@ public class Alert {
     @ColumnInfo(name="ringtone_name")
     private String ringtoneName;
     @ColumnInfo(name="number_of_rings")
-    private int numberOfRings;
+    private int secondsToRingFor;
     @ColumnInfo(name="alert_active")
     private boolean alertActive;
     @ColumnInfo(name="alert_vibrate")
     private boolean alertVibrate;
 
-    public Alert(String name, String phoneNumber, String ringtoneName, String ringtoneUri, int numberOfRings, boolean alertVibrate) {
+    public Alert(String name, String phoneNumber, String ringtoneName, String ringtoneUri, int secondsToRingFor, boolean alertVibrate) {
         this.name = name;
         this.phoneNumber = phoneNumber.toLowerCase();
         this.ringtoneName = ringtoneName;
         this.ringtoneUri = ringtoneUri;
         this.alertActive = true;
-        this.numberOfRings = numberOfRings;
+        this.secondsToRingFor = secondsToRingFor;
         this.alertVibrate = alertVibrate;
     }
 
-    public Alert(String name, String phoneNumber, String ringtoneName, Uri ringtoneUri, int numberOfRings, boolean alertVibrate) {
+    public Alert(String name, String phoneNumber, String ringtoneName, Uri ringtoneUri, int secondsToRingFor, boolean alertVibrate) {
         this.name = name;
         this.phoneNumber = phoneNumber.toLowerCase();
         this.ringtoneName = ringtoneName;
         this.ringtoneUri = String.valueOf(ringtoneUri);
         this.alertActive = true;
-        this.numberOfRings = numberOfRings;
+        this.secondsToRingFor = secondsToRingFor;
         this.alertVibrate = alertVibrate;
     }
 
@@ -67,8 +66,8 @@ public class Alert {
         return this.ringtoneName;
     }
 
-    public int getNumberOfRings() {
-        return this.numberOfRings;
+    public int getSecondsToRingFor() {
+        return this.secondsToRingFor;
     }
 
     public boolean isAlertActive() {
@@ -103,8 +102,8 @@ public class Alert {
         this.ringtoneUri = ringtoneUri;
     }
 
-    public void setNumberOfRings(int numberOfRings) {
-        this.numberOfRings = numberOfRings;
+    public void setSecondsToRingFor(int secondsToRingFor) {
+        this.secondsToRingFor = secondsToRingFor;
     }
 
     public void setAlertActive(boolean alertActive) {

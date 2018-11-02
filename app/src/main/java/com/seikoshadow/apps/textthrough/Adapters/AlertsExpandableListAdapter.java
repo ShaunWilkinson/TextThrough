@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
@@ -68,7 +67,7 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
         // If true set to yes, otherwise No
         String alertActive = alerts.get(groupPosition).isAlertActive() ? _context.getString(R.string.yes) : _context.getString(R.string.no);
         String vibrate = alerts.get(groupPosition).isAlertVibrate() ? _context.getString(R.string.yes) : _context.getString(R.string.no);
-        String ringCount = String.valueOf(alerts.get(groupPosition).getNumberOfRings());
+        String ringCount = String.valueOf(alerts.get(groupPosition).getSecondsToRingFor());
 
         // Set the values
         phoneNumberText.setText(alerts.get(groupPosition).getPhoneNumber());
