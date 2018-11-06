@@ -46,6 +46,28 @@ public class PermissionFunctions {
             == PackageManager.PERMISSION_GRANTED;
     }
 
+
+    /**
+     * Displays a dialog describing why the read permission is required
+     */
+    public static void showRequestReadSmsPermissionDialog(final Activity activity) {
+        // Create the alert dialog and set values
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(R.string.read_sms_request_title);
+        builder.setMessage(R.string.read_sms_request_message);
+
+        // Handle button click
+        builder.setPositiveButton(R.string.action_ok, (dialog, which) -> {
+            dialog.dismiss();
+
+            // Display permission request
+            PermissionFunctions.requestReadSmsPermission(activity);
+        });
+
+        builder.setCancelable(false);
+        builder.show();
+    }
+
     /**
      * Handles requesting READ SMS permissions for the app
      */

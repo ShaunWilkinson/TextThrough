@@ -1,7 +1,6 @@
 package com.seikoshadow.apps.textthrough;
 
-import android.app.Activity;
-import android.app.AlertDialog;
+import android.Manifest;
 import android.app.FragmentTransaction;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,12 +12,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.seikoshadow.apps.textthrough.Adapters.AlertsExpandableListAdapter;
 import com.seikoshadow.apps.textthrough.Database.AlertViewModel;
 import com.seikoshadow.apps.textthrough.Dialogs.CreateAlertDialogFragment;
 import com.seikoshadow.apps.textthrough.Dialogs.EditAlertDialogFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -35,10 +40,43 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initToolbar();
+        //permissionsCheck();
 
+        // Notifies the system to expect notifications
+        createNotificationChannel();
+
+        initAlertsListView();
+
+        //TODO implement Dexter permission requests
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.RECEIVE_SMS,
+                        Manifest.permission.VIBRATE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+
+                    }
+                })
+                .check();
+    }
+
+
+    public void initToolbar() {
+        Toolbar mainToolbar = findViewById(R.id.mainToolbar);
+        mainToolbar.setSubtitle(R.string.alerts);
+        setSupportActionBar(mainToolbar);
+    }
+
+    private void permissionsCheck() {
         // Request READ SMS permission if not already granted
         if (!PermissionFunctions.isReadSmsPermissionGranted(this))
-            showRequestReadSmsPermissionDialog(this);
+            PermissionFunctions.showRequestReadSmsPermissionDialog(this);
 
         // Request RECEIVE SMS permission if not already granted
         /*if (!PermissionFunctions.isReceiveSmsPermissionGranted(this))
@@ -46,16 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
         PermissionFunctions.checkThatAppIsProtected(getApplicationContext());
 
-        // Notifies the system to expect notifications
-        createNotificationChannel();
 
-        initAlertsListView();
-    }
-
-    public void initToolbar() {
-        Toolbar mainToolbar = findViewById(R.id.mainToolbar);
-        mainToolbar.setSubtitle(R.string.alerts);
-        setSupportActionBar(mainToolbar);
+        //TODO ask permission to vibrate
     }
 
     /**
@@ -104,26 +134,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * Displays a dialog describing why the read permission is required
-     */
-    public void showRequestReadSmsPermissionDialog(final Activity activity) {
-        // Create the alert dialog and set values
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.read_sms_request_title);
-        builder.setMessage(R.string.read_sms_request_message);
-
-        // Handle button click
-        builder.setPositiveButton(R.string.action_ok, (dialog, which) -> {
-            dialog.dismiss();
-
-            // Display permission request
-            PermissionFunctions.requestReadSmsPermission(activity);
-        });
-
-        builder.setCancelable(false);
-        builder.show();
-    }
 
     /**
      * Sets up the notification channel so that the app can display notifications
