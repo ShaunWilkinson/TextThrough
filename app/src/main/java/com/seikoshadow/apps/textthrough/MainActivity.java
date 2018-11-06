@@ -1,69 +1,79 @@
 package com.seikoshadow.apps.textthrough;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import com.seikoshadow.apps.textthrough.Adapters.AlertsExpandableListAdapter;
 import com.seikoshadow.apps.textthrough.Database.AlertViewModel;
-import com.seikoshadow.apps.textthrough.Database.AppDatabase;
 import com.seikoshadow.apps.textthrough.Dialogs.CreateAlertDialogFragment;
 import com.seikoshadow.apps.textthrough.Dialogs.EditAlertDialogFragment;
-import com.seikoshadow.apps.textthrough.Services.SMSWatchService;
-import com.seikoshadow.apps.textthrough.Services.SmsFunctionsServiceManager;
 
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
 
-//TODO finish layout_create_alert
-//TODO support editing and deleting alerts
+//TODO Tidy up all stlyes so they're defined properly
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private Intent mServiceIntent;
-    private AppDatabase db;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initToolbar();
 
         // Request READ SMS permission if not already granted
         if (!PermissionFunctions.isReadSmsPermissionGranted(this))
             showRequestReadSmsPermissionDialog(this);
 
         // Request RECEIVE SMS permission if not already granted
-        if (!PermissionFunctions.isReceiveSmsPermissionGranted(this))
-            showRequestReceiveSmsPermissionDialog(this);
+        /*if (!PermissionFunctions.isReceiveSmsPermissionGranted(this))
+            showRequestReceiveSmsPermissionDialog(this);*/
 
-        if(!PermissionFunctions.isKillProcessesPermissionGranted(this))
-            showRequestKillProcessesPermissionDialog(this);
+        PermissionFunctions.checkThatAppIsProtected(getApplicationContext());
 
         // Notifies the system to expect notifications
         createNotificationChannel();
 
-        db = AppDatabase.getInstance(getApplicationContext());
-
-        handleListView();
+        initAlertsListView();
     }
 
-    public void handleListView() {
-        // TODO update the listview on change
+    public void initToolbar() {
+        Toolbar mainToolbar = findViewById(R.id.mainToolbar);
+        mainToolbar.setSubtitle(R.string.alerts);
+        setSupportActionBar(mainToolbar);
+    }
+
+    /**
+     * Handles clicks of any of the menu items
+     * @param item the Menuitem that was clicked
+     * @return true if method has consumed the event, false otherwise
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void initAlertsListView() {
         ExpandableListView alertsList = findViewById(R.id.alertsList);
         AlertsExpandableListAdapter listAdapter = new AlertsExpandableListAdapter(this, new ArrayList<>());
         alertsList.setAdapter(listAdapter);
@@ -83,64 +93,21 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_toolbar, menu);
+        return true;
+    }
+
     // Called by Start Service Button
     public void startService(View view) {
-        startSmsService();
+        //startSmsService();
     }
+
 
     // Called by Start Service Button
     public void stopService(View view) {
-        forceKillService();
-    }
-
-
-    //TODO make it started and stopped via button
-
-    /**
-     * Starts the SMS Service so long as there is saved numbers to compare
-     */
-    protected void startSmsService() {
-        boolean serviceIsRunning = SmsFunctionsServiceManager.isMyServiceRunning;
-
-        if(db.alertModel().isTherePhoneNumber() != null) {
-            if(!serviceIsRunning) {
-                // Create an SMSWatchService then if not already started then start it
-                SMSWatchService smsWatchService = new SMSWatchService();
-                mServiceIntent = new Intent(MainActivity.this, smsWatchService.getClass());
-                startService(mServiceIntent);
-            } else {
-                Toast.makeText(this, "service is running", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(this, getString(R.string.noNumbersFound), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    /**
-     * If it's running this stops the SMS Service watcher
-     */
-    protected void stopSmsService() {
-        // TODO finish ability to stop service
-        if(SmsFunctionsServiceManager.isMyServiceRunning) {
-            stopService(mServiceIntent);
-        }
-    }
-
-    protected void forceKillService() {
-        // Gets running services and kills the service associated with the app
-        ActivityManager am = (ActivityManager) getSystemService(Activity.ACTIVITY_SERVICE);
-        if(am != null) {
-            am.killBackgroundProcesses("com.seikoshadow.apps.textthrough");
-        }
-    }
-
-    /**
-     * When the app is properly closed stop the service so that it calls its own create
-     */
-    @Override
-    protected void onDestroy() {
-        stopService(mServiceIntent);
-        super.onDestroy();
+        //forceKillService();
     }
 
 
@@ -181,28 +148,6 @@ public class MainActivity extends AppCompatActivity {
 
             // Display permission request
             PermissionFunctions.requestReceiveSmsPermission(activity);
-        });
-
-        builder.setCancelable(false);
-        builder.show();
-    }
-
-    /**
-     * Creates an AlertDialog explaining why the KILL_BACKGROUND_PROCESSES permission is required then asks for
-     * permission
-     */
-    public void showRequestKillProcessesPermissionDialog(final Activity activity) {
-        // Create the alert dialog and set values
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.kill_background_processes_title);
-        builder.setMessage(R.string.kill_background_processes_message);
-
-        // Handle button click
-        builder.setPositiveButton(R.string.action_ok, (dialog, which) -> {
-            dialog.dismiss();
-
-            // Display permission request
-            PermissionFunctions.requestKillProcessesPermission(activity);
         });
 
         builder.setCancelable(false);
