@@ -37,7 +37,10 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
 
         if(v == null) {
             LayoutInflater inflater = (LayoutInflater)this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.alerts_listview_item, parent, false);
+            if(inflater != null)
+                v = inflater.inflate(R.layout.alerts_listview_item, parent, false);
+            else
+                return null;
         }
 
         TextView itemTitleText = v.findViewById(R.id.alertsItemHeading);
@@ -55,6 +58,9 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
             LayoutInflater layoutInflater = (LayoutInflater)this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if(layoutInflater != null)
                 v = layoutInflater.inflate(R.layout.alerts_listview_child, parent, false);
+            else {
+                return null;
+            }
         }
 
         // initiate the fields

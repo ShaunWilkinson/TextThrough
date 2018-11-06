@@ -93,23 +93,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Inflates the toolbar menu
+     * @param menu the menu containing the view to inflate
+     * @return true if the event is consumed, false otherwise
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_toolbar, menu);
         return true;
     }
-
-    // Called by Start Service Button
-    public void startService(View view) {
-        //startSmsService();
-    }
-
-
-    // Called by Start Service Button
-    public void stopService(View view) {
-        //forceKillService();
-    }
-
 
     /**
      * Displays a dialog describing why the read permission is required
@@ -133,28 +126,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates an AlertDialog explaining why the RECEIVE_SMS permission is required then asks for
-     * permission
-     */
-    public void showRequestReceiveSmsPermissionDialog(final Activity activity) {
-        // Create the alert dialog and set values
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.receive_sms_request_title);
-        builder.setMessage(R.string.receive_sms_request_message);
-
-        // Handle button click
-        builder.setPositiveButton(R.string.action_ok, (dialog, which) -> {
-            dialog.dismiss();
-
-            // Display permission request
-            PermissionFunctions.requestReceiveSmsPermission(activity);
-        });
-
-        builder.setCancelable(false);
-        builder.show();
-    }
-
-    /**
      * Sets up the notification channel so that the app can display notifications
      */
     private void createNotificationChannel() {
@@ -168,7 +139,11 @@ public class MainActivity extends AppCompatActivity {
 
             channel.setDescription(description);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            if(notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            } else {
+                Log.e(TAG, "failed to get the notification manager");
+            }
         }
     }
 

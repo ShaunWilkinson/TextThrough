@@ -28,7 +28,6 @@ public class SMSHandlerService extends IntentService {
     private Alert relatedAlert;
     private MediaPlayer mediaPlayer;
     private AudioManager audioManager;
-    private AudioFocusRequest audioFocusRequest;
     private int originalVolume;
 
     public SMSHandlerService() {
@@ -63,7 +62,7 @@ public class SMSHandlerService extends IntentService {
 
     /**
      * Retrieves the received SMS data and then compares to list of alerts
-     * @param intent
+     * @param intent the passed intent
      */
     private void handleSMSReceived(Intent intent) {
         Bundle smsBundle = intent.getExtras();
@@ -107,20 +106,42 @@ public class SMSHandlerService extends IntentService {
      * Starts an audio alert using the ringtone defined in the related alert
      */
     private void startAudioAlert() {
-        // Sets the current volume to the max level and records the current volume level
+        // If the Audio Manager and media Player are setup correctly then start to play the alert
+        if (setupAudio()) {
+            // Bit of a hacky workaround so the tone will play after any default handlers and notification sounds
+            Thread alertToneThread = new Thread(() -> {
+                try {
+                    Thread.sleep(4000);
+                    mediaPlayer.start();
+                    executeDelayedAlertStop();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            alertToneThread.start();
+        }
+    }
+
+    /**
+     * Sets up the Audio Manager for use by the Media Player
+     * @return True if audio player set up fully, false otherwise
+     */
+    private boolean setupAudio() {
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
         if(audioManager != null) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_ALARM)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .build();
 
+            // Set the volume to max
             originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
             int newVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
             audioManager.setStreamVolume(AudioManager.STREAM_ALARM, newVolume, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
 
             // Request that the system grants temporary focus to alert audio
-            audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+            AudioFocusRequest audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
                     .setAudioAttributes(audioAttributes)
                     .setAcceptsDelayedFocusGain(false)
                     .setWillPauseWhenDucked(false)
@@ -135,22 +156,13 @@ public class SMSHandlerService extends IntentService {
             try {
                 mediaPlayer.setDataSource(context, Uri.parse(relatedAlert.getRingtoneUri()));
                 mediaPlayer.prepare();
+                return true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            // Bit of a hacky workaround so the tone will play after any default handlers and notification sounds
-            Thread alertToneThread = new Thread(() -> {
-                try {
-                    Thread.sleep(4000);
-                    mediaPlayer.start();
-                    executeDelayedAlertStop();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
-            alertToneThread.start();
         }
+
+        return false;
     }
 
     /**
