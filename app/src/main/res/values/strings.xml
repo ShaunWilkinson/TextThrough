@@ -32,11 +32,12 @@
   <!-- Service -->
   <string name="smswatchservice_name">&appname; Service</string>
   <string name="serviceRunningTitle">&appname; Service Running</string>
+  <string name="serviceRunningDesc">The service is running</string>
 
   <string name="startService">Start Service</string>
-  <string name="startServiceDescription">Successfully monitoring texts</string>
+  <string name="startServiceDescription">Started watching incoming texts</string>
   <string name="stopService">Stop Service</string>
-  <string name="stopServiceDescription">Stopped monitoring texts</string>
+  <string name="stopServiceDescription">Stopped watching incoming texts</string>
 
   <!-- Alert Setup -->
   <string name="createAlertTitle">Create an Alert</string>

@@ -16,10 +16,11 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.seikoshadow.apps.textthrough.Adapters.AlertsExpandableListAdapter;
 import com.seikoshadow.apps.textthrough.BroadcastReceivers.SmsBroadcastReceiver;
 import com.seikoshadow.apps.textthrough.Database.AlertViewModel;
@@ -27,7 +28,6 @@ import com.seikoshadow.apps.textthrough.Dialogs.CreateAlertDialogFragment;
 import com.seikoshadow.apps.textthrough.Dialogs.EditAlertDialogFragment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -71,24 +71,23 @@ public class MainActivity extends AppCompatActivity {
     private void requestPermissions() {
         // TODO add description of why this is needed
         Dexter.withActivity(this)
-            .withPermissions(
-                    Manifest.permission.RECEIVE_SMS)
-            .withListener(new MultiplePermissionsListener() {
+            .withPermission(Manifest.permission.RECEIVE_SMS)
+            .withListener(new PermissionListener() {
                 @Override
-                public void onPermissionsChecked(MultiplePermissionsReport report) {
-                    // Check if all permissions are granted
-                    if(report.areAllPermissionsGranted()) {
-                        Toast.makeText(getApplicationContext(), "Permissions Granted", Toast.LENGTH_LONG).show();
-                    }
+                public void onPermissionGranted(PermissionGrantedResponse report) {
 
-                    // Check if permanent denial of any permission
-                    if(report.isAnyPermissionPermanentlyDenied()) {
+                }
 
+                @Override
+                public void onPermissionDenied(PermissionDeniedResponse response) {
+                    // check for permanent denial of permission
+                    if (response.isPermanentlyDenied()) {
+                        // navigate user to app settings
                     }
                 }
 
                 @Override
-                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
                     token.continuePermissionRequest();
                 }
             })
