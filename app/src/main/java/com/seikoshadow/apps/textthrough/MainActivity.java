@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         });
+
+        alertsList.setEmptyView(findViewById(R.id.emptyElement));
     }
 
     /**

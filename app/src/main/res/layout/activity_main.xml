@@ -27,6 +27,21 @@
         android:groupIndicator="@drawable/extendable_icons">
     </ExpandableListView>
 
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/emptyElement"
+        android:text="@string/emptyAlertList"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@+id/alertsList"
+        app:layout_constraintBottom_toTopOf="@+id/alertsList"
+        app:layout_constraintLeft_toLeftOf="@+id/alertsList"
+        app:layout_constraintRight_toRightOf="@+id/alertsList"
+        />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
