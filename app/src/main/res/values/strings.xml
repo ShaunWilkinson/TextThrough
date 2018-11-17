@@ -15,6 +15,8 @@
   <string name="yes">Yes</string>
   <string name="no">No</string>
   <string name="active">Active</string>
+  <string name="settings">Settings</string>
+  <string name="alerts">Alerts</string>
 
   <string name="number">Number</string>
   <string name="enterNumberToPassThrough">Enter the number to Pass Through</string>
@@ -24,8 +26,8 @@
   <string name="read_sms_request_message">&appname; will now request \'Read SMS\' permission on your device.\n\nThis is required in order to process new incoming SMS and will at no point leave this device.</string>
   <string name="receive_sms_request_title">Receive SMS Permission</string>
   <string name="receive_sms_request_message">&appname; will now request \'Receive SMS\' permission on your device.\n\nThis allows the app to intercept new emails so that they can trigger actions.</string>
-  <string name="kill_background_processes_title">Kill Background Process Permission</string>
-  <string name="kill_background_processes_message">&appname; will now request \'Kill Background Processes\' permission.\n\nThis allows the app to close the background service which watches for texts to start the alert.</string>
+    <string name="protected_status_title">Protected App Status</string>
+    <string name="protected_status_description">This app needs specific permission to keep running in the background, this allows the app to listen for specific texts and run the alerts</string>
 
   <!-- Service -->
   <string name="smswatchservice_name">&appname; Service</string>
@@ -45,6 +47,11 @@
   <string name="vibrate">Vibrate</string>
   <string name="save">Save</string>
   <string name="ringtonePickerTitle">Select a ringtone for the alert</string>
+
+  <!-- Alert Ringing Dialog -->
+  <string name="alert_ringing_dialog_title">Alert!</string>
+  <string name="alert_ringing_dialog_description">Received a text from %1$s</string>
+  <string name="stop_ringing">Stop Ringing</string>
 
   <!-- Edit Alert -->
   <string name="editAlertTitle">Edit Alert</string>

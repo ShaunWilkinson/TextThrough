@@ -1,54 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.seikoshadow.apps.textthrough">
+xmlns:tools="http://schemas.android.com/tools"
+package="com.seikoshadow.apps.textthrough">
 
-  <uses-permission android:name="android.permission.RECEIVE_SMS" />
-  <uses-permission android:name="android.permission.READ_SMS" />
-  <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
-  <application
-      android:allowBackup="true"
-      android:icon="@mipmap/ic_launcher"
-      android:label="@string/app_name"
-      android:roundIcon="@mipmap/ic_launcher_round"
-      android:supportsRtl="true"
-      android:theme="@style/AppTheme"
-      tools:ignore="GoogleAppIndexingWarning">
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
-    <activity android:name=".MainActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
 
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-    </activity>
-      <activity android:name=".Dialogs.AlarmRingingDialog" />
+        <receiver android:name=".BroadcastReceivers.SmsBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS"
+            android:label="SMSBroadcastReceiver">
+                <intent-filter android:priority="2147483647">
+                    <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                </intent-filter>
+        </receiver>
 
-      <receiver android:name=".BroadcastReceivers.SmsBroadcastReceiver"
-        android:enabled="true"
-        android:exported="true"
-        android:label="SMSBroadcastReceiver">
-      <intent-filter android:priority="500">
-        <action android:name="com.seikoshadow.apps.textthrough.SmsBroadcastReceiver" />
-      </intent-filter>
-    </receiver>
+        <!--
+        <receiver android:name=".Services.RestartService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartServiceWhenStopped">
+                <intent-filter android:priority="500">
+                    <action android:name="com.seikoshadow.apps.textthrough.restartBroadcastReceiver" />
+                </intent-filter>
+        </receiver>
+-->
+        <service
+            android:name=".Services.SMSHandlerService"
+            android:label="@string/smswatchservice_name" />
 
-      <receiver android:name=".Services.RestartService"
-          android:enabled="true"
-          android:exported="true"
-          android:label="RestartServiceWhenStopped">
-          <intent-filter android:priority="500">
-              <action android:name="com.seikoshadow.apps.textthrough.restartBroadcastReceiver" />
-          </intent-filter>
-      </receiver>
-
-    <service
-      android:name=".Services.SMSWatchService"
-      android:label="@string/smswatchservice_name"
-      />
-      <meta-data
-          android:name="preloaded_fonts"
-          android:resource="@array/preloaded_fonts" />
-  </application>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+    </application>
 </manifest>
