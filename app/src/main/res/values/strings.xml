@@ -26,17 +26,17 @@
   <string name="read_sms_request_message">&appname; will now request \'Read SMS\' permission on your device.\n\nThis is required in order to process new incoming SMS and will at no point leave this device.</string>
   <string name="receive_sms_request_title">Receive SMS Permission</string>
   <string name="receive_sms_request_message">&appname; will now request \'Receive SMS\' permission on your device.\n\nThis allows the app to intercept new emails so that they can trigger actions.</string>
-    <string name="protected_status_title">Protected App Status</string>
-    <string name="protected_status_description">This app needs specific permission to keep running in the background, this allows the app to listen for specific texts and run the alerts</string>
+  <string name="protected_status_title">Protected App Status</string>
+  <string name="protected_status_description">This app needs specific permission to keep running in the background, this allows the app to listen for specific texts and run the alerts</string>
 
   <!-- Service -->
   <string name="smswatchservice_name">&appname; Service</string>
   <string name="serviceRunningTitle">&appname; Service Running</string>
-  <string name="serviceRunningDesc">forcing alert if sms received from entered numbers</string>
-  <string name="noNumbersFound">Error\: Couldn\'t locate any saved numbers</string>
 
   <string name="startService">Start Service</string>
+  <string name="startServiceDescription">Successfully monitoring texts</string>
   <string name="stopService">Stop Service</string>
+  <string name="stopServiceDescription">Stopped monitoring texts</string>
 
   <!-- Alert Setup -->
   <string name="createAlertTitle">Create an Alert</string>

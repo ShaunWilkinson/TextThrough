@@ -6,6 +6,7 @@ package="com.seikoshadow.apps.textthrough">
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <application
         android:allowBackup="true"
@@ -34,16 +35,6 @@ package="com.seikoshadow.apps.textthrough">
                 </intent-filter>
         </receiver>
 
-        <!--
-        <receiver android:name=".Services.RestartService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="RestartServiceWhenStopped">
-                <intent-filter android:priority="500">
-                    <action android:name="com.seikoshadow.apps.textthrough.restartBroadcastReceiver" />
-                </intent-filter>
-        </receiver>
--->
         <service
             android:name=".Services.SMSHandlerService"
             android:label="@string/smswatchservice_name" />

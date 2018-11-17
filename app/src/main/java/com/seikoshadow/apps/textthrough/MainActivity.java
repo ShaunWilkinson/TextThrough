@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.FragmentTransaction;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ComponentName;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -18,6 +21,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.seikoshadow.apps.textthrough.Adapters.AlertsExpandableListAdapter;
+import com.seikoshadow.apps.textthrough.BroadcastReceivers.SmsBroadcastReceiver;
 import com.seikoshadow.apps.textthrough.Database.AlertViewModel;
 import com.seikoshadow.apps.textthrough.Dialogs.CreateAlertDialogFragment;
 import com.seikoshadow.apps.textthrough.Dialogs.EditAlertDialogFragment;
@@ -34,76 +38,67 @@ import androidx.lifecycle.ViewModelProviders;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private Toolbar mainToolbar;
+    private ComponentName receiverName;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initToolbar();
-        //permissionsCheck();
 
         // Notifies the system to expect notifications
         createNotificationChannel();
 
         initAlertsListView();
 
-        //TODO implement Dexter permission requests
-        Dexter.withActivity(this)
-                .withPermissions(
-                        Manifest.permission.RECEIVE_SMS,
-                        Manifest.permission.VIBRATE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-
-                    }
-                })
-                .check();
+        requestPermissions();
     }
 
 
-    public void initToolbar() {
-        Toolbar mainToolbar = findViewById(R.id.mainToolbar);
+    private void initToolbar() {
+        mainToolbar = findViewById(R.id.mainToolbar);
         mainToolbar.setSubtitle(R.string.alerts);
         setSupportActionBar(mainToolbar);
+
+        receiverName = new ComponentName(this, SmsBroadcastReceiver.class);
     }
 
-    private void permissionsCheck() {
-        // Request READ SMS permission if not already granted
-        if (!PermissionFunctions.isReadSmsPermissionGranted(this))
-            PermissionFunctions.showRequestReadSmsPermissionDialog(this);
-
-        // Request RECEIVE SMS permission if not already granted
-        /*if (!PermissionFunctions.isReceiveSmsPermissionGranted(this))
-            showRequestReceiveSmsPermissionDialog(this);*/
-
-        PermissionFunctions.checkThatAppIsProtected(getApplicationContext());
-
-
-        //TODO ask permission to vibrate
-    }
 
     /**
-     * Handles clicks of any of the menu items
-     * @param item the Menuitem that was clicked
-     * @return true if method has consumed the event, false otherwise
+     * Requests permission to handle received sms
      */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    private void requestPermissions() {
+        // TODO add description of why this is needed
+        Dexter.withActivity(this)
+            .withPermissions(
+                    Manifest.permission.RECEIVE_SMS)
+            .withListener(new MultiplePermissionsListener() {
+                @Override
+                public void onPermissionsChecked(MultiplePermissionsReport report) {
+                    // Check if all permissions are granted
+                    if(report.areAllPermissionsGranted()) {
+                        Toast.makeText(getApplicationContext(), "Permissions Granted", Toast.LENGTH_LONG).show();
+                    }
+
+                    // Check if permanent denial of any permission
+                    if(report.isAnyPermissionPermanentlyDenied()) {
+
+                    }
+                }
+
+                @Override
+                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                    token.continuePermissionRequest();
+                }
+            })
+            .onSameThread()
+            .check();
+
+        BatteryManagerPermission.checkThatAppIsProtected(getApplicationContext());
     }
 
-    public void initAlertsListView() {
+    private void initAlertsListView() {
         ExpandableListView alertsList = findViewById(R.id.alertsList);
         AlertsExpandableListAdapter listAdapter = new AlertsExpandableListAdapter(this, new ArrayList<>());
         alertsList.setAdapter(listAdapter);
@@ -131,7 +126,59 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_toolbar, menu);
+        setStartStopReceiverMenuVisibility();
         return true;
+    }
+
+
+    /**
+     * Handles clicks of any of the menu items
+     * @param item the Menuitem that was clicked
+     * @return true if method has consumed the event, false otherwise
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            case R.id.start_receiver:
+                // Start the receiver and update menu
+                getApplicationContext().getPackageManager().setComponentEnabledSetting(receiverName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED , PackageManager.DONT_KILL_APP);
+                setStartStopReceiverMenuVisibility();
+                Toast.makeText(getApplicationContext(), getString(R.string.startServiceDescription), Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.stop_receiver:
+                // Stop the receiver and update menu
+                getApplicationContext().getPackageManager().setComponentEnabledSetting(receiverName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED , PackageManager.DONT_KILL_APP);
+                setStartStopReceiverMenuVisibility();
+                Toast.makeText(getApplicationContext(), getString(R.string.stopServiceDescription), Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Checks whether the broadcast receiver is active and modifies options menu
+     */
+    private void setStartStopReceiverMenuVisibility() {
+        MenuItem startServiceItem = mainToolbar.getMenu().findItem(R.id.start_receiver);
+        MenuItem stopServiceItem = mainToolbar.getMenu().findItem(R.id.stop_receiver);
+
+        if(startServiceItem != null && stopServiceItem != null) {
+            // Check if the broadcast receiver is enabled currently
+            int status = this.getPackageManager().getComponentEnabledSetting(receiverName);
+
+            if (status == PackageManager.COMPONENT_ENABLED_STATE_ENABLED || status == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT) {
+                // Enabled
+                startServiceItem.setVisible(false);
+                stopServiceItem.setVisible(true);
+            } else if (status == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
+                // Disabled
+                startServiceItem.setVisible(true);
+                stopServiceItem.setVisible(false);
+            }
+        }
     }
 
 
