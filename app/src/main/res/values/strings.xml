@@ -18,12 +18,11 @@
     <string name="enterNumberToPassThrough">Enter the number to Pass Through</string>
 
     <!-- Permissions -->
-    <string name="read_sms_request_title">Read SMS Permission</string>
-    <string name="read_sms_request_message">&appname; will now request \'Read SMS\' permission on your device.\n\nThis is required in order to process new incoming SMS and will at no point leave this device.</string>
-    <string name="receive_sms_request_title">Receive SMS Permission</string>
-    <string name="receive_sms_request_message">&appname; will now request \'Receive SMS\' permission on your device.\n\nThis allows the app to intercept new emails so that they can trigger actions.</string>
+    <string name="permissions">Permissions</string>
     <string name="protected_status_title">Protected App Status</string>
     <string name="protected_status_description">This app needs specific permission to keep running in the background, this allows the app to listen for specific texts and run the alerts</string>
+
+    <string name="denied_sms_permission">You must allow SMS permission for this app to function</string>
 
     <!-- Service -->
     <string name="smswatchservice_name">&appname; Service</string>

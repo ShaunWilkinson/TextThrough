@@ -172,7 +172,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
         return valid;
     }
-    
+
     /**
      * Generates a Ringtone Picker
      */

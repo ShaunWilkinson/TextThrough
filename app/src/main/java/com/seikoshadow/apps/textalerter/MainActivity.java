@@ -26,6 +26,7 @@ import com.seikoshadow.apps.textalerter.BroadcastReceivers.SmsBroadcastReceiver;
 import com.seikoshadow.apps.textalerter.Database.AlertViewModel;
 import com.seikoshadow.apps.textalerter.Dialogs.CreateAlertDialogFragment;
 import com.seikoshadow.apps.textalerter.Dialogs.EditAlertDialogFragment;
+import com.seikoshadow.apps.textalerter.Dialogs.SettingsDialogFragment;
 import com.seikoshadow.apps.textalerter.Helpers.BatteryManagerPermission;
 
 import java.util.ArrayList;
@@ -84,7 +85,11 @@ public class MainActivity extends AppCompatActivity {
                     // check for permanent denial of permission
                     if (response.isPermanentlyDenied()) {
                         // navigate user to app settings
+                        Log.d(TAG, "test");
+                        //TODO make settings page to grant access
                     }
+
+                    Toast.makeText(getApplicationContext(), getString(R.string.denied_sms_permission), Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -144,6 +149,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_settings:
+                SettingsDialogFragment dialog = new SettingsDialogFragment();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                dialog.show(fragmentTransaction, SettingsDialogFragment.TAG);
                 return false;
             case R.id.start_receiver:
                 // Start the receiver and update menu

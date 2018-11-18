@@ -26,6 +26,14 @@
         <item name="android:layout_marginStart">20dp</item>
     </style>
 
+    <!-- Settings Dialog -->
+    <style name="settingsLinearlayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+
     <!-- Create and Edit Dialogs -->
     <style name="FullScreenDialogStyle" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
