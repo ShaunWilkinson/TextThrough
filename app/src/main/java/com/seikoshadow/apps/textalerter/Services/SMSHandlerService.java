@@ -11,11 +11,11 @@ import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
-import com.seikoshadow.apps.textalerter.AlarmControl;
 import com.seikoshadow.apps.textalerter.BroadcastReceivers.SmsBroadcastReceiver;
 import com.seikoshadow.apps.textalerter.BroadcastReceivers.StopRingtoneReceiver;
 import com.seikoshadow.apps.textalerter.Database.Alert;
 import com.seikoshadow.apps.textalerter.Database.AppDatabase;
+import com.seikoshadow.apps.textalerter.Helpers.AlarmControl;
 import com.seikoshadow.apps.textalerter.R;
 import com.seikoshadow.apps.textalerter.constants;
 
@@ -84,6 +84,7 @@ public class SMSHandlerService extends IntentService {
 
             if(messages != null) {
                 String smsSender = messages[0].getOriginatingAddress();
+
                 relatedAlert = retrieveRelatedAlert(smsSender);
 
                 if(relatedAlert == null || smsSender == null) {

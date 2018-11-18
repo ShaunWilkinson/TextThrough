@@ -79,7 +79,8 @@
         <Switch
             android:id="@+id/activeSwitch"
             style="@style/createOrEditSwitch"
-            android:text="@string/active" />
+            android:text="@string/active"
+            android:visibility="invisible" />
 
 
     </LinearLayout>

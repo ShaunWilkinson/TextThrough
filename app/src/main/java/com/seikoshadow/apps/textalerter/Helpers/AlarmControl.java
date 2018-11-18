@@ -1,4 +1,4 @@
-package com.seikoshadow.apps.textalerter;
+package com.seikoshadow.apps.textalerter.Helpers;
 
 import android.content.Context;
 import android.media.AudioAttributes;

@@ -26,6 +26,7 @@ import com.seikoshadow.apps.textalerter.BroadcastReceivers.SmsBroadcastReceiver;
 import com.seikoshadow.apps.textalerter.Database.AlertViewModel;
 import com.seikoshadow.apps.textalerter.Dialogs.CreateAlertDialogFragment;
 import com.seikoshadow.apps.textalerter.Dialogs.EditAlertDialogFragment;
+import com.seikoshadow.apps.textalerter.Helpers.BatteryManagerPermission;
 
 import java.util.ArrayList;
 

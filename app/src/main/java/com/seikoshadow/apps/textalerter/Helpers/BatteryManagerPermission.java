@@ -1,4 +1,4 @@
-package com.seikoshadow.apps.textalerter;
+package com.seikoshadow.apps.textalerter.Helpers;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+
+import com.seikoshadow.apps.textalerter.R;
 
 import static android.content.Context.MODE_PRIVATE;
 

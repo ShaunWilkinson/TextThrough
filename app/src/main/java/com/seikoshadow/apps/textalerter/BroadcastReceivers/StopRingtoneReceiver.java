@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.seikoshadow.apps.textalerter.AlarmControl;
+import com.seikoshadow.apps.textalerter.Helpers.AlarmControl;
 import com.seikoshadow.apps.textalerter.MainActivity;
 
 import static com.seikoshadow.apps.textalerter.constants.SMS_SERVICE_RUNNING_ID;
@@ -15,12 +15,9 @@ import static com.seikoshadow.apps.textalerter.constants.SMS_SERVICE_RUNNING_ID;
  * Simply gets an instance of the alarm controller and stops any playing sound
  */
 public class StopRingtoneReceiver extends BroadcastReceiver {
-    private Context context;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        this.context = context;
-
         // Get any actions
         Bundle bundle = intent.getExtras();
         String action = null;

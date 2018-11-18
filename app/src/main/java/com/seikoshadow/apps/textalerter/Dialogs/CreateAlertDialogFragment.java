@@ -21,6 +21,8 @@ import com.seikoshadow.apps.textalerter.R;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -127,11 +129,50 @@ public class CreateAlertDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Very basic validation of field inputs
+     * @return true if valid, false otherwise
+     */
     private boolean validateFields() {
-        //TODO validation of fields
-        return true;
-    }
+        boolean valid = true;
 
+        if(alertNameEditText.getText().toString().equals("") || alertNameEditText.getText().length() > 50) {
+            alertNameEditText.setError(getString(R.string.alert_name_error));
+            valid = false;
+        }
+
+        String phoneNumberInput = phoneNumberEditText.getText().toString();
+        // Ensure phone number isn't blank or too long
+        if(phoneNumberInput.equals("") || phoneNumberInput.length() > 30) {
+            phoneNumberEditText.setError(getString(R.string.alert_phone_number_error));
+            valid = false;
+
+            // Ensure phone number doesn't contain special characters (uses + or ( to check if it's a number)
+        } else if (phoneNumberInput.substring(0, 1).equals("+") || phoneNumberInput.substring(0, 1).equals("(")) {
+            Pattern p = Pattern.compile("^[a-zA-Z0-9äöüÄÖÜ+]*$", Pattern.CASE_INSENSITIVE);
+            Matcher m = p.matcher(phoneNumberInput);
+            if (!m.find()) {
+                phoneNumberEditText.setError(getString(R.string.alert_phone_number_character_error));
+                valid = false;
+            }
+        }
+
+        // If the seconds to ring isn't blank
+        if(!numberOfRingsEditText.getText().toString().equals("")) {
+            try {
+                Integer.parseInt(numberOfRingsEditText.getText().toString());
+            } catch (NumberFormatException exception) {
+                numberOfRingsEditText.setError(getString(R.string.alert_phone_number_error));
+                valid = false;
+            }
+        } else {
+            numberOfRingsEditText.setError(getString(R.string.alert_seconds_to_ring_error));
+            valid = false;
+        }
+
+        return valid;
+    }
+    
     /**
      * Generates a Ringtone Picker
      */
