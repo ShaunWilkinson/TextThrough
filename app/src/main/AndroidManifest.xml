@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-package="com.seikoshadow.apps.textthrough">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.seikoshadow.apps.textalerter">
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -17,24 +17,27 @@ package="com.seikoshadow.apps.textthrough">
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <receiver android:name=".BroadcastReceivers.SmsBroadcastReceiver"
+        <receiver
+            android:name=".BroadcastReceivers.SmsBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
-            android:permission="android.permission.BROADCAST_SMS"
-            android:label="SMSBroadcastReceiver">
-                <intent-filter android:priority="2147483647">
-                    <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-                </intent-filter>
+            android:label="SMSBroadcastReceiver"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="2147483647">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
         </receiver>
+        <receiver android:name=".BroadcastReceivers.StopRingtoneReceiver" />
 
         <service
             android:name=".Services.SMSHandlerService"
@@ -43,5 +46,15 @@ package="com.seikoshadow.apps.textthrough">
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.seikoshadow.apps.textalerter.MainActivity" />
+        </activity>
     </application>
+
 </manifest>
