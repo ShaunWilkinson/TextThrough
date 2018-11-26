@@ -22,7 +22,11 @@
     <string name="protected_status_title">Protected App Status</string>
     <string name="protected_status_description">This app needs specific permission to keep running in the background, this allows the app to listen for specific texts and run the alerts</string>
 
+    <string name="all_required_permissions_granted">All required permissions are granted</string>
+    <string name="denied_sms_permission_permanently">&appname; will not function due to SMS denied, enable in settings to continue</string>
     <string name="denied_sms_permission">You must allow SMS permission for this app to function</string>
+    <string name="rational_sms_title">Receive SMS Permission</string>
+    <string name="rational_sms_description">The Receive SMS permission is required so that the app may intercept sms and process who is the sender, this is needed so that the app can fire an alert when an sms is received from a sender listed in one of the user created alerts.\n\nWithout this permission this app cannot function at all.\n\nClicking OK will ask you to grant permission again</string>
 
     <!-- Service -->
     <string name="smswatchservice_name">&appname; Service</string>

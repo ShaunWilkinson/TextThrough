@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,23 +17,19 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 import com.seikoshadow.apps.textalerter.Adapters.AlertsExpandableListAdapter;
 import com.seikoshadow.apps.textalerter.BroadcastReceivers.SmsBroadcastReceiver;
 import com.seikoshadow.apps.textalerter.Database.AlertViewModel;
 import com.seikoshadow.apps.textalerter.Dialogs.CreateAlertDialogFragment;
 import com.seikoshadow.apps.textalerter.Dialogs.EditAlertDialogFragment;
-import com.seikoshadow.apps.textalerter.Dialogs.SettingsDialogFragment;
+import com.seikoshadow.apps.textalerter.Helpers.AppPermissionListener;
 import com.seikoshadow.apps.textalerter.Helpers.BatteryManagerPermission;
 
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
 
@@ -70,37 +67,21 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Requests permission to handle received sms
      */
-    private void requestPermissions() {
-        // TODO add description of why this is needed
-        Dexter.withActivity(this)
-            .withPermission(Manifest.permission.RECEIVE_SMS)
-            .withListener(new PermissionListener() {
-                @Override
-                public void onPermissionGranted(PermissionGrantedResponse report) {
+    public void requestPermissions() {
 
-                }
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
+            // Create the permission listener for requesting SMS Permission
+            AppPermissionListener permissionListener = new AppPermissionListener(this);
 
-                @Override
-                public void onPermissionDenied(PermissionDeniedResponse response) {
-                    // check for permanent denial of permission
-                    if (response.isPermanentlyDenied()) {
-                        // navigate user to app settings
-                        Log.d(TAG, "test");
-                        //TODO make settings page to grant access
-                    }
-
-                    Toast.makeText(getApplicationContext(), getString(R.string.denied_sms_permission), Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                    token.continuePermissionRequest();
-                }
-            })
-            .onSameThread()
-            .check();
+            Dexter.withActivity(this)
+                    .withPermission(Manifest.permission.RECEIVE_SMS)
+                    .withListener(permissionListener)
+                    .onSameThread()
+                    .check();
+        }
 
         BatteryManagerPermission.checkThatAppIsProtected(getApplicationContext());
+
     }
 
     /**
@@ -149,9 +130,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_settings:
-                SettingsDialogFragment dialog = new SettingsDialogFragment();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                dialog.show(fragmentTransaction, SettingsDialogFragment.TAG);
+                Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(settings);
                 return false;
             case R.id.start_receiver:
                 // Start the receiver and update menu

@@ -50,8 +50,6 @@ public class EditAlertDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(android.app.DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
 
-        //TODO finish edit alerts
-
         db = AppDatabase.getInstance(getContext());
 
         Bundle bundle = getArguments();
@@ -79,9 +77,7 @@ public class EditAlertDialogFragment extends DialogFragment {
         Button ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
         ringtoneSelectButton.setText(alert.getRingtoneName());
 
-        ringtoneSelectButton.setOnClickListener(view1 -> {
-            selectRingtone(view);
-        });
+        ringtoneSelectButton.setOnClickListener(view1 -> selectRingtone(view));
     }
 
     private void populateFields() {

@@ -32,23 +32,27 @@
             android:enabled="true"
             android:exported="true"
             android:label="SMSBroadcastReceiver"
-            android:permission="android.permission.BROADCAST_SMS">
+            android:permission="android.permission.BROADCAST_SMS"
+            tools:ignore="InnerclassSeparator">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".BroadcastReceivers.StopRingtoneReceiver" />
+
+        <receiver android:name=".BroadcastReceivers.StopRingtoneReceiver"
+            tools:ignore="InnerclassSeparator" />
 
         <service
             android:name=".Services.SMSHandlerService"
-            android:label="@string/smswatchservice_name" />
+            android:label="@string/smswatchservice_name"
+            tools:ignore="InnerclassSeparator" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Dialogs.SettingsDialogFragment"
-            android:screenOrientation="portrait"/>
+
+        <activity android:name=".SettingsActivity"/>
     </application>
 
 </manifest>
