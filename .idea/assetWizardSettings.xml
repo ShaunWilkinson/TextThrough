@@ -29,12 +29,26 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="paddingPercent" value="50" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                     </map>
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_select_ringtone_btn" />
-                                      <entry key="theme" value="HOLO_DARK" />
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="C:\Users\Shaun\Desktop\expandable.png" />
+                                      <entry key="outputName" value="ic_expand_white" />
+                                      <entry key="theme" value="CUSTOM" />
+                                      <entry key="themeColor" value="f9a338" />
                                     </map>
                                   </option>
                                 </PersistentState>

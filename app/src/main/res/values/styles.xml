@@ -19,11 +19,11 @@
     </style>
 
     <style name="alertsItemHeading">
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorGreyText</item>
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/montserrat</item>
         <item name="android:padding">10dp</item>
-        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginStart">10dp</item>
     </style>
 
     <!-- Settings Dialog -->
@@ -101,45 +101,36 @@
     <style name="ListViewGridLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:columnCount">2</item>
+        <item name="android:columnCount">3</item>
         <item name="android:rowCount">5</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingStart">20dp</item>
         <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingEnd">10dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:background">@color/colorPrimaryLight</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:background">@color/colorPrimaryLightDark</item>
     </style>
 
     <style name="ListViewTextViewLabel">
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorGreyText</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">1dp</item>
-        <item name="android:paddingBottom">1dp</item>
-        <item name="android:layout_column">0</item>
+        <item name="android:paddingTop">8dp</item>
         <item name="android:layout_columnSpan">1</item>
+        <item name="android:layout_columnWeight">1</item>
         <item name="android:layout_gravity">fill_horizontal</item>
-        <item name="android:layout_columnWeight">3</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="ListViewTextViewField">
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:background">@color/colorPrimary</item>
         <item name="android:paddingEnd">5dp</item>
-        <item name="android:paddingStart">5dp</item>
-        <item name="android:paddingTop">1dp</item>
         <item name="android:paddingBottom">1dp</item>
-        <item name="android:layout_marginTop">2dp</item>
-        <item name="android:layout_marginBottom">2dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_column">1</item>
         <item name="android:layout_columnSpan">1</item>
+        <item name="android:layout_columnWeight">1</item>
         <item name="android:layout_gravity">fill_horizontal</item>
-        <item name="android:layout_columnWeight">7</item>
-        <item name="android:elevation">3dp</item>
     </style>
 
 </resources>

@@ -1,7 +1,6 @@
 package com.seikoshadow.apps.textalerter.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,10 @@ import android.widget.TextView;
 import com.seikoshadow.apps.textalerter.Database.Alert;
 import com.seikoshadow.apps.textalerter.R;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import androidx.core.content.ContextCompat;
 
 public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
     private final String TAG = "AlertsExpandableListAdapter";
@@ -26,7 +28,6 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
     public void addItems(List<Alert> alerts) {
         this.alerts.clear();
         this.alerts = alerts;
-        Log.e(TAG, alerts.toString());
         notifyDataSetChanged();
     }
 
@@ -47,6 +48,14 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
 
         itemTitleText.setText(headerTitle);
 
+        if(isExpanded) {
+            v.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorPrimaryLightDark));
+            itemTitleText.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
+        } else {
+            v.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorPrimary));
+            itemTitleText.setTextColor(ContextCompat.getColor(_context, R.color.colorGreyText));
+        }
+
         return v;
     }
 
@@ -61,6 +70,17 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
             else {
                 return null;
             }
+        }
+
+        // Convert all labels to lower case
+        List<TextView> labels = new ArrayList<>();
+        labels.add(v.findViewById(R.id.alertsListChildPhoneLabel));
+        labels.add(v.findViewById(R.id.alertsListChildRingtoneLabel));
+        labels.add(v.findViewById(R.id.alertsListChildActiveLabel));
+        labels.add(v.findViewById(R.id.alertsListChildRingLabel));
+        labels.add(v.findViewById(R.id.alertsListChildVibrateLabel));
+        for(TextView label : labels) {
+            label.setText(label.getText().toString().toLowerCase());
         }
 
         // initiate the fields

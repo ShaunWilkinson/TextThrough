@@ -7,8 +7,10 @@ import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private Toolbar mainToolbar;
     private ComponentName receiverName;
+    private ExpandableListView alertsList;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
      * Initiates and populates the alerts listview
      */
     private void initAlertsListView() {
-        ExpandableListView alertsList = findViewById(R.id.alertsList);
+        alertsList = findViewById(R.id.alertsList);
         AlertsExpandableListAdapter listAdapter = new AlertsExpandableListAdapter(this, new ArrayList<>());
         alertsList.setAdapter(listAdapter);
 
@@ -119,13 +122,27 @@ public class MainActivity extends AppCompatActivity {
 
         alertsList.setOnItemLongClickListener((adapterView, view, i, id) -> {
             int groupPosition = ExpandableListView.getPackedPositionGroup(id);
-            //int childPosition = ExpandableListView.getPackedPositionChild(id);
-
             editAlert(groupPosition);
-
             return true;
         });
 
+        // Allows only a single item to be expanded at a time
+        alertsList.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            // Keep track of previous expanded parent
+            int previousGroup = -1;
+
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                // Collapse previous parent if expanded.
+                if ((previousGroup != -1) && (groupPosition != previousGroup)) {
+                    alertsList.collapseGroup(previousGroup);
+                }
+                previousGroup = groupPosition;
+            }
+        });
+
+
+        // Sets a message if no items in list
         alertsList.setEmptyView(findViewById(R.id.emptyElement));
     }
 
@@ -232,5 +249,29 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         dialog.show(fragmentTransaction, EditAlertDialogFragment.TAG);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
+
+        //alertsList.setIndicatorBounds(alertsList.getRight() - convertDpToPixel(35), alertsList.getWidth() - convertDpToPixel(5));
+        alertsList.setIndicatorBoundsRelative(width - convertDpToPixel(40), width - convertDpToPixel(10));
+    }
+
+    /**
+     * Helper function to convert dp to pixels
+     * @param dp The dp value to convert
+     * @return The pixel value
+     */
+    public int convertDpToPixel(float dp){
+        Resources resources = this.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+
+        return (int) (dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 }

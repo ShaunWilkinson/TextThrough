@@ -22,10 +22,10 @@
         android:id="@+id/alertsList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/mainToolbar"
+        android:choiceMode="singleChoice"
+        android:groupIndicator="@drawable/extendable_icons"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
-        android:groupIndicator="@drawable/extendable_icons">
-    </ExpandableListView>
+        app:layout_constraintTop_toBottomOf="@+id/mainToolbar" />
 
     <TextView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
