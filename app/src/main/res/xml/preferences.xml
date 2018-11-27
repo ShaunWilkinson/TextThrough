@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Permissions">
+    <PreferenceCategory android:title="@string/permissions">
 
         <Preference
             android:key="permissionsCheck"
-            android:summary="Tap to re-check for required permissions"
-            android:title="Check Permissions" />
+            android:summary="@string/check_permissions_description"
+            android:title="@string/check_permissions" />
     </PreferenceCategory>
 </PreferenceScreen>

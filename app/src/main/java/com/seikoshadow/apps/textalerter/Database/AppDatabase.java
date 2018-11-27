@@ -17,8 +17,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase getInstance(Context context) {
         if(appDatabase == null) {
             appDatabase = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, constants.APPDATABASENAME)
-            .allowMainThreadQueries() //TODO may want to stop allowing mainthreadqueries
-            .fallbackToDestructiveMigration() // Definitely remove this
+            .allowMainThreadQueries()
             .build();
         }
         return appDatabase;

@@ -7,12 +7,14 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.seikoshadow.apps.textalerter.Database.Alert;
 import com.seikoshadow.apps.textalerter.Database.AlertModel;
@@ -68,16 +70,26 @@ public class EditAlertDialogFragment extends DialogFragment {
 
         setupToolbar();
         populateFields();
+
         setupRingtonePickerButton(view);
+        setupContactPickerButton(view);
 
         return view;
     }
 
     private void setupRingtonePickerButton(View view) {
-        Button ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
-        ringtoneSelectButton.setText(alert.getRingtoneName());
+        ImageButton ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
+        TextView ringtoneSelectValue = view.findViewById(R.id.ringtoneSelectValue);
+
+        ringtoneSelectValue.setText(alert.getRingtoneName());
 
         ringtoneSelectButton.setOnClickListener(view1 -> selectRingtone(view));
+    }
+
+    private void setupContactPickerButton(View view) {
+        ImageButton contactPicker = view.findViewById(R.id.contactPickerBtn);
+
+        contactPicker.setOnClickListener(this::selectContact);
     }
 
     private void populateFields() {
@@ -218,7 +230,16 @@ public class EditAlertDialogFragment extends DialogFragment {
         this.dismiss();
     }
 
-    //TODO finish ringtone selector (only a button right now)
+    /**
+    * Called by clicking the select contact button
+    * @param view
+    */
+    private void selectContact(View view) {
+        // Start a contact picker
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+        startActivityForResult(intent, 998);
+    }
 
     /**
      * Generates a Ringtone Picker
@@ -250,8 +271,8 @@ public class EditAlertDialogFragment extends DialogFragment {
                 String name = selectedRingtone.getTitle(getContext());
                 selectedRingtone.stop();
                 if(uri != null) {
-                    Button ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
-                    ringtoneSelectButton.setText(name);
+                    TextView ringtoneSelectValue = view.findViewById(R.id.ringtoneSelectValue);
+                    ringtoneSelectValue.setText(name);
                     alert.setRingtoneName(name);
                     alert.setRingtoneUri(uri);
                 }

@@ -122,7 +122,6 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Alert getChild(int groupPosition, int childPosition) {
-        //TODO
         return null;
     }
 

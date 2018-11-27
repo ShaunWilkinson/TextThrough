@@ -40,15 +40,63 @@
             style="@style/createOrEditLabel"
             android:text="@string/phoneNumber" />
 
-        <EditText
-            android:id="@+id/numberEditText"
-            style="@style/createOrEditField"
-            android:hint="@android:string/emptyPhoneNumber"
-            android:inputType="text" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/numberEditText"
+                style="@style/createOrEditField"
+                android:layout_weight="1"
+                android:hint="@android:string/emptyPhoneNumber"
+                android:inputType="text" />
+
+            <ImageButton
+                android:id="@+id/contactPickerBtn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_select_contact_btn" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/numOfRingsLabel2"
+            style="@style/createOrEditLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:text="@string/ringtone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/ringtoneSelectValue"
+                style="@style/createOrEditField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="6dp"
+                android:text="TextView" />
+
+            <ImageButton
+                android:id="@+id/ringtoneSelectBtn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_select_ringtone_btn"
+                android:theme="@style/createOfEditButton" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/numOfRingsLabel"
             style="@style/createOrEditLabel"
+            android:layout_marginTop="7dp"
             android:text="@string/secondsToRingFor" />
 
         <EditText
@@ -56,20 +104,6 @@
             style="@style/createOrEditField"
             android:hint="1"
             android:inputType="number" />
-
-        <TextView
-            android:id="@+id/numOfRingsLabel2"
-            style="@style/createOrEditLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/ringtone" />
-
-        <Button
-            android:id="@+id/ringtoneSelectBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            android:theme="@style/createOfEditButton" />
 
         <Switch
             android:id="@+id/vibrateSwitch"

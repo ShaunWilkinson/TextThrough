@@ -87,6 +87,8 @@ public class SMSHandlerService extends IntentService {
 
                 relatedAlert = retrieveRelatedAlert(smsSender);
 
+                Log.d(TAG, "Sender: " + smsSender + "other: " + messages[0].getDisplayOriginatingAddress());
+
                 if(relatedAlert == null || smsSender == null) {
                     return;
                 }

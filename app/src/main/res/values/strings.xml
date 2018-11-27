@@ -17,10 +17,25 @@
     <string name="number">Number</string>
     <string name="enterNumberToPassThrough">Enter the number to Pass Through</string>
 
+    <!-- Optimization Dialog -->
+    <string name="optimization_message">Phones newer than Android Marshmallow \(6.0\) may need this app to be excluded from optimization to ensure the service keeps running in the background properly. This is easy to do by following the instructions below.
+        \n\n
+     1. Go to Settings → Battery\n
+     2. Tap on the top right 3-dot menu, and choose Battery Optimisation.\n
+     3. There should be a dropdown below the actionbar on the top left, choose All Apps from the list.\n
+     4. Find &appname;\n
+     5. Tap on it. You will get a popup with 2 options\, Optimise and Don\'t Optimise\n
+     6. Optimise should be selected by default.\n
+     7. Select \"Don\'t Optimise\", and press \"Done\".\n
+     8. All Done</string>
+
     <!-- Permissions -->
     <string name="permissions">Permissions</string>
     <string name="protected_status_title">Protected App Status</string>
     <string name="protected_status_description">This app needs specific permission to keep running in the background, this allows the app to listen for specific texts and run the alerts</string>
+
+    <string name="check_permissions">Check Permissions</string>
+    <string name="check_permissions_description">Tap to re-check for required permissions</string>
 
     <string name="all_required_permissions_granted">All required permissions are granted</string>
     <string name="denied_sms_permission_permanently">&appname; will not function due to SMS denied, enable in settings to continue</string>

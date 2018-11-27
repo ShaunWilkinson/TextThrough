@@ -32,9 +32,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
-
-//TODO Tidy up all stlyes so they're defined properly
-
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private Toolbar mainToolbar;
@@ -83,6 +80,30 @@ public class MainActivity extends AppCompatActivity {
         BatteryManagerPermission.checkThatAppIsProtected(getApplicationContext());
 
     }
+
+    /* Excluded as added manifest permission
+    private void showOptimizationWarning() {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        boolean showDialog = sharedPreferences.getBoolean("showOptimizationWarningDialog", true);
+
+        if(showDialog) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Battery Optimisation Warning")
+                    .setMessage(getString(R.string.optimization_message))
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        dialog.dismiss();
+                    })
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        dialog.dismiss();
+                        editor.putBoolean("showOptimizationWarningDialog", false);
+                        editor.apply();
+                    })
+                    .show();
+        }
+    }
+    */
 
     /**
      * Initiates and populates the alerts listview
@@ -196,8 +217,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // TODO easy way to remove phone numbers
-
     public void createAlert(View view) {
         CreateAlertDialogFragment dialog = new CreateAlertDialogFragment();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -205,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void editAlert(long alertId) {
-        //TODO create an alert
         Bundle bundle = new Bundle();
         bundle.putLong("Alert Id", alertId);
 

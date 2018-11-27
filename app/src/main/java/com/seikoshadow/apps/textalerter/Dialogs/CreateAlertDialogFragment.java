@@ -3,16 +3,20 @@ package com.seikoshadow.apps.textalerter.Dialogs;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.seikoshadow.apps.textalerter.Database.Alert;
 import com.seikoshadow.apps.textalerter.Database.AlertModel;
@@ -74,12 +78,14 @@ public class CreateAlertDialogFragment extends DialogFragment {
         vibrateSwitch = view.findViewById(R.id.vibrateSwitch);
 
         setupRingtonePickerButton(view);
+        setupContactPickerButton(view);
 
         return view;
     }
 
     private void setupRingtonePickerButton(View view) {
-        Button ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
+        ImageButton ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
+        TextView ringtoneSelectValue = view.findViewById(R.id.ringtoneSelectValue);
 
         Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getActivity().getApplicationContext(), RingtoneManager.TYPE_ALARM);
         Ringtone defaultRingtone = RingtoneManager.getRingtone(getActivity(), ringtoneUri);
@@ -87,12 +93,14 @@ public class CreateAlertDialogFragment extends DialogFragment {
         this.ringtoneUri = ringtoneUri;
         ringtoneName = defaultRingtone.getTitle(getContext());
 
-        //TODO ringtone title not right
-        ringtoneSelectButton.setText(defaultRingtone.getTitle(getContext()));
+        ringtoneSelectValue.setText(defaultRingtone.getTitle(getContext()));
+        ringtoneSelectButton.setOnClickListener(this::selectRingtone);
+    }
 
-        ringtoneSelectButton.setOnClickListener(view1 -> {
-            selectRingtone(view);
-        });
+    private void setupContactPickerButton(View view) {
+        ImageButton contactPicker = view.findViewById(R.id.contactPickerBtn);
+
+        contactPicker.setOnClickListener(this::selectContact);
     }
 
     private void setupToolbar() {
@@ -142,6 +150,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
         }
 
         String phoneNumberInput = phoneNumberEditText.getText().toString();
+
         // Ensure phone number isn't blank or too long
         if(phoneNumberInput.equals("") || phoneNumberInput.length() > 30) {
             phoneNumberEditText.setError(getString(R.string.alert_phone_number_error));
@@ -149,8 +158,10 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
             // Ensure phone number doesn't contain special characters (uses + or ( to check if it's a number)
         } else if (phoneNumberInput.substring(0, 1).equals("+") || phoneNumberInput.substring(0, 1).equals("(")) {
+            phoneNumberEditText.setText(phoneNumberEditText.getText().toString().replace(" ", ""));
+
             Pattern p = Pattern.compile("^[a-zA-Z0-9äöüÄÖÜ+]*$", Pattern.CASE_INSENSITIVE);
-            Matcher m = p.matcher(phoneNumberInput);
+            Matcher m = p.matcher(phoneNumberEditText.getText().toString());
             if (!m.find()) {
                 phoneNumberEditText.setError(getString(R.string.alert_phone_number_character_error));
                 valid = false;
@@ -174,6 +185,18 @@ public class CreateAlertDialogFragment extends DialogFragment {
     }
 
     /**
+     * Called by clicking the select contact button
+     * @param view
+     */
+    private void selectContact(View view) {
+        //TODO code to select contact and populate phone number
+        // Start a contact picker
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+        startActivityForResult(intent, 998);
+    }
+
+    /**
      * Generates a Ringtone Picker
      */
     private void selectRingtone(View view) {
@@ -193,21 +216,46 @@ public class CreateAlertDialogFragment extends DialogFragment {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // If the result comes from the ringtone picker
-        if(requestCode == 999) {
-            if(resultCode == RESULT_OK) {
+        if(resultCode == RESULT_OK) {
+
+            // RINGTONE PICKER
+            if (requestCode == 999) {
                 // Get the selected ringtone and pass to saveAlert
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 Ringtone selectedRingtone = RingtoneManager.getRingtone(getContext(), uri);
                 String name = selectedRingtone.getTitle(getContext());
                 selectedRingtone.stop();
-                if(uri != null) {
-                    Button ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
-                    ringtoneSelectButton.setText(name);
+                if (uri != null) {
+                    TextView ringtoneSelectValue = view.findViewById(R.id.ringtoneSelectValue);
+                    ringtoneSelectValue.setText(name);
                     ringtoneName = name;
                     ringtoneUri = uri;
                 }
             }
+
+            // CONTACT PICKER
+            if (requestCode == 998) {
+                Uri contactData = data.getData();
+                if(contactData != null) {
+                    Cursor cursor = getContext().getContentResolver().query(contactData, null, null, null, null);
+
+                    if(cursor!= null) {
+                        cursor.moveToFirst();
+                        String number = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                        Log.d(TAG, "Retrieved " + number);
+                        EditText phoneNumberField = view.findViewById(R.id.numberEditText);
+                        phoneNumberField.setText(number);
+
+                        cursor.close();
+                    } else {
+                        Log.e(TAG, "Failed to get cursor");
+                    }
+                } else {
+                    Log.e(TAG, "Failed to get contact data");
+                }
+            }
+
         }
     }
 

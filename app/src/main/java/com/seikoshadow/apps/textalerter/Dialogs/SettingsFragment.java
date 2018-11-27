@@ -1,4 +1,4 @@
-package com.seikoshadow.apps.textalerter;
+package com.seikoshadow.apps.textalerter.Dialogs;
 
 import android.Manifest;
 import android.app.Activity;
@@ -8,6 +8,7 @@ import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.seikoshadow.apps.textalerter.Helpers.AppPermissionListener;
 import com.seikoshadow.apps.textalerter.Helpers.BatteryManagerPermission;
+import com.seikoshadow.apps.textalerter.R;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
