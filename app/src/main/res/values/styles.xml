@@ -21,7 +21,7 @@
     <style name="alertsItemHeading">
         <item name="android:textColor">@color/colorGreyText</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_marginStart">10dp</item>
     </style>
@@ -59,10 +59,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:layout_marginTop">15dp</item>
-        <!--<item name="android:drawableBottom">@drawable/section_header_line</item>
-        <item name="android:drawablePadding">4dp</item>-->
         <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:fontFamily">@font/roboto</item>
     </style>
 
     <style name="createOrEditField">
@@ -77,7 +75,7 @@
         <item name="android:paddingEnd">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:fontFamily">@font/roboto</item>
     </style>
 
     <style name="createOrEditSwitch">
@@ -87,7 +85,7 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="android:colorControlNormal">@color/colorAccent</item>
     </style>
@@ -98,16 +96,25 @@
     </style>
 
     <!-- Alert ListView -->
+    <style name="ListViewLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:background">@color/colorPrimaryLightDark</item>
+    </style>
+
     <style name="ListViewGridLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:columnCount">3</item>
         <item name="android:rowCount">5</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:paddingStart">20dp</item>
         <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingEnd">20dp</item>
-        <item name="android:paddingBottom">20dp</item>
+        <item name="android:paddingBottom">15dp</item>
         <item name="android:background">@color/colorPrimaryLightDark</item>
     </style>
 
@@ -120,6 +127,7 @@
         <item name="android:layout_columnWeight">1</item>
         <item name="android:layout_gravity">fill_horizontal</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
     </style>
 
     <style name="ListViewTextViewField">
@@ -131,6 +139,60 @@
         <item name="android:layout_columnSpan">1</item>
         <item name="android:layout_columnWeight">1</item>
         <item name="android:layout_gravity">fill_horizontal</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/roboto</item>
     </style>
 
+    <!-- About me Page -->
+
+    <style name="AboutMeLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:background">@color/colorPrimaryLightDark</item>
+    </style>
+
+    <style name="AboutMeTitle">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="AboutMeSubTitle">
+        <item name="android:textColor">@color/colorGreyText</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/indie_flower</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="AboutMeHeadings">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+    </style>
+
+    <style name="AboutMeText">
+        <item name="android:textColor">@color/colorGreyText</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingEnd">15dp</item>
+    </style>
 </resources>

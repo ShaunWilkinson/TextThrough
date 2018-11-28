@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -38,8 +39,8 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".BroadcastReceivers.StopRingtoneReceiver"
+        <receiver
+            android:name=".BroadcastReceivers.StopRingtoneReceiver"
             tools:ignore="InnerclassSeparator" />
 
         <service
@@ -51,8 +52,8 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-
-        <activity android:name=".SettingsActivity"/>
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".About"></activity>
     </application>
 
 </manifest>

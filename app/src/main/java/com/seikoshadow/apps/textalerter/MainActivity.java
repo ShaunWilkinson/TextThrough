@@ -183,6 +183,10 @@ public class MainActivity extends AppCompatActivity {
                 setStartStopReceiverMenuVisibility();
                 Toast.makeText(getApplicationContext(), getString(R.string.stopServiceDescription), Toast.LENGTH_LONG).show();
                 return true;
+            case R.id.action_about:
+                Intent about = new Intent(MainActivity.this, About.class);
+                startActivity(about);
+                return false;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -259,8 +263,7 @@ public class MainActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels;
 
-        //alertsList.setIndicatorBounds(alertsList.getRight() - convertDpToPixel(35), alertsList.getWidth() - convertDpToPixel(5));
-        alertsList.setIndicatorBoundsRelative(width - convertDpToPixel(40), width - convertDpToPixel(10));
+        alertsList.setIndicatorBoundsRelative(width - convertDpToPixel(45), width - convertDpToPixel(10));
     }
 
     /**

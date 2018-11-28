@@ -1,13 +1,18 @@
 package com.seikoshadow.apps.textalerter.Adapters;
 
+import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.seikoshadow.apps.textalerter.Database.Alert;
+import com.seikoshadow.apps.textalerter.Dialogs.EditAlertDialogFragment;
 import com.seikoshadow.apps.textalerter.R;
 
 import java.util.ArrayList;
@@ -39,7 +44,7 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
         if(v == null) {
             LayoutInflater inflater = (LayoutInflater)this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if(inflater != null)
-                v = inflater.inflate(R.layout.alerts_listview_item, parent, false);
+                v = inflater.inflate(R.layout.expandable_list_parent, parent, false);
             else
                 return null;
         }
@@ -48,8 +53,10 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
 
         itemTitleText.setText(headerTitle);
 
+        // Change the view background depending on whether it is expanded or not
         if(isExpanded) {
-            v.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorPrimaryLightDark));
+            //v.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorPrimaryLightDark));
+            v.setBackground(ContextCompat.getDrawable(_context, R.drawable.expandable_list_parent_background));
             itemTitleText.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
         } else {
             v.setBackgroundColor(ContextCompat.getColor(_context, R.color.colorPrimary));
@@ -66,7 +73,7 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
         if(v == null) {
             LayoutInflater layoutInflater = (LayoutInflater)this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if(layoutInflater != null)
-                v = layoutInflater.inflate(R.layout.alerts_listview_child, parent, false);
+                v = layoutInflater.inflate(R.layout.expandable_list_child, parent, false);
             else {
                 return null;
             }
@@ -101,6 +108,19 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
         alertActiveText.setText(alertActive);
         ringCountText.setText(ringCount);
         vibrateText.setText(vibrate);
+
+        // Set up the edit button
+        Button editBtn = v.findViewById(R.id.editBtn);
+        editBtn.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putLong("Alert Id", groupPosition + 1);
+
+            EditAlertDialogFragment dialog = new EditAlertDialogFragment();
+            dialog.setArguments(bundle);
+
+            FragmentTransaction fragmentTransaction = ((Activity) _context).getFragmentManager().beginTransaction();
+            dialog.show(fragmentTransaction, EditAlertDialogFragment.TAG);
+        });
 
         return v;
     }

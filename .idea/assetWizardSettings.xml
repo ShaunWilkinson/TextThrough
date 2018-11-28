@@ -18,12 +18,23 @@
                                 <PersistentState>
                                   <option name="children">
                                     <map>
+                                      <entry key="clipArt">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="trimmed" value="true" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                       <entry key="clipartAsset">
                                         <value>
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/av/ic_library_music_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_add_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -44,11 +55,10 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="assetType" value="IMAGE" />
                                       <entry key="imageAsset" value="C:\Users\Shaun\Desktop\expandable.png" />
-                                      <entry key="outputName" value="ic_expand_white" />
+                                      <entry key="outputName" value="fab_plus_icon" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="f9a338" />
+                                      <entry key="themeColor" value="102027" />
                                     </map>
                                   </option>
                                 </PersistentState>

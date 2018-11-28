@@ -58,7 +58,7 @@
                 android:layout_height="48dp"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_select_contact_btn" />
+                android:src="@drawable/alert_contact_select_icon" />
         </LinearLayout>
 
         <TextView
@@ -89,7 +89,7 @@
                 android:layout_height="48dp"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_select_ringtone_btn"
+                android:src="@drawable/alert_ringtone_select_icon"
                 android:theme="@style/createOfEditButton" />
         </LinearLayout>
 

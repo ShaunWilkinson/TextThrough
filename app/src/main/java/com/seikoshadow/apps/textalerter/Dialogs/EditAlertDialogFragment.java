@@ -66,7 +66,7 @@ public class EditAlertDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        view = inflater.inflate(R.layout.layout_create_alert, container, false);
+        view = inflater.inflate(R.layout.dialog_alert, container, false);
 
         setupToolbar();
         populateFields();
@@ -114,7 +114,7 @@ public class EditAlertDialogFragment extends DialogFragment {
         toolbar.setTitle(getString(R.string.editAlertTitle));
 
         // Add an exit button
-        toolbar.setNavigationIcon(R.drawable.ic_close_white);
+        toolbar.setNavigationIcon(R.drawable.dialog_close_icon);
         toolbar.setNavigationOnClickListener(view -> getDialog().dismiss());
 
         // Inflate the menu for save

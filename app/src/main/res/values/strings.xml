@@ -3,6 +3,7 @@
 <resources>
     <string name="app_name">&appname;</string>
     <string name="placeholder">Placeholder</string>
+    <string name="linkedInURL">https://www.linkedin.com/in/shaun-wilkinson/</string>
 
     <!-- Generic -->
     <string name="action_ok">OK</string>
@@ -12,7 +13,10 @@
     <string name="no">No</string>
     <string name="active">Active</string>
     <string name="settings">Settings</string>
+    <string name="about">About</string>
     <string name="alerts">Alerts</string>
+    <string name="edit">Edit</string>
+    <string name="details">Details</string>
 
     <string name="number">Number</string>
     <string name="enterNumberToPassThrough">Enter the number to Pass Through</string>
@@ -81,4 +85,8 @@
     <string name="editAlertTitle">Edit Alert</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!-- About Page -->
+    <string name="about_details">Special thanks to work colleagues and friends for their support in design and testing.</string>
+    <string name="about_text">&appname; was created between copious amounts of work and university in order to wake me up for On-Call Rota texts from \'emergency\'.
+        \n\nHopefully, this app will be of use to others and if you have any issues at all feel free to get in touch at seikoshadow@gmail.com</string>
 </resources>
