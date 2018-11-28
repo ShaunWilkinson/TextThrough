@@ -12,12 +12,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.seikoshadow.apps.textalerter.Database.Alert;
+import com.seikoshadow.apps.textalerter.Database.AlertModel;
+import com.seikoshadow.apps.textalerter.Database.AppDatabase;
 import com.seikoshadow.apps.textalerter.Dialogs.EditAlertDialogFragment;
 import com.seikoshadow.apps.textalerter.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
 public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
@@ -113,13 +118,34 @@ public class AlertsExpandableListAdapter extends BaseExpandableListAdapter {
         Button editBtn = v.findViewById(R.id.editBtn);
         editBtn.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putLong("Alert Id", groupPosition + 1);
+            bundle.putLong("Alert Id", alerts.get(groupPosition).getId());
 
             EditAlertDialogFragment dialog = new EditAlertDialogFragment();
             dialog.setArguments(bundle);
 
             FragmentTransaction fragmentTransaction = ((Activity) _context).getFragmentManager().beginTransaction();
             dialog.show(fragmentTransaction, EditAlertDialogFragment.TAG);
+        });
+
+        // Set up the delete button
+        Button deleteBtn = v.findViewById(R.id.deleteBtn);
+        deleteBtn.setOnClickListener(view -> {
+            new AlertDialog.Builder(_context)
+                .setTitle("Confirm")
+                .setMessage("Are you sure you want to delete this alert?")
+                .setPositiveButton(android.R.string.yes, (confirmDialog, which) -> {
+                    // Run the delete in the background
+                    Executor executor = Executors.newSingleThreadExecutor();
+                    executor.execute(() -> {
+                        // Make sure theres not an existing record with the same phone number
+                        AlertModel alertModel = AppDatabase.getInstance(_context.getApplicationContext()).alertModel();
+                        alertModel.delete(alerts.get(groupPosition));
+                    });
+
+                    confirmDialog.dismiss();
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .show();
         });
 
         return v;

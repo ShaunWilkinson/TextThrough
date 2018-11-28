@@ -14,6 +14,9 @@ public interface AlertModel {
     @Query("SELECT * FROM alert")
     LiveData<List<Alert>> getAll();
 
+    @Query("SELECT * FROM alert")
+    List<Alert> getAllAlerts();
+
     @Query("SELECT * FROM alert WHERE id IN (:alertIds)")
     LiveData<List<Alert>> loadAllByIds(int[] alertIds);
 
