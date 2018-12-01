@@ -61,6 +61,26 @@
         <item name="android:layout_margin">10dp</item>
     </style>
 
+    <style name="createOrEditTextFieldBoxes">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="primaryColor">@color/colorAccent</item>
+        <item name="hasClearButton">true</item>
+        <item name="alwaysShowHint">false</item>
+        <item name="useDenseSpacing">true</item>
+        <item name="manualValidateError">true</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
+    <style name="createOrEditExtendedEditText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:inputType">text</item>
+    </style>
+
     <style name="createOrEditLabel">
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:layout_width">match_parent</item>

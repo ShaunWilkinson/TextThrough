@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.seikoshadow.apps.textalerter.Database.Alert;
@@ -29,6 +28,9 @@ import java.util.regex.Pattern;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
+import studio.carbonylgroup.textfieldboxes.TextFieldBoxes;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -43,10 +45,14 @@ public class CreateAlertDialogFragment extends DialogFragment {
     private String ringtoneName;
     private Uri ringtoneUri;
 
-    private EditText alertNameEditText;
-    private EditText phoneNumberEditText;
-    private EditText numberOfRingsEditText;
+    private TextFieldBoxes alertNameFieldBox;
+    private ExtendedEditText alertNameEditText;
+    private TextFieldBoxes phoneNumberFieldBox;
+    private ExtendedEditText phoneNumberEditText;
+    private TextFieldBoxes numberOfRingsFieldBox;
+    private ExtendedEditText numberOfRingsEditText;
     private SwitchCompat vibrateSwitch;
+    private TextView ringtoneSelectValue;
 
     /**
      * Called first, on creation set the style to fullscreen and initiate a reference to the database
@@ -72,21 +78,22 @@ public class CreateAlertDialogFragment extends DialogFragment {
 
         setupToolbar();
 
+        alertNameFieldBox = view.findViewById(R.id.nameEditBox);
         alertNameEditText = view.findViewById(R.id.nameEditText);
+        phoneNumberFieldBox = view.findViewById(R.id.numberEditBox);
         phoneNumberEditText = view.findViewById(R.id.numberEditText);
+        numberOfRingsFieldBox = view.findViewById(R.id.numOfRingsEditBox);
         numberOfRingsEditText = view.findViewById(R.id.numOfRingsEditText);
         vibrateSwitch = view.findViewById(R.id.vibrateSwitch);
+        ringtoneSelectValue = view.findViewById(R.id.selectedValue);
 
-        setupRingtonePickerButton(view);
-        setupContactPickerButton(view);
+        setupRingtonePickerButton();
+        setupContactPickerButton();
 
         return view;
     }
 
-    private void setupRingtonePickerButton(View view) {
-        ImageButton ringtoneSelectButton = view.findViewById(R.id.ringtoneSelectBtn);
-        TextView ringtoneSelectValue = view.findViewById(R.id.ringtoneSelectValue);
-
+    private void setupRingtonePickerButton() {
         Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getActivity().getApplicationContext(), RingtoneManager.TYPE_ALARM);
         Ringtone defaultRingtone = RingtoneManager.getRingtone(getActivity(), ringtoneUri);
 
@@ -94,13 +101,13 @@ public class CreateAlertDialogFragment extends DialogFragment {
         ringtoneName = defaultRingtone.getTitle(getActivity());
 
         ringtoneSelectValue.setText(defaultRingtone.getTitle(getActivity()));
-        ringtoneSelectButton.setOnClickListener(this::selectRingtone);
+
+        ConstraintLayout selectorLayout = view.findViewById(R.id.ringtoneSelect);
+        selectorLayout.setOnClickListener(this::selectRingtone);
     }
 
-    private void setupContactPickerButton(View view) {
-        ImageButton contactPicker = view.findViewById(R.id.contactPickerBtn);
-
-        contactPicker.setOnClickListener(this::selectContact);
+    private void setupContactPickerButton() {
+        phoneNumberFieldBox.getEndIconImageButton().setOnClickListener(this::selectContact);
     }
 
     private void setupToolbar() {
@@ -142,46 +149,55 @@ public class CreateAlertDialogFragment extends DialogFragment {
      * @return true if valid, false otherwise
      */
     private boolean validateFields() {
-        boolean valid = true;
+        boolean nameValid = true, phoneValid = true, numOfRingsValid = true;
 
-        if(alertNameEditText.getText().toString().equals("") || alertNameEditText.getText().length() > 50) {
-            alertNameEditText.setError(getString(R.string.alert_name_error));
-            valid = false;
+        //TODO add text listener validate on each input, if valid remove hint
+        if(!alertNameFieldBox.validate()) {
+            if(alertNameEditText.getText().toString().length() > alertNameFieldBox.getMaxCharacters()) {
+                alertNameFieldBox.setError(getString(R.string.alert_error_over_limit, alertNameFieldBox.getMaxCharacters()), false);
+            } else {
+                alertNameFieldBox.setError(getString(R.string.alert_name_error), false);
+            }
+            nameValid = false;
         }
 
         String phoneNumberInput = phoneNumberEditText.getText().toString();
 
-        // Ensure phone number isn't blank or too long
-        if(phoneNumberInput.equals("") || phoneNumberInput.length() > 30) {
-            phoneNumberEditText.setError(getString(R.string.alert_phone_number_error));
-            valid = false;
+        // Check if phone number is within allowed characters
+        if(!phoneNumberFieldBox.validate()) {
+            if(phoneNumberEditText.getText().toString().length() > phoneNumberFieldBox.getMaxCharacters()) {
+                phoneNumberFieldBox.setError(getString(R.string.alert_error_over_limit, phoneNumberFieldBox.getMaxCharacters()), false);
+            } else {
+                phoneNumberFieldBox.setError(getString(R.string.alert_phone_number_error), false);
+            }
+            phoneValid = false;
+        }
 
-            // Ensure phone number doesn't contain special characters (uses + or ( to check if it's a number)
-        } else if (phoneNumberInput.substring(0, 1).equals("+") || phoneNumberInput.substring(0, 1).equals("(")) {
+        if (phoneValid && (phoneNumberInput.substring(0, 1).equals("+") || phoneNumberInput.substring(0, 1).equals("("))) {
             phoneNumberEditText.setText(phoneNumberEditText.getText().toString().replace(" ", ""));
 
             Pattern p = Pattern.compile("^[a-zA-Z0-9äöüÄÖÜ+]*$", Pattern.CASE_INSENSITIVE);
             Matcher m = p.matcher(phoneNumberEditText.getText().toString());
             if (!m.find()) {
-                phoneNumberEditText.setError(getString(R.string.alert_phone_number_character_error));
-                valid = false;
+                phoneNumberFieldBox.setError(getString(R.string.alert_phone_number_character_error), false);
+                phoneValid = false;
             }
         }
 
-        // If the seconds to ring isn't blank
-        if(!numberOfRingsEditText.getText().toString().equals("")) {
+        // Check if num of seconds is valid
+        if(numberOfRingsFieldBox.validate()) {
             try {
                 Integer.parseInt(numberOfRingsEditText.getText().toString());
             } catch (NumberFormatException exception) {
-                numberOfRingsEditText.setError(getString(R.string.alert_phone_number_error));
-                valid = false;
+                numberOfRingsFieldBox.setError(getString(R.string.alert_phone_number_error), false);
+                numOfRingsValid = false;
             }
         } else {
-            numberOfRingsEditText.setError(getString(R.string.alert_seconds_to_ring_error));
-            valid = false;
+            numberOfRingsFieldBox.setError(getString(R.string.alert_seconds_to_ring_error), false);
+            numOfRingsValid = false;
         }
 
-        return valid;
+        return nameValid && phoneValid && numOfRingsValid;
     }
 
     /**
@@ -226,7 +242,6 @@ public class CreateAlertDialogFragment extends DialogFragment {
                 String name = selectedRingtone.getTitle(getActivity());
                 selectedRingtone.stop();
                 if (uri != null) {
-                    TextView ringtoneSelectValue = view.findViewById(R.id.ringtoneSelectValue);
                     ringtoneSelectValue.setText(name);
                     ringtoneName = name;
                     ringtoneUri = uri;

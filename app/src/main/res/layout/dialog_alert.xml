@@ -23,78 +23,60 @@
         style="@style/createOrEditLinearLayout"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/nameLabel"
-            style="@style/createOrEditLabel"
-            android:text="@string/alert_name"
-            android:textSize="16sp" />
+        <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
+            android:id="@+id/nameEditBox"
+            style="@style/createOrEditTextFieldBoxes"
+            app:helperText="Enter the name for the alert"
+            app:labelText="@string/alert_name"
+            app:maxCharacters="30"
+            app:minCharacters="1">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/nameEditText"
-            style="@style/createOrEditField"
-            android:hint="@string/alert_name"
-            android:inputType="textPersonName" />
+            <studio.carbonylgroup.textfieldboxes.ExtendedEditText
+                android:id="@+id/nameEditText"
+                style="@style/createOrEditExtendedEditText" />
 
-        <TextView
-            android:id="@+id/phoneNumberLabel"
-            style="@style/createOrEditLabel"
-            android:text="@string/phoneNumber" />
+        </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
+            android:id="@+id/numberEditBox"
+            app:labelText="@string/phoneNumber"
+            app:helperText="Enter a valid phone number"
+            app:minCharacters="1"
+            app:maxCharacters="30"
+            app:endIcon="@drawable/alert_contact_select_icon"
+            style="@style/createOrEditTextFieldBoxes"
+            >
 
-            <androidx.appcompat.widget.AppCompatEditText
+            <studio.carbonylgroup.textfieldboxes.ExtendedEditText
                 android:id="@+id/numberEditText"
-                style="@style/createOrEditField"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:hint="@android:string/emptyPhoneNumber"
-                android:inputType="text" />
+                style="@style/createOrEditExtendedEditText"
+                />
 
-            <ImageButton
-                android:id="@+id/contactPickerBtn"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@android:color/transparent"
-                android:scaleType="centerInside"
-                android:src="@drawable/alert_contact_select_icon"
-                android:contentDescription="@string/select_a_contact" />
-        </LinearLayout>
+        </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
 
-        <TextView
-            android:id="@+id/numOfRingsLabel2"
-            style="@style/createOrEditLabel"
+        <include
+            android:id="@+id/ringtoneSelect"
+            layout="@layout/selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:text="@string/ringtone" />
+            android:layout_marginBottom="10dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <studio.carbonylgroup.textfieldboxes.TextFieldBoxes
+            android:id="@+id/numOfRingsEditBox"
+            style="@style/createOrEditTextFieldBoxes"
+            app:helperText="Enter seconds to ring for"
+            app:labelText="@string/secondsToRingFor"
+            app:maxCharacters="3"
+            app:minCharacters="1"
+            android:hint="@string/_1">
 
-            <TextView
-                android:id="@+id/ringtoneSelectValue"
-                style="@style/createOrEditField"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingTop="6dp" />
+            <studio.carbonylgroup.textfieldboxes.ExtendedEditText
+                android:id="@+id/numOfRingsEditText"
+                style="@style/createOrEditExtendedEditText"
+                android:inputType="number" />
 
-            <ImageButton
-                android:id="@+id/ringtoneSelectBtn"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@android:color/transparent"
-                android:scaleType="centerInside"
-                android:src="@drawable/alert_ringtone_select_icon"
-                android:theme="@style/createOfEditButton"
-                android:contentDescription="@string/select_a_ringtone"/>
-        </LinearLayout>
-
+        </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
+        <!--
         <TextView
             android:id="@+id/numOfRingsLabel"
             style="@style/createOrEditLabel"
@@ -106,7 +88,7 @@
             style="@style/createOrEditField"
             android:hint="@string/_1"
             android:inputType="number" />
-
+-->
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/vibrateSwitch"
             style="@style/createOrEditSwitch"

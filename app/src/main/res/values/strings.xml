@@ -75,6 +75,8 @@
     <string name="select_a_ringtone">Select a ringtone</string>
 
     <string name="alert_name_error">You need to enter an alert name</string>
+    <string name="alert_error_over_limit">Enter %1$i or less characters</string>
+
     <string name="alert_phone_number_error">You need to enter a valid number or text</string>
     <string name="alert_seconds_to_ring_error">You need to enter max seconds to ring for</string>
     <string name="alert_phone_number_character_error">Phone numbers should not contain any special characters or spaces other than +</string>
