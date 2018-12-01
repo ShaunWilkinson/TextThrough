@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.seikoshadow.apps.textalerter.Database.Alert;
@@ -27,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import static android.app.Activity.RESULT_OK;
@@ -40,8 +40,8 @@ public class EditAlertDialogFragment extends DialogFragment {
     private EditText alertNameEditText;
     private EditText phoneNumberEditText;
     private EditText numberOfRingsEditText;
-    private Switch vibrateSwitch;
-    private Switch activeSwitch;
+    private SwitchCompat vibrateSwitch;
+    private SwitchCompat activeSwitch;
 
     /**
      * Called first, on creation set the style to fullscreen and initiate a reference to the database
@@ -52,7 +52,7 @@ public class EditAlertDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(android.app.DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
 
-        db = AppDatabase.getInstance(getContext());
+        db = AppDatabase.getInstance(getActivity());
 
         Bundle bundle = getArguments();
         alert = db.alertModel().findById((int)bundle.getLong("Alert Id"));
@@ -127,7 +127,7 @@ public class EditAlertDialogFragment extends DialogFragment {
                 }
             // Delete Button Clicked
             } else {
-                new AlertDialog.Builder(getContext())
+                new AlertDialog.Builder(getActivity())
                         .setTitle("Confirm")
                         .setMessage("Are you sure you want to delete this alert?")
                         .setPositiveButton(android.R.string.yes, (confirmDialog, which) -> {
@@ -267,8 +267,8 @@ public class EditAlertDialogFragment extends DialogFragment {
             if(resultCode == RESULT_OK) {
                 // Get the selected ringtone and pass to saveAlert
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                Ringtone selectedRingtone = RingtoneManager.getRingtone(getContext(), uri);
-                String name = selectedRingtone.getTitle(getContext());
+                Ringtone selectedRingtone = RingtoneManager.getRingtone(getActivity(), uri);
+                String name = selectedRingtone.getTitle(getActivity());
                 selectedRingtone.stop();
                 if(uri != null) {
                     TextView ringtoneSelectValue = view.findViewById(R.id.ringtoneSelectValue);

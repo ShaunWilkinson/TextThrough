@@ -10,114 +10,98 @@
     app:layout_constraintEnd_toStartOf="parent"
     app:layout_constraintStart_toStartOf="parent">
 
-    <GridLayout style="@style/ListViewGridLayout">
+    <androidx.gridlayout.widget.GridLayout style="@style/ListViewGridLayout">
 
         <TextView
             android:id="@+id/alertsListChildPhoneLabel"
             style="@style/ListViewTextViewLabel"
-            android:layout_row="0"
-            android:layout_column="0"
-            android:text="@string/phoneNumber" />
+            android:text="@string/phoneNumber"
+            app:layout_column="0"
+            app:layout_row="0" />
 
         <TextView
             android:id="@+id/alertsListChildPhoneText"
             style="@style/ListViewTextViewField"
-            android:layout_row="1"
-            android:layout_column="0"
+            app:layout_column="0"
+            app:layout_row="1"
             tools:text="@string/phoneNumber" />
 
 
         <TextView
             android:id="@+id/alertsListChildRingtoneLabel"
             style="@style/ListViewTextViewLabel"
-            android:layout_row="0"
-            android:layout_column="1"
-            android:text="@string/ringtone" />
+            android:text="@string/ringtone"
+            app:layout_column="1"
+            app:layout_row="0" />
 
         <TextView
             android:id="@+id/alertsListChildRingtoneText"
             style="@style/ListViewTextViewField"
-            android:layout_row="1"
-            android:layout_column="1"
+            app:layout_column="1"
+            app:layout_row="1"
             tools:text="@string/ringtone" />
 
         <TextView
             android:id="@+id/alertsListChildRingLabel"
             style="@style/ListViewTextViewLabel"
-            android:layout_row="0"
-            android:layout_column="2"
-            android:text="@string/secondsToRingFor" />
+            android:text="@string/secondsToRingFor"
+            app:layout_column="2"
+            app:layout_row="0" />
 
         <TextView
             android:id="@+id/alertsListChildRingText"
             style="@style/ListViewTextViewField"
-            android:layout_row="1"
-            android:layout_column="2"
+            app:layout_column="2"
+            app:layout_row="1"
             tools:text="@string/secondsToRingFor" />
 
         <TextView
             android:id="@+id/alertsListChildVibrateLabel"
             style="@style/ListViewTextViewLabel"
-            android:layout_row="3"
-            android:layout_column="0"
-            android:text="@string/vibrate" />
+            android:text="@string/vibrate"
+            app:layout_column="0"
+            app:layout_row="3" />
 
         <TextView
             android:id="@+id/alertsListChildVibrateText"
             style="@style/ListViewTextViewField"
-            android:layout_row="4"
-            android:layout_column="0"
+            app:layout_column="0"
+            app:layout_row="4"
             tools:text="@string/vibrate" />
 
         <TextView
             android:id="@+id/alertsListChildActiveLabel"
             style="@style/ListViewTextViewLabel"
-            android:layout_row="3"
-            android:layout_column="1"
-            android:text="@string/active" />
+            android:text="@string/active"
+            app:layout_column="1"
+            app:layout_row="3" />
 
         <TextView
             android:id="@+id/alertsListChildActiveText"
             style="@style/ListViewTextViewField"
-            android:layout_row="4"
-            android:layout_column="1"
+            app:layout_column="1"
+            app:layout_row="4"
             tools:text="@string/active" />
 
-    </GridLayout>
+    </androidx.gridlayout.widget.GridLayout>
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="#293841" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:gravity="end"
-        android:orientation="horizontal">
+    <LinearLayout style="@style/ListViewButtonContent">
 
         <Button
             android:id="@+id/deleteBtn"
-            android:layout_width="100dp"
-            android:layout_height="48dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/button_gradient"
-            android:fontFamily="@font/roboto"
-            android:text="@string/action_delete"
-            android:textAllCaps="false" />
+            style="@style/buttonStyle"
+            android:text="@string/action_delete" />
 
         <Button
             android:id="@+id/editBtn"
-            android:layout_width="100dp"
-            android:layout_height="48dp"
-            android:layout_gravity="end"
-            android:background="@drawable/button_gradient"
-            android:fontFamily="@font/roboto"
-            android:text="@string/edit"
-            android:textAllCaps="false" />
+            style="@style/buttonStyle"
+            android:layout_marginEnd="0dp"
+            android:text="@string/edit" />
     </LinearLayout>
 
 </LinearLayout>

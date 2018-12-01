@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.seikoshadow.apps.textalerter.Database.Alert;
@@ -28,6 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import static android.app.Activity.RESULT_OK;
@@ -46,7 +46,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
     private EditText alertNameEditText;
     private EditText phoneNumberEditText;
     private EditText numberOfRingsEditText;
-    private Switch vibrateSwitch;
+    private SwitchCompat vibrateSwitch;
 
     /**
      * Called first, on creation set the style to fullscreen and initiate a reference to the database
@@ -57,7 +57,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
 
-        db = AppDatabase.getInstance(getContext());
+        db = AppDatabase.getInstance(getActivity());
     }
 
     /**
@@ -91,9 +91,9 @@ public class CreateAlertDialogFragment extends DialogFragment {
         Ringtone defaultRingtone = RingtoneManager.getRingtone(getActivity(), ringtoneUri);
 
         this.ringtoneUri = ringtoneUri;
-        ringtoneName = defaultRingtone.getTitle(getContext());
+        ringtoneName = defaultRingtone.getTitle(getActivity());
 
-        ringtoneSelectValue.setText(defaultRingtone.getTitle(getContext()));
+        ringtoneSelectValue.setText(defaultRingtone.getTitle(getActivity()));
         ringtoneSelectButton.setOnClickListener(this::selectRingtone);
     }
 
@@ -222,8 +222,8 @@ public class CreateAlertDialogFragment extends DialogFragment {
             if (requestCode == 999) {
                 // Get the selected ringtone and pass to saveAlert
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                Ringtone selectedRingtone = RingtoneManager.getRingtone(getContext(), uri);
-                String name = selectedRingtone.getTitle(getContext());
+                Ringtone selectedRingtone = RingtoneManager.getRingtone(getActivity(), uri);
+                String name = selectedRingtone.getTitle(getActivity());
                 selectedRingtone.stop();
                 if (uri != null) {
                     TextView ringtoneSelectValue = view.findViewById(R.id.ringtoneSelectValue);
@@ -237,7 +237,7 @@ public class CreateAlertDialogFragment extends DialogFragment {
             if (requestCode == 998) {
                 Uri contactData = data.getData();
                 if(contactData != null) {
-                    Cursor cursor = getContext().getContentResolver().query(contactData, null, null, null, null);
+                    Cursor cursor = getActivity().getContentResolver().query(contactData, null, null, null, null);
 
                     if(cursor!= null) {
                         cursor.moveToFirst();

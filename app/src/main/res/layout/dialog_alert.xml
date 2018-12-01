@@ -29,7 +29,7 @@
             android:text="@string/alert_name"
             android:textSize="16sp" />
 
-        <EditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/nameEditText"
             style="@style/createOrEditField"
             android:hint="@string/alert_name"
@@ -45,9 +45,10 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <EditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/numberEditText"
                 style="@style/createOrEditField"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:hint="@android:string/emptyPhoneNumber"
                 android:inputType="text" />
@@ -58,7 +59,8 @@
                 android:layout_height="48dp"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
-                android:src="@drawable/alert_contact_select_icon" />
+                android:src="@drawable/alert_contact_select_icon"
+                android:contentDescription="@string/select_a_contact" />
         </LinearLayout>
 
         <TextView
@@ -77,11 +79,10 @@
             <TextView
                 android:id="@+id/ringtoneSelectValue"
                 style="@style/createOrEditField"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingTop="6dp"
-                android:text="TextView" />
+                android:paddingTop="6dp" />
 
             <ImageButton
                 android:id="@+id/ringtoneSelectBtn"
@@ -90,7 +91,8 @@
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
                 android:src="@drawable/alert_ringtone_select_icon"
-                android:theme="@style/createOfEditButton" />
+                android:theme="@style/createOfEditButton"
+                android:contentDescription="@string/select_a_ringtone"/>
         </LinearLayout>
 
         <TextView
@@ -99,18 +101,19 @@
             android:layout_marginTop="7dp"
             android:text="@string/secondsToRingFor" />
 
-        <EditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/numOfRingsEditText"
             style="@style/createOrEditField"
-            android:hint="1"
+            android:hint="@string/_1"
             android:inputType="number" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/vibrateSwitch"
             style="@style/createOrEditSwitch"
-            android:text="@string/vibrate" />
+            android:text="@string/vibrate"
+            android:theme="@style/Color1SwitchStyle" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/activeSwitch"
             style="@style/createOrEditSwitch"
             android:text="@string/active"

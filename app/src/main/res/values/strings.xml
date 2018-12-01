@@ -17,6 +17,7 @@
     <string name="alerts">Alerts</string>
     <string name="edit">Edit</string>
     <string name="details">Details</string>
+    <string name="_1">1</string>
 
     <string name="number">Number</string>
     <string name="enterNumberToPassThrough">Enter the number to Pass Through</string>
@@ -70,6 +71,8 @@
     <string name="save">Save</string>
     <string name="ringtonePickerTitle">Select a ringtone for the alert</string>
     <string name="emptyAlertList">Create a new alert by tapping + below</string>
+    <string name="select_a_contact">Select a contact</string>
+    <string name="select_a_ringtone">Select a ringtone</string>
 
     <string name="alert_name_error">You need to enter an alert name</string>
     <string name="alert_phone_number_error">You need to enter a valid number or text</string>

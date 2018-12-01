@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Telephony;
@@ -80,14 +81,26 @@ public class SMSHandlerService extends IntentService {
     private void handleSMSReceived(Intent intent) {
         Bundle smsBundle = intent.getExtras();
         if (smsBundle != null) {
-            SmsMessage[] messages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
+            SmsMessage message;
 
-            if(messages != null) {
-                String smsSender = messages[0].getOriginatingAddress();
+            // If supported just get the message from intent otherwise fall back to old method
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                message = Telephony.Sms.Intents.getMessagesFromIntent(intent)[0];
+            } else {
+                Object[] data = (Object[]) smsBundle.get("pdus");
+                if(data != null) {
+                    message = SmsMessage.createFromPdu((byte[]) data[0]);
+
+                } else {
+                    Log.e(TAG, "message data was null");
+                    return;
+                }
+            }
+
+            if(message != null) {
+                String smsSender = message.getOriginatingAddress();
 
                 relatedAlert = retrieveRelatedAlert(smsSender);
-
-                Log.d(TAG, "Sender: " + smsSender + "other: " + messages[0].getDisplayOriginatingAddress());
 
                 if(relatedAlert == null || smsSender == null) {
                     return;

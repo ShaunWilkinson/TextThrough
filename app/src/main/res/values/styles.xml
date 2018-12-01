@@ -14,16 +14,24 @@
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
-    <style name="mainToolbar">
-        <item name="android:colorForeground">@color/colorWhite</item>
+    <style name="mainToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@color/colorGreyText</item>
     </style>
 
-    <style name="alertsItemHeading">
-        <item name="android:textColor">@color/colorGreyText</item>
-        <item name="android:textSize">16sp</item>
+    <style name="buttonStyle">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:layout_marginEnd">5dp</item>
+        <item name="android:background">@drawable/button_gradient</item>
         <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Color1SwitchStyle">
+        <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
     <!-- Settings Dialog -->
@@ -68,7 +76,7 @@
         <item name="android:textColorHint">@color/colorPrimaryLight</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:backgroundTint">@color/colorPrimaryLight</item>
+        <item name="backgroundTint">@color/colorPrimaryLight</item>
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingStart">10dp</item>
@@ -86,8 +94,7 @@
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/roboto</item>
-        <item name="colorControlActivated">@color/colorAccent</item>
-        <item name="android:colorControlNormal">@color/colorAccent</item>
+
     </style>
 
     <style name="createOfEditButton" parent="Widget.AppCompat.Button.Colored">
@@ -96,6 +103,14 @@
     </style>
 
     <!-- Alert ListView -->
+    <style name="alertsItemHeading">
+        <item name="android:textColor">@color/colorGreyText</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginStart">10dp</item>
+    </style>
+
     <style name="ListViewLinearLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -103,44 +118,50 @@
         <item name="android:paddingStart">20dp</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingEnd">20dp</item>
-        <item name="android:paddingBottom">5dp</item>
         <item name="android:background">@color/colorPrimaryLightDark</item>
     </style>
 
     <style name="ListViewGridLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:columnCount">3</item>
-        <item name="android:rowCount">5</item>
+        <item name="android:columnCount">2</item>
+        <item name="android:rowCount">3</item>
         <item name="android:orientation">vertical</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">15dp</item>
         <item name="android:background">@color/colorPrimaryLightDark</item>
     </style>
 
-    <style name="ListViewTextViewLabel">
-        <item name="android:textColor">@color/colorGreyText</item>
+    <style name="ListViewContent">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">8dp</item>
         <item name="android:layout_columnSpan">1</item>
-        <item name="android:layout_columnWeight">1</item>
-        <item name="android:layout_gravity">fill_horizontal</item>
-        <item name="android:textSize">12sp</item>
+        <item name="layout_gravity">fill_horizontal</item>
         <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:paddingEnd">2dp</item>
+        <item name="layout_columnWeight">1</item>
     </style>
 
-    <style name="ListViewTextViewField">
+    <style name="ListViewTextViewLabel" parent="ListViewContent">
+        <item name="android:textColor">@color/colorGreyText</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ListViewTextViewField" parent="ListViewContent">
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:paddingEnd">5dp</item>
         <item name="android:paddingBottom">1dp</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_columnSpan">1</item>
-        <item name="android:layout_columnWeight">1</item>
-        <item name="android:layout_gravity">fill_horizontal</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
+    <style name="ListViewButtonContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:gravity">end</item>
+        <item name="android:orientation">horizontal</item>
     </style>
 
     <!-- About me Page -->

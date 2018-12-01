@@ -2,10 +2,10 @@ package com.seikoshadow.apps.textalerter.Helpers;
 
 import android.content.Context;
 import android.media.AudioAttributes;
-import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 
@@ -21,7 +21,7 @@ public class AlarmControl {
     private MediaPlayer mediaPlayer;
     private Vibrator vibrator;
 
-    public AlarmControl(Context context) {
+    private AlarmControl(Context context) {
         mContext = context;
     }
 
@@ -34,33 +34,22 @@ public class AlarmControl {
 
     /**
      * Plays the sound specified in the related alert, ensures the mediaplayer is null to stop multiple alerts at once
-     * @param relatedAlert
+     * @param relatedAlert The related alert to grab the tone to play from
      */
     public void playMusic(Alert relatedAlert) {
+        //TODO request audio focus
+
         if(mediaPlayer == null) {
             vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
 
             AudioManager audioManager = (AudioManager) mContext.getSystemService(AUDIO_SERVICE);
 
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build();
-
             // Set the volume to max
             int newVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
             audioManager.setStreamVolume(AudioManager.STREAM_ALARM, newVolume, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
 
-            // Request that the system grants temporary focus to alert audio
-            AudioFocusRequest audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
-                    .setAudioAttributes(audioAttributes)
-                    .setAcceptsDelayedFocusGain(false)
-                    .setWillPauseWhenDucked(false)
-                    .build();
-            audioManager.requestAudioFocus(audioFocusRequest);
-
+            // Create a media player and setup variables
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioAttributes(audioAttributes);
             mediaPlayer.setVolume(100, 100);
             mediaPlayer.setLooping(true);
             try {
@@ -70,10 +59,24 @@ public class AlarmControl {
                 e.printStackTrace();
             }
 
+            // If supported set the audio type to alarm
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build();
+                mediaPlayer.setAudioAttributes(audioAttributes);
+            }
+
             mediaPlayer.start();
 
+            // Start vibrating the device if enabled
             if (relatedAlert.isAlertVibrate() && vibrator != null) {
-                vibrator.vibrate(VibrationEffect.createOneShot(relatedAlert.getSecondsToRingFor() * 1000, VibrationEffect.DEFAULT_AMPLITUDE));
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(relatedAlert.getSecondsToRingFor() * 1000, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    vibrator.vibrate(relatedAlert.getSecondsToRingFor() * 1000);
+                }
             }
         }
     }
