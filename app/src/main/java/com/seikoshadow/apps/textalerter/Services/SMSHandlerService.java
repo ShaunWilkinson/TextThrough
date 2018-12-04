@@ -175,7 +175,8 @@ public class SMSHandlerService extends IntentService {
                 .setContentIntent(pendingIntent)
                 .addAction(R.drawable.notification_icon, getString(R.string.stopRinging), stopAlarmPendingIntent)
                 .setTimeoutAfter((relatedAlert.getSecondsToRingFor() * 1000) + msToDelay)
-                .setPriority(NotificationCompat.PRIORITY_MAX);
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setOngoing(true);
 
         // Show the notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
