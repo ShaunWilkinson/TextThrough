@@ -26,6 +26,12 @@
     <string name="number">Number</string>
     <string name="enterNumberToPassThrough">Enter the number to Pass Through</string>
 
+    <!-- Rate App -->
+    <string name="rate_message">If this app has proven useful, I would appreciate you taking a moment to rate it\n\nThank you for your support!</string>
+    <string name="no_more_rate_message">Thank you anyway</string>
+    <string name="thank_you_for_rate">Thank you! I appreciate the support</string>
+
+
     <!-- Optimization Dialog -->
     <string name="optimization_message">Phones newer than Android Marshmallow \(6.0\) may need this app to be excluded from optimization to ensure the service keeps running in the background properly. This is easy to do by following the instructions below.
         \n\n

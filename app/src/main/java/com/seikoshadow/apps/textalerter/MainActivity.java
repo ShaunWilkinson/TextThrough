@@ -21,6 +21,7 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
+import com.kobakei.ratethisapp.RateThisApp;
 import com.seikoshadow.apps.textalerter.Adapters.AlertsExpandableListAdapter;
 import com.seikoshadow.apps.textalerter.BroadcastReceivers.SmsBroadcastReceiver;
 import com.seikoshadow.apps.textalerter.Database.AlertViewModel;
@@ -54,8 +55,39 @@ public class MainActivity extends AppCompatActivity {
         initAlertsListView();
 
         requestPermissions();
+
+        setupAppRater();
     }
 
+    private void setupAppRater() {
+        RateThisApp.onCreate(this); // Monitors launch times and interval from installation
+
+        RateThisApp.Config config = new RateThisApp.Config(2, 3);
+        config.setMessage(R.string.rate_message);
+        config.setUrl("https://play.google.com/store/apps/details?id=com.seikoshadow.apps.textthrough");
+        RateThisApp.init(config);
+
+        RateThisApp.setCallback(new RateThisApp.Callback() {
+            @Override
+            public void onYesClicked() {
+                Toast.makeText(MainActivity.this, getString(R.string.thank_you_for_rate), Toast.LENGTH_LONG).show();
+                RateThisApp.stopRateDialog(MainActivity.this);
+            }
+
+            @Override
+            public void onNoClicked() {
+                Toast.makeText(MainActivity.this, getString(R.string.no_more_rate_message), Toast.LENGTH_LONG).show();
+                RateThisApp.stopRateDialog(MainActivity.this);
+            }
+
+            @Override
+            public void onCancelClicked() {
+                // Later clicked
+            }
+        });
+
+        RateThisApp.showRateDialogIfNeeded(this);
+    }
 
     private void initToolbar() {
         mainToolbar = findViewById(R.id.mainToolbar);

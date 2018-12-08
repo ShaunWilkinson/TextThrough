@@ -71,4 +71,7 @@ dependencies {
 
     // Used for nice edittext
     implementation 'com.github.HITGIF:TextFieldBoxes:1.4.4' //https://github.com/HITGIF/TextFieldBoxes#helper
+
+    // Used for app rating
+    implementation 'io.github.kobakei:ratethisapp:1.2.0'
 }
