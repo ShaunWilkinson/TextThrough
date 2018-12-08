@@ -16,7 +16,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "OnReceive called");
+        Log.d(TAG, "SmsBroadcast Receiver started");
 
         intent.setClass(context, SMSHandlerService.class);
         intent.putExtra("result", getResultCode());

@@ -16,6 +16,10 @@
         android:visible="false"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/action_feedback"
+        android:title="@string/requestFeature"
+        app:showAsAction="never"/>
+
     <item
         android:id="@+id/action_about"
         android:title="@string/about"

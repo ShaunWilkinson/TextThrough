@@ -186,7 +186,6 @@ public class CreateAlertDialogFragment extends DialogFragment {
     private boolean validateFields() {
         boolean nameValid = true, phoneValid = true, numOfRingsValid = true;
 
-        //TODO add text listener validate on each input, if valid remove hint
         if(!alertNameFieldBox.validate()) {
             if(alertNameEditText.getText().toString().length() > alertNameFieldBox.getMaxCharacters()) {
                 alertNameFieldBox.setError(getString(R.string.alert_error_over_limit, alertNameFieldBox.getMaxCharacters()), false);
@@ -247,7 +246,6 @@ public class CreateAlertDialogFragment extends DialogFragment {
      * @param view
      */
     private void selectContact(View view) {
-        //TODO code to select contact and populate phone number
         // Start a contact picker
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);

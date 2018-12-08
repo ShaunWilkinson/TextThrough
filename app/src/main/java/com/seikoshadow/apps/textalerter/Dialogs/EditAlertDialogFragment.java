@@ -212,7 +212,6 @@ public class EditAlertDialogFragment extends DialogFragment {
     private boolean validateFields() {
         boolean nameValid = true, phoneValid = true, numOfRingsValid = true;
 
-        //TODO add text listener validate on each input, if valid remove hint
         if(!alertNameFieldBox.validate()) {
             if(alertNameEditText.getText().toString().length() > alertNameFieldBox.getMaxCharacters()) {
                 alertNameFieldBox.setError(getString(R.string.alert_error_over_limit, alertNameFieldBox.getMaxCharacters()), false);

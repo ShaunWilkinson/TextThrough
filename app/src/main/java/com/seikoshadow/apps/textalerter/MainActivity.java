@@ -4,10 +4,12 @@ import android.Manifest;
 import android.app.FragmentTransaction;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -182,6 +184,18 @@ public class MainActivity extends AppCompatActivity {
                 getApplicationContext().getPackageManager().setComponentEnabledSetting(receiverName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED , PackageManager.DONT_KILL_APP);
                 setStartStopReceiverMenuVisibility();
                 Toast.makeText(getApplicationContext(), getString(R.string.stopServiceDescription), Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.action_feedback:
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                emailIntent.setType("message/rfc822");
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " " + getString(R.string.requestFeature));
+                emailIntent.setData(Uri.parse("mailto:" + getString(R.string.developerEmail)));
+                emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                try {
+                    startActivity(emailIntent);
+                } catch (ActivityNotFoundException ex) {
+                    Toast.makeText(MainActivity.this, getString(R.string.sendEmailError), Toast.LENGTH_LONG).show();
+                }
                 return true;
             case R.id.action_about:
                 Intent about = new Intent(MainActivity.this, About.class);

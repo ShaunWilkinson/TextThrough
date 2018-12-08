@@ -4,6 +4,7 @@
     <string name="app_name">&appname;</string>
     <string name="placeholder">Placeholder</string>
     <string name="linkedInURL">https://www.linkedin.com/in/shaun-wilkinson/</string>
+    <string name="developerEmail">shaunwilkinsonapps@gmail.com</string>
 
     <!-- Generic -->
     <string name="action_ok">OK</string>
@@ -18,6 +19,9 @@
     <string name="edit">Edit</string>
     <string name="details">Details</string>
     <string name="_1">1</string>
+    <string name="requestFeature">Request Feature</string>
+    <string name="sendEmail">Send an email</string>
+    <string name="sendEmailError">There are no email apps installed.</string>
 
     <string name="number">Number</string>
     <string name="enterNumberToPassThrough">Enter the number to Pass Through</string>
