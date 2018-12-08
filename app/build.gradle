@@ -14,8 +14,8 @@ android {
         applicationId "com.seikoshadow.apps.textthrough"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 3
-        versionName "0.11"
+        versionCode 5
+        versionName "0.13"
         testInstrumentationRunner "androidx.indie_flower.runner.AndroidJUnitRunner"
 
         javaCompileOptions {

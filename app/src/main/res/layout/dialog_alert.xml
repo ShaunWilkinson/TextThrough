@@ -76,19 +76,7 @@
                 android:inputType="number" />
 
         </studio.carbonylgroup.textfieldboxes.TextFieldBoxes>
-        <!--
-        <TextView
-            android:id="@+id/numOfRingsLabel"
-            style="@style/createOrEditLabel"
-            android:layout_marginTop="7dp"
-            android:text="@string/secondsToRingFor" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/numOfRingsEditText"
-            style="@style/createOrEditField"
-            android:hint="@string/_1"
-            android:inputType="number" />
--->
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/vibrateSwitch"
             style="@style/createOrEditSwitch"
@@ -99,9 +87,8 @@
             android:id="@+id/activeSwitch"
             style="@style/createOrEditSwitch"
             android:text="@string/active"
-            android:visibility="invisible" />
-
-
+            android:visibility="invisible"
+            android:theme="@style/Color1SwitchStyle" />
     </LinearLayout>
 
 

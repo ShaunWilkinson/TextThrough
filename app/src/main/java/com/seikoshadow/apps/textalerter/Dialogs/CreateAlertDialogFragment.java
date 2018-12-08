@@ -1,5 +1,6 @@
 package com.seikoshadow.apps.textalerter.Dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -87,10 +90,41 @@ public class CreateAlertDialogFragment extends DialogFragment {
         vibrateSwitch = view.findViewById(R.id.vibrateSwitch);
         ringtoneSelectValue = view.findViewById(R.id.selectedValue);
 
+        setupNextActionListener();
+
         setupRingtonePickerButton();
         setupContactPickerButton();
 
         return view;
+    }
+
+    /**
+     * Fix for a bug in the EditTextBoxes solution whereby the next/done button on keyboard doesn't work properly
+     */
+    private void setupNextActionListener() {
+        alertNameEditText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if(actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE) {
+                phoneNumberEditText.requestFocus();
+            }
+            return true;
+        });
+
+        phoneNumberEditText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+           if(actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE) {
+               numberOfRingsEditText.requestFocus();
+           }
+           return true;
+        });
+
+        numberOfRingsEditText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if(actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE) {
+                numberOfRingsEditText.clearFocus();
+                InputMethodManager inputMethodManager = (InputMethodManager)  getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                if(inputMethodManager != null)
+                    inputMethodManager.hideSoftInputFromWindow(numberOfRingsEditText.getWindowToken(), 0);
+            }
+            return true;
+        });
     }
 
     private void setupRingtonePickerButton() {
