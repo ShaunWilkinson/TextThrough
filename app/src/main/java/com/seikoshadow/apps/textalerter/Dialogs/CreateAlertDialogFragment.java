@@ -24,6 +24,7 @@ import com.seikoshadow.apps.textalerter.Database.AlertModel;
 import com.seikoshadow.apps.textalerter.Database.AppDatabase;
 import com.seikoshadow.apps.textalerter.R;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -204,6 +205,13 @@ public class CreateAlertDialogFragment extends DialogFragment {
             } else {
                 phoneNumberFieldBox.setError(getString(R.string.alert_phone_number_error), false);
             }
+            phoneValid = false;
+        }
+
+        // Check if phone number is unique
+        List<String> existingNumbers = db.alertModel().getAllPhoneNumbers();
+        if(existingNumbers.contains(phoneNumberInput)) {
+            phoneNumberFieldBox.setError(getString(R.string.alert_phone_number_not_unique_error), false);
             phoneValid = false;
         }
 

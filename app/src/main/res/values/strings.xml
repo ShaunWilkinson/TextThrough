@@ -80,6 +80,7 @@
     <string name="alert_phone_number_error">You need to enter a valid number or text</string>
     <string name="alert_seconds_to_ring_error">You need to enter max seconds to ring for</string>
     <string name="alert_phone_number_character_error">Phone numbers should not contain any special characters or spaces other than +</string>
+    <string name="alert_phone_number_not_unique_error">Phone number must be unique</string>
 
     <!-- Alert Ringing Dialog -->
     <string name="alert_ringing_dialog_title">Alert!</string>
