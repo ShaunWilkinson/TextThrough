@@ -2,13 +2,11 @@
 
 <resources>
     <string name="app_name">&appname;</string>
-    <string name="placeholder">Placeholder</string>
     <string name="linkedInURL">https://www.linkedin.com/in/shaun-wilkinson/</string>
     <string name="developerEmail">shaunwilkinsonapps@gmail.com</string>
+    <string name="author">by Shaun Wilkinson</string>
 
     <!-- Generic -->
-    <string name="action_ok">OK</string>
-    <string name="action_submit">Submit</string>
     <string name="action_delete">Delete</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -20,29 +18,12 @@
     <string name="details">Details</string>
     <string name="_1">1</string>
     <string name="requestFeature">Request Feature</string>
-    <string name="sendEmail">Send an email</string>
     <string name="sendEmailError">There are no email apps installed.</string>
-
-    <string name="number">Number</string>
-    <string name="enterNumberToPassThrough">Enter the number to Pass Through</string>
 
     <!-- Rate App -->
     <string name="rate_message">If this app has proven useful, I would appreciate you taking a moment to rate it\n\nThank you for your support!</string>
     <string name="no_more_rate_message">Thank you anyway</string>
     <string name="thank_you_for_rate">Thank you! I appreciate the support</string>
-
-
-    <!-- Optimization Dialog -->
-    <string name="optimization_message">Phones newer than Android Marshmallow \(6.0\) may need this app to be excluded from optimization to ensure the service keeps running in the background properly. This is easy to do by following the instructions below.
-        \n\n
-     1. Go to Settings → Battery\n
-     2. Tap on the top right 3-dot menu, and choose Battery Optimisation.\n
-     3. There should be a dropdown below the actionbar on the top left, choose All Apps from the list.\n
-     4. Find &appname;\n
-     5. Tap on it. You will get a popup with 2 options\, Optimise and Don\'t Optimise\n
-     6. Optimise should be selected by default.\n
-     7. Select \"Don\'t Optimise\", and press \"Done\".\n
-     8. All Done</string>
 
     <!-- Permissions -->
     <string name="permissions">Permissions</string>
@@ -60,7 +41,6 @@
 
     <!-- Service -->
     <string name="smswatchservice_name">&appname; Service</string>
-    <string name="serviceRunningTitle">&appname; Service Running</string>
     <string name="serviceRunningDesc">The service is running</string>
 
     <string name="startService">Start Service</string>
@@ -68,8 +48,6 @@
     <string name="stopService">Stop Service</string>
     <string name="stopServiceDescription">Stopped watching incoming texts</string>
     <string name="stopRinging">Stop Ringing</string>
-
-    <string name="disabledAlert">Disabled %1$s to stop further alerts, re-enable to start alerting.</string>
 
     <!-- Alert Setup -->
     <string name="createAlertTitle">Create an Alert</string>
@@ -81,7 +59,6 @@
     <string name="save">Save</string>
     <string name="ringtonePickerTitle">Select a ringtone for the alert</string>
     <string name="emptyAlertList">Create a new alert by tapping + below</string>
-    <string name="select_a_contact">Select a contact</string>
     <string name="select_a_ringtone">Select a ringtone</string>
 
     <string name="alert_name_error">You need to enter an alert name</string>
@@ -92,14 +69,8 @@
     <string name="alert_phone_number_character_error">Phone numbers should not contain any special characters or spaces other than +</string>
     <string name="alert_phone_number_not_unique_error">Phone number must be unique</string>
 
-    <!-- Alert Ringing Dialog -->
-    <string name="alert_ringing_dialog_title">Alert!</string>
-    <string name="alert_ringing_dialog_description">Received a text from %1$s</string>
-    <string name="stop_ringing">Stop Ringing</string>
-
     <!-- Edit Alert -->
     <string name="editAlertTitle">Edit Alert</string>
-    <string name="title_activity_settings">Settings</string>
 
     <!-- About Page -->
     <string name="about_details">Special thanks to work colleagues and friends for their support in design and testing.</string>

@@ -35,12 +35,6 @@
     </style>
 
     <!-- Settings Dialog -->
-    <style name="settingsLinearlayout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:layout_margin">10dp</item>
-    </style>
 
     <!-- Create and Edit Dialogs -->
     <style name="FullScreenDialogStyle" parent="Theme.AppCompat.Dialog">
@@ -81,31 +75,6 @@
         <item name="android:inputType">text</item>
     </style>
 
-    <style name="createOrEditLabel">
-        <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:layout_marginTop">15dp</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">@font/roboto</item>
-    </style>
-
-    <style name="createOrEditField">
-        <item name="android:textColor">@color/colorGrey</item>
-        <item name="android:textColorHint">@color/colorPrimaryLight</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="backgroundTint">@color/colorPrimaryLight</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingStart">10dp</item>
-        <item name="android:paddingEnd">10dp</item>
-        <item name="android:paddingBottom">10dp</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">@font/roboto</item>
-    </style>
-
     <style name="createOrEditSwitch">
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:layout_width">match_parent</item>
@@ -115,11 +84,6 @@
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/roboto</item>
 
-    </style>
-
-    <style name="createOfEditButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/colorPrimaryLight</item>
-        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <!-- Alert ListView -->

@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/contraintLayout"
     tools:context="com.seikoshadow.apps.textalerter.MainActivity"
-    style="@style/MainActivityConstraintLayout">
+    style="@style/MainActivityConstraintLayout"
+    android:id="@+id/mainConstraint">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/mainToolbar"
@@ -15,7 +15,9 @@
         android:elevation="4dp"
         app:theme="@style/mainToolbar"
         style="@style/mainToolbar"
-        tools:targetApi="lollipop" />
+        tools:targetApi="lollipop"
+        app:layout_constraintTop_toTopOf="@+id/mainConstraint"
+        app:layout_constraintBottom_toTopOf="@+id/alertsList"/>
 
     <ExpandableListView
         android:id="@+id/alertsList"
@@ -55,7 +57,6 @@
         android:focusable="true" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
         android:layout_width="1dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
